@@ -1,10 +1,9 @@
 #pragma once
-#include "graphics/shader.h"
-#include "graphics/shader_cache.h"
-#include "filesystem/filesystem.h"
+#include "shader.h"
+#include "shader_cache.h"
 
 struct D3D12_SHADER_BYTECODE;
-namespace QRender
+namespace KNR
 {
 	class DirectXShader
 		: public Shader

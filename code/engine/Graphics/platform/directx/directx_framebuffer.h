@@ -1,11 +1,11 @@
 #pragma once 
-#include "graphics/framebuffer.h"
-#include "graphics/platform/directx/directx_heap.h"
-#include "graphics/platform/directx/directx_graphics_context.h"
-#include "graphics/platform/directx/directx_texture.h"
+#include "framebuffer.h"
+#include "platform/directx/directx_heap.h"
+#include "platform/directx/directx_graphics_context.h"
+#include "platform/directx/directx_texture.h"
 
 
-namespace QRender
+namespace KNR
 {
 	class DirectXCommandBuffer;
 	class DirectXFramebuffer
@@ -17,8 +17,8 @@ namespace QRender
 
 		void Invalidate();
 
-		virtual void Bind(Ref<DirectXCommandBuffer> commandList) override;
-		virtual void Unbind(Ref<DirectXCommandBuffer> commandList) override;
+		virtual void Bind(DirectXCommandBuffer* commandList) override;
+		virtual void Unbind(DirectXCommandBuffer* commandList) override;
 
 		virtual void Resize(uint32_t width, uint32_t height) override;
 		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) override;
@@ -29,8 +29,8 @@ namespace QRender
 
 		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
 		
-		virtual Ref<Texture2D> GetFramebufferTexture(uint32_t slot) const override { return std::static_pointer_cast<Texture2D>(m_framebufferTexture[slot]); }
-		virtual Ref<Texture2D> GetDepthTexture() const override { return std::static_pointer_cast<Texture2D>(m_framebufferDepthTexture); }
+		virtual Texture2D* GetFramebufferTexture(uint32_t slot) const override { return static_cast<Texture2D*>(m_framebufferTexture[slot]); }
+		virtual Texture2D* GetDepthTexture() const override { return static_cast<Texture2D*>(m_framebufferDepthTexture); }
 	private:
 		uint32_t m_RendererID = 0;
 		FramebufferSpecification m_Specification;
@@ -41,8 +41,8 @@ namespace QRender
 		uint32_t m_DepthAttachment = 0;
 		DirectXHeap m_RTVHeap;
 		DirectXHeap m_DSVHeap;
-		std::vector<Ref<DirectXTexture2D>> m_framebufferTexture;
-		Ref<DirectXTexture2D> m_framebufferDepthTexture;
+		std::vector<DirectXTexture2D*> m_framebufferTexture;
+		DirectXTexture2D* m_framebufferDepthTexture;
 
 		bool m_resize = false;
 		bool m_createOnce = false;

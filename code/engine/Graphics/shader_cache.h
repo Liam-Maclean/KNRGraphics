@@ -1,7 +1,6 @@
 #pragma once
-#include "core/core.h"
 
-namespace QRender
+namespace KNR
 {
 	class ShaderCache
 	{

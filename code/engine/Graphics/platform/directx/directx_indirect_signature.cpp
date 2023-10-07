@@ -1,8 +1,7 @@
-#include <qlpch.h>
-#include "graphics/platform/directx/directx_graphics_context.h"
-#include "graphics/platform/directx/directx_technique.h"
+#include "platform/directx/directx_graphics_context.h"
+#include "platform/directx/directx_technique.h"
 #include "directx_indirect_signature.h"
-namespace QRender
+namespace KNR
 {
 	IndirectSignature::IndirectSignature()
 	{
@@ -14,10 +13,8 @@ namespace QRender
 
 	}
 
-    void IndirectSignature::CreateSignature(Ref<Technique> technique, uint32_t byteStride)
+    void IndirectSignature::CreateSignature(Technique* technique, uint32_t byteStride)
     {
-
-     
         ID3D12Device* device = DirectXContext.GetDevice();
         HRESULT hr;
         // Each command consists of a CBV update and a DrawInstanced call.
@@ -25,7 +22,7 @@ namespace QRender
         commandSignatureDesc.pArgumentDescs = m_indirectArgs.data();
         commandSignatureDesc.NumArgumentDescs = static_cast<uint32_t>(m_indirectArgs.size());
         commandSignatureDesc.ByteStride = byteStride;
-        hr = device->CreateCommandSignature(&commandSignatureDesc, technique ? std::static_pointer_cast<DirectXTechnique>(technique)->GetRootSignature() : nullptr, IID_PPV_ARGS(&m_commandSignature));
+        hr = device->CreateCommandSignature(&commandSignatureDesc, technique ? static_cast<DirectXTechnique*>(technique)->GetRootSignature() : nullptr, IID_PPV_ARGS(&m_commandSignature));
         if (FAILED(hr))
         {
             assert(false);

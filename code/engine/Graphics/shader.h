@@ -1,9 +1,6 @@
 #pragma once
 
-#include "core/core.h"
-#include "logging/log.h"
-
-namespace QRender
+namespace KNR
 {
 	class Shader
 	{
@@ -16,7 +13,7 @@ namespace QRender
 		virtual void Unbind() const = 0;
 		virtual void* GetShaderBytecode() = 0;
 
-		static Ref<Shader> Create(const std::filesystem::path& shader);
+		static Shader* Create(const std::filesystem::path& shader);
 	protected:
 		std::string m_name;
 	};

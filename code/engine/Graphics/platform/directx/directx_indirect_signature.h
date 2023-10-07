@@ -1,7 +1,6 @@
 #pragma once
-#include "utilities/callback.h"
 #include <d3d12.h>
-namespace QRender
+namespace KNR
 {
 	class Technique;
 	class IndirectSignature
@@ -10,7 +9,7 @@ namespace QRender
 		IndirectSignature();
 		~IndirectSignature();
 
-		void CreateSignature(Ref<Technique> technique, uint32_t byteStride);
+		void CreateSignature(Technique* technique, uint32_t byteStride);
 		void AddIndirectConstantBufferViewArg(uint32_t rootParameterIndex);
 		void AddIndirectConstantArg(uint32_t rootParameterIndex, uint32_t destOffset, uint32_t numValuesToSet);
 		void AddIndirectShaderResourceViewArg(uint32_t rootParameterIndex);

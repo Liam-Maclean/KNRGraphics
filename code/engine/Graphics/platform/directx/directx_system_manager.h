@@ -1,14 +1,11 @@
 #pragma once
-#include "core/core.h"
-#include "graphics/platform/directx/directx_render_system.h"
-#include "graphics/framebuffer.h"
-#include "graphics/shader.h"
-#include "graphics/texture.h"
-#include "graphics/screen_quad.h"
+#include "platform/directx/directx_render_system.h"
+#include "framebuffer.h"
+#include "shader.h"
+#include "texture.h"
+#include "screen_quad.h"
 
-#include "entt/entt.hpp"
-
-namespace QRender
+namespace KNR
 {
 	class GraphicsProfiler;
 	class RenderSystemManager 
@@ -25,16 +22,16 @@ namespace QRender
 		inline void SetUpscaleRatio(float inRatio) { m_upscaleRatio = inRatio; }
 
 		template<typename System>
-		Ref<System> CreateRenderSystem();
+		System* CreateRenderSystem();
 		
 		template<typename System>
-		Ref<System> GetRenderSystem();
+		System* GetRenderSystem();
 
-		inline std::vector<Ref<RenderSystem>> GetRenderSystems() { return m_systems; }
+		inline std::vector<RenderSystem*> GetRenderSystems() { return m_systems; }
 		
 		inline void SetProfilingEnabled(bool inEnabled) { m_profilingEnabled = inEnabled; }
 		inline bool GetProfilingEnabled() { return m_profilingEnabled; }
-		inline Ref<QRender::GraphicsProfiler> GetGraphicsProfiler() { return m_gpuProfiler; };
+		inline GraphicsProfiler* GetGraphicsProfiler() { return m_gpuProfiler; };
 
 
 		void Resize(int width, int height);
@@ -42,9 +39,9 @@ namespace QRender
 		void DrawFrametimes();
 
 	private:
-		std::vector<Ref<RenderSystem>> m_systems;
-		Ref<QRender::GraphicsProfiler> m_gpuProfiler;
-		std::map<HashString, Ref<RenderSystem>> m_systemsMap;
+		std::vector<RenderSystem*> m_systems;
+		KNR::GraphicsProfiler* m_gpuProfiler;
+		std::map<uint32_t, RenderSystem*> m_systemsMap;
 		
 		uint32_t m_width;
 		uint32_t m_height;
@@ -56,24 +53,24 @@ namespace QRender
 	};
 
 	template<typename System>
-	inline Ref<System> RenderSystemManager::CreateRenderSystem()
+	inline System* RenderSystemManager::CreateRenderSystem()
 	{
-		Ref<System> system = MakeRef<System>(*this);
-		HashString hash(typeid(System).name());
-		m_systemsMap.emplace(hash, system);
+		System* system = new System(*this);
+		uint32_t hs = std::hash(typeid(System).name());
+		m_systemsMap.emplace(hs, system);
 		m_systems.push_back(system);
-		return std::static_pointer_cast<System>(m_systemsMap.at(hash));
+		return reinterpret_cast<System*>(m_systemsMap.at(hs));
 	}
 
 	//Return system of the same type as template
 	template<typename System>
-	inline Ref<System> RenderSystemManager::GetRenderSystem()
+	inline System* RenderSystemManager::GetRenderSystem()
 	{
-		HashString hs = HashString(typeid(System).name());
+		uint32_t hs = std::hash(typeid(System).name());
 		auto find_it = m_systemsMap.find(hs);
 		if (find_it != m_systemsMap.end())
 		{
-			return std::static_pointer_cast<System>(find_it->second);
+			return reinterpret_cast<System*>(find_it->second);
 		}
 		return ERROR;
 	}

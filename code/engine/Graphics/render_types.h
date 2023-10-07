@@ -1,6 +1,6 @@
 #pragma once
 
-namespace QRender
+namespace KNR
 {
 	enum class TopologyType
 	{

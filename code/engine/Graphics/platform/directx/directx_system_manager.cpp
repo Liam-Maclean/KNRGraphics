@@ -1,22 +1,17 @@
-#include <qlpch.h>
 #include "directx_system_manager.h"
+#include "graphics_profiler.h"
 #include <limits>
-#include "graphics/systems/deferred_lighting_system.h"
-#include "graphics/systems/forward_system.h"
-#include "graphics/systems/fxaa_system.h"
-#include "graphics/systems/shadow_system.h"
-#include "graphics/systems/taa_system.h"
-#include "graphics/graphics_profiler.h"
 
-namespace QRender
+namespace KNR
 {
 	RenderSystemManager::RenderSystemManager()
 	{
-		m_gpuProfiler = QRender::GraphicsProfiler::Create();
+		m_gpuProfiler = KNR::GraphicsProfiler::Create();
 	}
 
 	RenderSystemManager::~RenderSystemManager()
 	{
+
 	}
 
 	void RenderSystemManager::Resize(int width, int height)

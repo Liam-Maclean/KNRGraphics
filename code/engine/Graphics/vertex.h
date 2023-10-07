@@ -1,6 +1,5 @@
 #pragma once
-#include "serialization/json_types.hpp"
-namespace QRender
+namespace KNR
 {
 	enum VertexLayout
 	{
@@ -53,7 +52,7 @@ namespace QRender
 		Vector4f DebugColor = { 0, 0, 0, 1 }; //46
 		//44
 		NLOHMANN_DEFINE_TYPE_INTRUSIVE(PrimitiveVertex, Position, Normal, TexCoord, DebugColor)
-		const inline bool operator==(const QRender::PrimitiveVertex& a) const
+		const inline bool operator==(const KNR::PrimitiveVertex& a) const
 		{
 			return (a.Position == Position
 				&& a.Normal == Normal

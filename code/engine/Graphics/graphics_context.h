@@ -1,6 +1,6 @@
 #pragma once
 
-namespace QRender
+namespace KNR
 {
 	class CGraphicsContext
 	{

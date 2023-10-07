@@ -1,10 +1,9 @@
 #pragma once
 
-#include "graphics/render_types.h"
-#include "material.h"
+#include "render_types.h"
 #include "vertex.h"
 #include "buffer.h"
-namespace QRender
+namespace KNR
 {
 	class StaticMesh
 	{
@@ -14,6 +13,5 @@ namespace QRender
 		uint32_t vertexCount;
 		std::vector<uint32_t> indices;
 		std::vector<PrimitiveVertex> vertices;
-		NLOHMANN_DEFINE_TYPE_INTRUSIVE(StaticMesh, indexCount, vertexCount, indices, vertices)
 	};
 }

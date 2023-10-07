@@ -1,7 +1,7 @@
 #include "directx_fence.h"
 #include "directx_graphics_context.h"
 #include "directx_copy_context.h"
-namespace QRender
+namespace KNR
 {
 	DirectXFence::DirectXFence(bool copy)
 	{

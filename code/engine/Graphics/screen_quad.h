@@ -1,9 +1,9 @@
 #pragma once
-#include "graphics/buffer.h"
-#include "graphics/vertex.h"
-#include "graphics/platform/directx/directx_graphics_context.h"
+#include "buffer.h"
+#include "vertex.h"
+#include "platform/directx/directx_graphics_context.h"
 
-namespace QRender
+namespace KNR
 {
 	class DirectXCommandList;
 	class ScreenQuad
@@ -11,12 +11,10 @@ namespace QRender
 	public:
 		ScreenQuad();
 		~ScreenQuad();
-		void Draw(Ref<DirectXCommandBuffer> commandList);
+		void Draw(DirectXCommandBuffer* commandList);
 
 	private:
-		Ref<Buffer> m_vertexBuffer;
+		Buffer* m_vertexBuffer;
 		std::vector< QuadVertex> m_quadVertices;
-
 	};
-
 }

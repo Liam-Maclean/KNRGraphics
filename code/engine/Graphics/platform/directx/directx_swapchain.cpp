@@ -1,11 +1,8 @@
-#include "qlpch.h"
 #define GLFW_EXPOSE_NATIVE_WIN32 = 1;
 #include "directx_graphics_context.h"
 #include "directx_swapchain.h"
-#include "GLFW/glfw3.h"
-#include "GLFW/glfw3native.h"
 
-namespace QRender
+namespace KNR
 {
 	DirectXSwapchain::DirectXSwapchain(void* windowPtr, int screenWidth, int screenHeight)
 	{

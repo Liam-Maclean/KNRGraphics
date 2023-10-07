@@ -1,10 +1,9 @@
-#include "qlpch.h"
 #include "directx_pipeline.h"
 #include "directx_graphics_context.h"
+#include "render_types.h"
 #include "d3dx12.h"
-#include "graphics/render_types.h"
 
-namespace QRender
+namespace KNR
 {
 	DirectXPipeline::DirectXPipeline(const PipelineCreateInfo& desc)
 	{
@@ -36,7 +35,6 @@ namespace QRender
 			{
 				rasterizer.FillMode = D3D12_FILL_MODE_SOLID;
 			}
-
 			if (m_pipelineCreateInfo.cullMode == CullingMode::frontface)
 			{
 				rasterizer.CullMode == D3D12_CULL_MODE_FRONT;
@@ -105,7 +103,7 @@ namespace QRender
 		m_pipelineState = 0;
 	}
 
-	void DirectXPipeline::Bind(Ref<DirectXCommandBuffer> commandList)
+	void DirectXPipeline::Bind(DirectXCommandBuffer* commandList)
 	{
 		//bind compute
 		if (m_pipelineCreateInfo.computeShader.pShaderBytecode != nullptr)
@@ -122,7 +120,7 @@ namespace QRender
 		}
 	}
 
-	void DirectXPipeline::Unbind(Ref<DirectXCommandBuffer> commandList)
+	void DirectXPipeline::Unbind(DirectXCommandBuffer* commandList)
 	{
 
 	}

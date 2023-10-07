@@ -1,7 +1,7 @@
 #include "directx_heap.h"
 #include <d3d12.h>
 
-namespace QRender
+namespace KNR
 {
 	DirectXHeap::~DirectXHeap()
 	{

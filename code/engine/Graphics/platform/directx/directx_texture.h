@@ -1,11 +1,10 @@
 #pragma once
-#include "graphics/texture.h"
-#include "graphics/platform/directx/directx_graphics_context.h"
-#include <d3d12.h>
+#include "platform/directx/directx_graphics_context.h"
+#include "texture.h"
 #include <string>
-#include "utilities/stb_image.hpp"
+#include <d3d12.h>
 
-namespace QRender
+namespace KNR
 {
 	class DirectXHeap;
 	class DirectXTexture2D : public Texture2D

@@ -1,7 +1,7 @@
 #pragma once
 #include "directx_pipeline_layout.h"
 #include <vector>
-namespace QRender
+namespace KNR
 {
 	enum class CullingMode;
 	struct PipelineCreateInfo
@@ -28,8 +28,8 @@ namespace QRender
 		DirectXPipeline();
 		~DirectXPipeline();
 
-		virtual void Bind(Ref<DirectXCommandBuffer> commandList);
-		virtual void Unbind(Ref<DirectXCommandBuffer> commandList);
+		virtual void Bind(DirectXCommandBuffer* commandList);
+		virtual void Unbind(DirectXCommandBuffer* commandList);
 
 		inline DirectXPipelineLayout* GetPipelineLayout() { return m_pipelineLayout; }
 		inline ID3D12PipelineState* GetPipeline() {return m_pipelineState; }

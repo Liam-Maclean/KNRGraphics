@@ -1,11 +1,9 @@
-#include <qlpch.h>
-#include "logging/log.h"
 #include "directx_command_buffer.h"
 #include "directx_graphics_context.h"
 #include <d3d12.h>
 #include "d3dx12.h"
 
-namespace QRender
+namespace KNR
 {
 	DirectXCommandBuffer::DirectXCommandBuffer(CommandBufferType type)
 	{
@@ -84,7 +82,6 @@ namespace QRender
 
 	void DirectXCommandBuffer::Submit(ID3D12CommandQueue* queue)
 	{
-		Q_RENDER_INFO("Copy work submitted");
 		ID3D12CommandList* ppCommandLists[] = { m_commandList };
 		queue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);	
 		m_fence->IncrementFenceValue();
@@ -130,7 +127,6 @@ namespace QRender
 	{
 		if (!m_workToBeSubmitted)
 		{
-			Q_RENDER_WARN("UpdateCopyResource has been called without the command list being manually reset, command list has been opened");
 			Reset();
 		}
 
@@ -141,7 +137,6 @@ namespace QRender
 	{
 		if (!m_workToBeSubmitted)
 		{
-			Q_RENDER_WARN("UpdateCopyResource has been called without the command list being manually reset, command list has been opened");
 			Reset();
 		}
 
@@ -153,7 +148,6 @@ namespace QRender
 	{
 		if (!m_workToBeSubmitted)
 		{
-			Q_RENDER_WARN("CopyResource has been called without the command list being manually reset, command list has been opened");
 			Reset();
 		}
 

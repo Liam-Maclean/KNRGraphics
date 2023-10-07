@@ -1,12 +1,10 @@
 #pragma once
-
-#include "graphics/platform/directx/directx_fence.h"
-#include "graphics/platform/directx/directx_command_buffer.h"
-#include "utilities/callback.h"
+#include "platform/directx/directx_fence.h"
+#include "platform/directx/directx_command_buffer.h"
 #include <d3d12.h>
 #include <dxgi1_5.h>
 struct GLFWwindow;
-namespace QRender
+namespace KNR
 {
     class CDirectXCopyContext
     {
@@ -40,7 +38,7 @@ namespace QRender
 
         DirectXCommandBuffer* m_copyCommandBuffer;
 
-        QCore::Delegate<> m_afterCopyCallbacks;
+        //QCore::Delegate<> m_afterCopyCallbacks;
         UINT8* m_mappingAddress;
     };
 }

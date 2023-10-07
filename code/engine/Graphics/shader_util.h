@@ -1,8 +1,7 @@
 #pragma once
-#include "core/core.h"
 #include <vector>
 
-namespace QRender
+namespace KNR
 {
 	enum class ShaderStage
 	{

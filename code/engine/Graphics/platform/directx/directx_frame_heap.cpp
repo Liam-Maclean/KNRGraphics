@@ -1,7 +1,7 @@
 #include "directx_frame_heap.h"
 #include "directx_graphics_context.h"
 
-namespace QRender
+namespace KNR
 {
 	DirectXFrameHeap::DirectXFrameHeap()
 	{
@@ -17,7 +17,7 @@ namespace QRender
 
 	}
 
-	void DirectXFrameHeap::StartFrame(Ref<DirectXCommandBuffer> commandList)
+	void DirectXFrameHeap::StartFrame(DirectXCommandBuffer* commandList)
 	{
 		frameStartIndex = currentHeapIndex;
 

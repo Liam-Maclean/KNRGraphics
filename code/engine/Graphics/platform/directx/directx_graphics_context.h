@@ -1,11 +1,10 @@
 #pragma once
-#define DirectXContext (*QRender::CDirectXContext::Get())
-#include "graphics/graphics_context.h"
-#include "graphics/platform/directx/directx_heap.h"
-#include "graphics/platform/directx/directx_frame_heap.h"
-#include "graphics/platform/directx/directx_fence.h"
-#include "graphics/platform/directx/directx_command_buffer.h"
-#include "platform/window_interface.h"
+#define DirectXContext (*KNR::CDirectXContext::Get())
+#include "graphics_context.h"
+#include "platform/directx/directx_heap.h"
+#include "platform/directx/directx_frame_heap.h"
+#include "platform/directx/directx_fence.h"
+#include "platform/directx/directx_command_buffer.h"
 #include "directx_swapchain.h"
 #include <d3d12.h>
 #include <dxgi1_5.h>
@@ -16,7 +15,7 @@ using RENDERERID = uint64_t;
 using RENDERERID = uint32_t;
 #endif
 
-namespace QRender
+namespace KNR
 {
     struct DirectXDescriptorHandleBlock {
         DirectXDescriptorHandleBlock() { cpuHandle.ptr = 0; gpuHandle.ptr = 0; };
@@ -35,10 +34,10 @@ namespace QRender
         }
 
         CDirectXContext();
-        CDirectXContext(IWindow* windowHandle);
+        CDirectXContext(WindowDesc* windowHandle);
         ~CDirectXContext();
 
-        void Init(IWindow* windowHandle);
+        void Init(WindowDesc* windowHandle);
         virtual void Init() override;
         virtual void SwapBuffers() override;
 
@@ -69,7 +68,7 @@ namespace QRender
         void CreateCommandList();
         void CreateReservedHeapAllocations();
 
-        IWindow* m_window;
+        WindowDesc* m_window;
         ID3D12Device* m_device;
         DirectXSwapchain* m_swapChain;
         DirectXHeap m_imguiHeap;

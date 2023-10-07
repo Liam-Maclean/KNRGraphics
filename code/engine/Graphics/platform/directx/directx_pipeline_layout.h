@@ -4,7 +4,7 @@
 #include <d3dcompiler.h>
 #include <vector>
 
-namespace QRender
+namespace KNR
 {
 	namespace DirectXVertexInputLayouts
 	{
@@ -80,14 +80,6 @@ namespace QRender
 		void AddUnorderedAccessView(const std::string& name, uint32_t registerSlot, ShaderVisibility visibility);
 		void AddSampler(const std::string& name, uint32_t registerSlot, SamplerType samplerType);
 		void CreateRootSignature();
-
-
-		void CreateForwardRootSignature();
-		void CreateDeferredRootSignature();
-		void CreateDeferredGerstnerRootSignature();
-		void CreateFXAARootSignature();
-		void CreateShadowRootSignature();
-		void CreateTAAResolveRootSignature();
 		ID3D12RootSignature* GetRootSignature() { return m_rootSignature; }
 
 	private:
@@ -101,6 +93,4 @@ namespace QRender
 		std::vector<CD3DX12_DESCRIPTOR_RANGE> m_descriptorRanges;
 		std::list< CD3DX12_DESCRIPTOR_RANGE> m_descriptorRangeList;
 	};
-
-
 }

@@ -2,17 +2,14 @@
 #include "directx_graphics_context.h"
 #include "directx_copy_context.h"
 #include "directx_framebuffer.h"
-#include "core/core.h"
-#include "logging/log.h"
-#include "utilities/stb_image.hpp"
 #include <d3d12.h>
 #include "d3dx12.h"
 
-namespace QRender
+namespace KNR
 {
-	Ref<Texture2D> Texture2D::Create(const TextureDescriptor& desc)
+	Texture2D* Texture2D::Create(const TextureDescriptor& desc)
 	{
-		return MakeRef<DirectXTexture2D>(desc);
+		return new DirectXTexture2D(desc);
 	}
 
 	DirectXTexture2D::DirectXTexture2D(const TextureDescriptor& desc)

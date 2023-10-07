@@ -1,8 +1,6 @@
-#include "qlpch.h"
 #include "screen_quad.h"
 
-
-namespace QRender
+namespace KNR
 {
 	ScreenQuad::ScreenQuad()
 	{
@@ -14,7 +12,7 @@ namespace QRender
 		BufferDescriptor vertexBufferDesc = {};
 		vertexBufferDesc.bufferAccessType = BufferAccessType::DEFAULT;
 		vertexBufferDesc.bufferType = BufferUsageType::VERTEX;
-		vertexBufferDesc.vertexBuffer.stride = sizeof(QRender::PrimitiveVertex);
+		vertexBufferDesc.vertexBuffer.stride = sizeof(KNR::PrimitiveVertex);
 		vertexBufferDesc.size = sizeof(QuadVertex) * m_quadVertices.size();
 		vertexBufferDesc.debugName = L"Screen Quad Vertex Buffer";
 		vertexBufferDesc.initialData = m_quadVertices.data();
@@ -26,7 +24,7 @@ namespace QRender
 	{
 	}
 
-	void ScreenQuad::Draw(Ref<DirectXCommandBuffer> commandList)
+	void ScreenQuad::Draw(DirectXCommandBuffer* commandList)
 	{
 		commandList->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 		m_vertexBuffer->Bind(commandList);

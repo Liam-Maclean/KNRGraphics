@@ -1,24 +1,14 @@
-#include "qlpch.h"
 #include <d3d12.h>
-#include "graphics/platform/directx/directx_shader.h"
-#include "graphics/platform/directx/directx_graphics_context.h"
-#include "graphics/shader_util.h"
-#include "graphics/shader_cache.h"
-//#include  "../dxc/dxcapi.h"
-#include "../dxcTest/inc/dxcapi.h"
-#include <logging/log.h>
-#include <d3dcompiler.h>
-#include <fstream>
+#include "platform/directx/directx_shader.h"
+#include "platform/directx/directx_graphics_context.h"
+#include "shader_util.h"
+#include "shader_cache.h"
 
-#include <glm/gtc/type_ptr.hpp>
-#include <fstream>
-#include <array>
-
-namespace QRender
+namespace KNR
 {
-	Ref<Shader> Shader::Create(const std::filesystem::path& shader)
+	Shader* Shader::Create(const std::filesystem::path& shader)
 	{
-		return MakeRef<DirectXShader>(shader);
+		return new DirectXShader(shader);
 	}
 
 	ShaderStage _ConvertExtensionToShaderStage(const std::string& extension)
@@ -55,13 +45,11 @@ namespace QRender
 
 			if (vertCache.ShaderNeedsCompiled() || true)
 			{
-				Q_RENDER_INFO("COMPILING SHADER: {0}", shader.string());
 				m_shaderBytecode = ShaderUtil::CompileHLSL(vertInfo);
 				vertCache.WriteToFile(m_shaderBytecode);
 			}
 			else
 			{
-				Q_RENDER_INFO("SHADER ALREADY EXISTS, GRABBING FROM CACHE: {0}", shader.string());
 				m_shaderBytecode = vertCache.ReadFromFile();
 			}
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "directx_heap.h"
 
-namespace QRender
+namespace KNR
 {
 	class DirectXCommandBuffer;
 	struct DirectXDescriptorHandleBlock;
@@ -23,7 +23,7 @@ namespace QRender
 	public:
 		DirectXFrameHeap();
 		~DirectXFrameHeap();
-		void StartFrame(Ref<DirectXCommandBuffer> commandList);
+		void StartFrame(DirectXCommandBuffer* commandList);
 		void EndFrame();
 		int CopyAllocate(int numDescriptors, DirectXHeap descriptorHeap, int offset = 0); //We still need this for unbound resources where we bind the entire heap
 		void CopyAllocate(DirectXDescriptorHandleBlock& descriptorHeapBlock, int offset = 0); //For binding individual resources

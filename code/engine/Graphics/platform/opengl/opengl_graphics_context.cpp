@@ -5,7 +5,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 
-namespace QRender
+namespace KNR
 {
 	COpenGLContext::COpenGLContext(GLFWwindow* windowHandle)
 		: window_handle(windowHandle) {}

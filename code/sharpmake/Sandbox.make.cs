@@ -25,13 +25,13 @@ public class KNRSln : Solution
     {
         conf.SolutionFileName = "[solution.Name]";
         conf.SolutionPath = Globals.ProjectRoot;
-        conf.AddProject<CoreProject>(target);
+        conf.AddProject<SandboxProject>(target);
         conf.AddProject<KNRGraphics>(target);
     }
 }
 
 [Generate]
-public class CoreProject : Sharpmake.Project
+public class SandboxProject : Sharpmake.Project
 {
     public string[] GetDefinesByOptimization(Target target)
     {
@@ -47,16 +47,16 @@ public class CoreProject : Sharpmake.Project
         return null;
     }
 
-    public CoreProject()
+    public SandboxProject()
     {
-        Name = "CoreProject";
+        Name = "Sandbox";
 
         AddTargets(new Target(
                 Platform.win32 | Platform.win64,
                 DevEnv.vs2019,
                 Optimization.Debug | Optimization.Release
         ));
-        SourceRootPath = @"[project.SharpmakeCsPath]\codebase";
+        SourceRootPath = Globals.CoreDir;
     }
     [Configure]
     public void ConfigureAll(Configuration conf, Target target)
@@ -67,8 +67,6 @@ public class CoreProject : Sharpmake.Project
         conf.Defines.AddRange(GetDefinesByOptimization(target));
 
         // if not set, no precompile option will be used.
-        conf.PrecompHeader = "stdafx.h";
-        conf.PrecompSource = "stdafx.cpp";
         conf.CustomProperties.Add("CustomOptimizationProperty", $"Custom-{target.Optimization}");
     }
 }

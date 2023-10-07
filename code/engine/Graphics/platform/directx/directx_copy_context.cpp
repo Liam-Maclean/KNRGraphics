@@ -1,18 +1,16 @@
-#include "qlpch.h"
 #include "directx_graphics_context.h"
 #include "d3dx12.h"
 #include "directx_copy_context.h"
 #include <d3dcompiler.h>
 #include <d3d12.h>
 #include <dxgi1_5.h>
-#include "GLFW/glfw3.h"
 
 #pragma comment(lib, "dxgi")
 #pragma comment(lib, "d3d12")
 
 #define DX12_FEATURE_LEVEL D3D_FEATURE_LEVEL_12_1
 
-namespace QRender
+namespace KNR
 {
 	CDirectXCopyContext::CDirectXCopyContext()
 	{

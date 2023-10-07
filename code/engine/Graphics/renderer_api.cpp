@@ -1,13 +1,14 @@
 #include "renderer_api.h"
 
-namespace QRender
+namespace KNR
 {
-#if defined(OPENGL)
+#if defined(PLATFORM_OPENGL)
 	RendererAPI::API RendererAPI::s_target_api = RendererAPI::API::OpenGL;
-#elif defined(VULKAN)
+#elif defined(PLATFORM_VULKAN)
 	RendererAPI::API RendererAPI::s_target_api = RendererAPI::API::Vulkan;
-#elif defined(DIRECTX)
-	RendererAPI::API RendererAPI::s_target_api = RendererAPI::API::DirectX;
-	//#error "Vulkan not yet implemented."
+#elif defined(PLATFORM_DX11)
+	RendererAPI::API RendererAPI::s_target_api = RendererAPI::API::DirectX11;
+#elif defined(PLATFORM_DX12)
+	RendererAPI::API RendererAPI::s_target_api = RendererAPI::API::DirectX12;
 #endif
 }

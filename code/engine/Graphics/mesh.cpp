@@ -1,8 +1,7 @@
-#include <qlpch.h>
+#include "knrpch.h"
 #include "mesh.h"
-#include "renderer.h"
 
-namespace QRender
+namespace KNR
 {
 	
 }

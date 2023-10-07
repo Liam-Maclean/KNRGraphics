@@ -1,6 +1,6 @@
 #pragma once
 
-namespace QRender
+namespace KNR
 {
 	class Texture2D;
 	enum class FramebufferTextureFormat
@@ -54,8 +54,8 @@ namespace QRender
 	public:
 		virtual ~Framebuffer() = default;
 
-		virtual void Bind(Ref<DirectXCommandBuffer> commandList) = 0;
-		virtual void Unbind(Ref<DirectXCommandBuffer> commandList) = 0;
+		virtual void Bind(DirectXCommandBuffer* commandList) = 0;
+		virtual void Unbind(DirectXCommandBuffer* commandList) = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) = 0;
@@ -65,9 +65,9 @@ namespace QRender
 		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
 
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
-		virtual Ref<Texture2D> GetFramebufferTexture(uint32_t slot) const = 0;
-		virtual Ref<Texture2D> GetDepthTexture() const = 0;
-		static Ref<Framebuffer> Create(const FramebufferSpecification& spec);
+		virtual Texture2D* GetFramebufferTexture(uint32_t slot) const = 0;
+		virtual Texture2D* GetDepthTexture() const = 0;
+		static Framebuffer* Create(const FramebufferSpecification& spec);
 	};
 
 

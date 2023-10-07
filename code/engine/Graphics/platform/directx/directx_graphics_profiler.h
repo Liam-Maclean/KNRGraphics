@@ -1,9 +1,9 @@
 #pragma once
-#include "graphics/graphics_profiler.h"
+#include "graphics_profiler.h"
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <vector>
-namespace QRender
+namespace KNR
 {
 	struct ProfileData;
 	class DirectXCommandBuffer;
@@ -13,8 +13,8 @@ namespace QRender
 	public:
 		DirectXGraphicsProfiler();
 		~DirectXGraphicsProfiler();
-		virtual uint64_t StartProfiler(Ref<DirectXCommandBuffer> commandList, const char* name) override;
-		virtual void EndProfiler(Ref<DirectXCommandBuffer> commandList, uint64_t idx)override;
+		virtual uint64_t StartProfiler(DirectXCommandBuffer* commandList, const char* name) override;
+		virtual void EndProfiler(DirectXCommandBuffer* commandList, uint64_t idx)override;
 		virtual void DisplayFrameData() override;
 		virtual void Update(ProfileData& profile, uint64_t profileIdx, bool drawText, uint64_t gpuFrequency, uint64_t* frameQueryData);
 

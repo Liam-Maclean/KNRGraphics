@@ -1,5 +1,3 @@
-#include "qlpch.h"
-
 #include "directx_buffer.h"
 #include "directx_graphics_context.h"
 #include "directx_copy_context.h"
@@ -8,12 +6,12 @@
 #include "directx_texture.h"
 #include "directx_technique.h"
 #include "directx_indirect_signature.h"
-#include "logging/log.h"
-#include <d3dcompiler.h>
 #include "d3dx12.h"
+#include <d3dcompiler.h>
+#include <basetsd.h>
 #pragma comment(lib, "d3dcompiler")
 
-namespace QRender
+namespace KNR
 {
 	DirectXRendererAPI::~DirectXRendererAPI()
 	{
@@ -51,22 +49,7 @@ namespace QRender
 
 	}
 
-	void DirectXRendererAPI::DrawIndexed(Ref<DirectXCommandBuffer> commandList, const Ref<VertexArray>& vertexArray, uint32_t indexCount)
-	{
-
-	}
-
-	void DirectXRendererAPI::DrawArrays(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
-	{
-		//vertexArray->Bind();
-	}
-
-	void DirectXRendererAPI::DrawLines(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
-	{
-		//vertexArray->Bind();
-	}
-
-	uint32_t DirectXRendererAPI::AppendBufferRegion(Ref<DirectXCommandBuffer> commandList, Ref<QRender::Buffer> dstBuffer, Ref<QRender::Buffer> srcBuffer)
+	uint32_t DirectXRendererAPI::AppendBufferRegion(DirectXCommandBuffer* commandList, KNR::Buffer* dstBuffer, KNR::Buffer* srcBuffer)
 	{
 		uint32_t destUsedSize = dstBuffer->GetUsedSize();
 		uint32_t destMaxCapacity = dstBuffer->GetCapacitySize();
@@ -81,12 +64,12 @@ namespace QRender
 		}
 		else
 		{
-			commandList->Get()->CopyBufferRegion(std::static_pointer_cast<DirectXBuffer>(dstBuffer)->GetD3D(), destUsedSize, std::static_pointer_cast<DirectXBuffer>(dstBuffer)->GetD3D(), 0, srcCopySize);
+			commandList->Get()->CopyBufferRegion(reinterpret_cast<DirectXBuffer*>(dstBuffer)->GetD3D(), destUsedSize, reinterpret_cast<DirectXBuffer*>(dstBuffer)->GetD3D(), 0, srcCopySize);
 			return combinedSize;
 		}
 	}
 
-	void DirectXRendererAPI::BindPipeline(Ref<DirectXCommandBuffer> commandList, Ref<QRender::Technique> technique)
+	void DirectXRendererAPI::BindPipeline(DirectXCommandBuffer* commandList, KNR::Technique* technique)
 	{
 		//Bind as normal
 		technique->Bind(commandList);
@@ -100,37 +83,37 @@ namespace QRender
 		}
 	}
 
-	void DirectXRendererAPI::BindVertexBuffer(Ref<DirectXCommandBuffer> commandList, Ref<Buffer> buffer)
+	void DirectXRendererAPI::BindVertexBuffer(DirectXCommandBuffer* commandList, Buffer* buffer)
 	{
-		commandList->Get()->IASetVertexBuffers(0, 1, std::static_pointer_cast<DirectXBuffer>(buffer)->GetD3DView<D3D12_VERTEX_BUFFER_VIEW*>());
+		commandList->Get()->IASetVertexBuffers(0, 1, reinterpret_cast<DirectXBuffer*>(buffer)->GetD3DView<D3D12_VERTEX_BUFFER_VIEW*>());
 	}
 
-	void DirectXRendererAPI::BindIndexBuffer(Ref<DirectXCommandBuffer> commandList, Ref<Buffer> buffer)
+	void DirectXRendererAPI::BindIndexBuffer(DirectXCommandBuffer* commandList, Buffer* buffer)
 	{
-		commandList->Get()->IASetIndexBuffer(std::static_pointer_cast<DirectXBuffer>(buffer)->GetD3DView<D3D12_INDEX_BUFFER_VIEW*>());
+		commandList->Get()->IASetIndexBuffer(reinterpret_cast<DirectXBuffer*>(buffer)->GetD3DView<D3D12_INDEX_BUFFER_VIEW*>());
 	}
 
-	void DirectXRendererAPI::BindUniformBuffer(Ref<DirectXCommandBuffer> commandList, Ref<Buffer> buffer, uint32_t bindslot)
+	void DirectXRendererAPI::BindUniformBuffer(DirectXCommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 	{
-		SetConstantBufferView(commandList, bindslot, std::static_pointer_cast<DirectXBuffer>(buffer)->GetD3D()->GetGPUVirtualAddress());
+		SetConstantBufferView(commandList, bindslot, reinterpret_cast<DirectXBuffer*>(buffer)->GetD3D()->GetGPUVirtualAddress());
 	}
 
-	void DirectXRendererAPI::BindStructuredBuffer(Ref<DirectXCommandBuffer> commandList, Ref<Buffer> buffer, uint32_t bindslot)
+	void DirectXRendererAPI::BindStructuredBuffer(DirectXCommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 	{
-		SetShaderResourceView(commandList, bindslot, std::static_pointer_cast<DirectXBuffer>(buffer)->GetD3D()->GetGPUVirtualAddress());
+		SetShaderResourceView(commandList, bindslot, reinterpret_cast<DirectXBuffer*>(buffer)->GetD3D()->GetGPUVirtualAddress());
 	}
 
-	void DirectXRendererAPI::DrawIndexedInstanced(Ref<DirectXCommandBuffer> commandList, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t baseVertexLocation, uint32_t startInstanceLocation)
+	void DirectXRendererAPI::DrawIndexedInstanced(DirectXCommandBuffer* commandList, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t baseVertexLocation, uint32_t startInstanceLocation)
 	{
 		commandList->Get()->DrawIndexedInstanced(indexCount, instanceCount, firstIndex, baseVertexLocation, startInstanceLocation);
 	}
 
-	void DirectXRendererAPI::DrawIndirect(Ref<DirectXCommandBuffer> commandList, Ref<IndirectSignature> indirectSignature, UINT commandCount, Ref<QRender::Buffer> argumentBuffer, UINT64 argumentBufferOffset, Ref<QRender::Buffer> countBuffer, UINT64 countBufferOffset)
+	void DirectXRendererAPI::DrawIndirect(DirectXCommandBuffer* commandList, IndirectSignature* indirectSignature, UINT commandCount, Buffer* argumentBuffer, UINT64 argumentBufferOffset, KNR::Buffer* countBuffer, UINT64 countBufferOffset)
 	{
-		commandList->Get()->ExecuteIndirect(indirectSignature->GetCommandSignature(), commandCount, std::static_pointer_cast<DirectXBuffer>(argumentBuffer)->GetD3D(), argumentBufferOffset, nullptr, countBufferOffset);
+		commandList->Get()->ExecuteIndirect(indirectSignature->GetCommandSignature(), commandCount, reinterpret_cast<DirectXBuffer*>(argumentBuffer)->GetD3D(), argumentBufferOffset, nullptr, countBufferOffset);
 	}
 
-	void DirectXRendererAPI::DispatchCompute(Ref<DirectXCommandBuffer> commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ)
+	void DirectXRendererAPI::DispatchCompute(DirectXCommandBuffer* commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ)
 	{
 
 	}
@@ -228,7 +211,6 @@ namespace QRender
 			copyCommandBuffer->Close();
 			copyCommandBuffer->Submit(copyQueue);
 			copyCommandBuffer->Wait();
-			Q_RENDER_INFO("Copy Command Finished");
 		}
 
 		RecordCommandBuffers();
@@ -301,11 +283,11 @@ namespace QRender
 
 		if (m_viewport.Width <= 0)
 		{
-			Q_RENDER_ERROR("VIEWPORT DIMENSIONS HAVE NOT BEEN SET BEFORE RENDERING, THIS WILL CAUSE A CRASH");
+			//Error
 		}
 		if (m_scissorRect.right <= 0)
 		{
-			Q_RENDER_ERROR("SCISSOR DIMENSIONS HAVE NOT BEEN SET BEFORE RENDERING, THIS WILL CAUSE A CRASH");
+			//Error
 		}
 
 		const float clearColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -344,19 +326,19 @@ namespace QRender
 		}
 	}
 
-	void DirectXRendererAPI::BlitToTexture(Ref<Texture2D> srcTx, Ref<Texture2D> dstTx)
+	void DirectXRendererAPI::BlitToTexture(Texture2D* srcTx, Texture2D* dstTx)
 	{
-		DirectXContext.StartBlit(std::static_pointer_cast<DirectXTexture2D>(srcTx)->GetTextureHandle(), std::static_pointer_cast<DirectXTexture2D>(dstTx)->GetTextureHandle(), srcTx->GetWidth(), srcTx->GetHeight());
+		DirectXContext.StartBlit(reinterpret_cast<DirectXTexture2D*>(srcTx)->GetTextureHandle(), reinterpret_cast<DirectXTexture2D*>(dstTx)->GetTextureHandle(), srcTx->GetWidth(), srcTx->GetHeight());
 		DirectXContext.EndBlit();
 	}
 
-	void DirectXRendererAPI::BlitToSwapchain(Ref<Texture2D> srcTx)
+	void DirectXRendererAPI::BlitToSwapchain(Texture2D* srcTx)
 	{
-		DirectXContext.StartBlitToSwapchain(std::static_pointer_cast<DirectXTexture2D>(srcTx)->GetTextureHandle(), m_backBufferRenderTarget[m_bufferIndex].Get(), srcTx->GetWidth(), srcTx->GetHeight());
+		DirectXContext.StartBlitToSwapchain(reinterpret_cast<DirectXTexture2D*>(srcTx)->GetTextureHandle(), m_backBufferRenderTarget[m_bufferIndex].Get(), srcTx->GetWidth(), srcTx->GetHeight());
 		DirectXContext.EndBlit();
 	}
 
-	void DirectXRendererAPI::SetRootConstant(Ref<DirectXCommandBuffer> commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues)
+	void DirectXRendererAPI::SetRootConstant(DirectXCommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -368,7 +350,7 @@ namespace QRender
 		}
 	}
 
-	void DirectXRendererAPI::SetRootConstants(Ref<DirectXCommandBuffer> commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* srcData, uint32_t destOffsetIn32BitValues)
+	void DirectXRendererAPI::SetRootConstants(DirectXCommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* srcData, uint32_t destOffsetIn32BitValues)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -380,7 +362,7 @@ namespace QRender
 		}
 	}
 
-	void DirectXRendererAPI::SetConstantBufferView(Ref<DirectXCommandBuffer> commandList, uint32_t bindSlot, UINT64 gpuAddress)
+	void DirectXRendererAPI::SetConstantBufferView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -392,7 +374,7 @@ namespace QRender
 		}
 	}
 
-	void DirectXRendererAPI::SetShaderResourceView(Ref<DirectXCommandBuffer> commandList, uint32_t bindSlot, UINT64 gpuAddress)
+	void DirectXRendererAPI::SetShaderResourceView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -404,7 +386,7 @@ namespace QRender
 		}
 	}
 
-	void DirectXRendererAPI::SetUnorderedAccessView(Ref<DirectXCommandBuffer> commandList, uint32_t bindSlot, UINT64 gpuAddress)
+	void DirectXRendererAPI::SetUnorderedAccessView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -416,7 +398,7 @@ namespace QRender
 		}
 	}
 
-	void DirectXRendererAPI::SetRootDescriptorTable(Ref<DirectXCommandBuffer> commandList, uint32_t bindSlot, UINT64 startGPUAddress)
+	void DirectXRendererAPI::SetRootDescriptorTable(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 startGPUAddress)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -448,7 +430,7 @@ namespace QRender
 	{
 		IDXGISwapChain3* swapchain = DirectXContext.GetSwapchain();
 		m_rtvHeapIndex = 0;
-		Q_RENDER_INFO("Creating Swapchain backbuffers");
+		
 		//Loop for each frame in flight
 		for (int i = 0; i < 3; ++i)
 		{

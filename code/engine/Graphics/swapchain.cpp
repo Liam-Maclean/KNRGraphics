@@ -1,6 +1,6 @@
 #include "swapchain.h"
 
-namespace QRender
+namespace KNR
 {
 	Swapchain::Swapchain()
 	{

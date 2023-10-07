@@ -1,10 +1,8 @@
 #include "shader_util.h"
-#include "core/core.h"
 #include <wrl/client.h>
-#include "../dxcTest/inc/dxcapi.h"
 #define SHADER_DEBUG_TRACE 1
 
-namespace QRender
+namespace KNR
 {
 	std::vector<uint32_t> ShaderUtil::CompileHLSL(ShaderInfo info)
 	{
@@ -54,21 +52,18 @@ namespace QRender
 		auto hr = DxcCreateInstance(CLSID_DxcUtils, IID_PPV_ARGS(dxc_utils.ReleaseAndGetAddressOf()));
 		if (FAILED(hr))
 		{
-			Q_CORE_ERROR("Failed to create 'IDxcUtils'");
 		}
 
 		ComPtr<IDxcIncludeHandler> include_handler;
 		hr = dxc_utils->CreateDefaultIncludeHandler(include_handler.ReleaseAndGetAddressOf());
 		if (FAILED(hr))
 		{
-			Q_CORE_ERROR("Failed to create 'IDxcIncludeHandler'");
 		}
 
 		ComPtr<IDxcCompiler3> dxc_compiler;
 		hr = DxcCreateInstance(CLSID_DxcCompiler, IID_PPV_ARGS(&dxc_compiler));
 		if (FAILED(hr))
 		{
-			Q_CORE_ERROR("Failed to create 'IDxcCompiler3'");
 		}
 
 		ComPtr<IDxcBlobEncoding> pSource;
@@ -94,7 +89,6 @@ namespace QRender
 		{
 #if SHADER_DEBUG_TRACE
 			//Output shader errors
-			Q_RENDER_TRACE(info.sourcePath + ": " + pErrors->GetStringPointer());
 #endif
 		}
 
@@ -105,7 +99,6 @@ namespace QRender
 		if (FAILED(hr))
 		{
 			//Output shader errors
-			Q_RENDER_ERROR(info.sourcePath + ": Failed to get shader output");
 		}
 
 		//// Get shader output

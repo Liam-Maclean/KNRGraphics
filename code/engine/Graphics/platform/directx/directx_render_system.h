@@ -1,30 +1,14 @@
 #pragma once
 
-#include "graphics/framebuffer.h"
-#include "graphics/shader.h"
-#include "graphics/texture.h"
-#include "graphics/screen_quad.h"
-#include "imgui.h"
-#include "ImGuizmo.h"
-#include "entt/entt.hpp"
+#include "framebuffer.h"
+#include "shader.h"
+#include "texture.h"
+#include "screen_quad.h"
 
-#define ScreenQuadObject (*QRender::RenderQuadSystem::GetScreenQuad())
+#define ScreenQuadObject (*KNR::RenderQuadSystem::GetScreenQuad())
 
-namespace QCore
+namespace KNR
 {
-	class GLTFStructure;
-}
-
-namespace QRender
-{
-	
-	class IRenderListSystem
-	{
-	public:
-		virtual void AddModelToRenderList(Ref<QCore::GLTFStructure>& model) = 0;
-		virtual void SetRenderList(std::vector<Ref<QCore::GLTFStructure>>& renderList) = 0;
-	};
-
 	class RenderSystemManager;
 	class RenderSystem 
 	{
@@ -43,12 +27,12 @@ namespace QRender
 		virtual void DebugDraw() = 0;
 		virtual void SetColorOutputAsFinalRenderTarget();
 		virtual void SetDepthOutputAsFinalRenderTarget();
-		inline Ref<QRender::Framebuffer> GetFramebuffer() { return m_framebuffer; }
+		inline Framebuffer* GetFramebuffer() { return m_framebuffer; }
 	protected:
 		
 		RenderSystemManager& m_manager;
-		Ref<QRender::Framebuffer> m_framebuffer;
-		Ref<QRender::Shader> m_shader; 
+		Framebuffer* m_framebuffer;
+		Shader* m_shader; 
 		std::vector<std::function<void()>> m_recordedCallbacks;
 	};
 
@@ -57,7 +41,7 @@ namespace QRender
 	public:
 		RenderQuadSystem(RenderSystemManager& manager);
 		virtual ~RenderQuadSystem();
-		static QRender::ScreenQuad* GetScreenQuad()
+		static KNR::ScreenQuad* GetScreenQuad()
 		{
 			static auto screenQuad = new ScreenQuad();
 			return screenQuad;

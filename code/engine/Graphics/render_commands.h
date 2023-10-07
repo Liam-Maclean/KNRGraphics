@@ -2,7 +2,7 @@
 
 #include "renderer_api.h"
 
-namespace QRender
+namespace KNR
 {
 	class Technique;
 	class DirectXCommandBuffer;
@@ -24,27 +24,12 @@ namespace QRender
 			sRendererAPI->Clear();
 		}
 
-		inline static void DrawIndexed(Ref<DirectXCommandBuffer> commandList, Ref<VertexArray>& vertexArray, uint32_t indexCount = 0)
-		{
-			sRendererAPI->DrawIndexed(commandList, vertexArray, indexCount);
-		}
-
-		inline static void DrawArrays(const Ref<VertexArray>& vertexArray, uint32_t vertexCount)
-		{
-			sRendererAPI->DrawArrays(vertexArray, vertexCount);
-		}
-
-		inline static void DrawLines(Ref<VertexArray>& vertexArray, uint32_t vertexCount = 0)
-		{
-			sRendererAPI->DrawLines(vertexArray, vertexCount);
-		}
-
-		inline static void IndirectDraw(Ref<DirectXCommandBuffer> commandList, Ref<IndirectSignature> indirectSignature, uint32_t commandCount, Ref<QRender::Buffer> commandArgBuffer, uint32_t argOffset, Ref<QRender::Buffer> countBuffer, uint32_t countBufferOffset)
+		inline static void IndirectDraw(DirectXCommandBuffer* commandList, IndirectSignature* indirectSignature, uint32_t commandCount, Buffer* commandArgBuffer, uint32_t argOffset, Buffer* countBuffer, uint32_t countBufferOffset)
 		{
 			sRendererAPI->DrawIndirect(commandList, indirectSignature, commandCount, commandArgBuffer, argOffset, nullptr, countBufferOffset);
 		}
 
-		inline static void DispatchCompute(Ref<DirectXCommandBuffer> commandList, uint32_t dispatchThreadCountX, uint32_t dispatchThreadCountY, uint32_t dispatchThreadCountZ)
+		inline static void DispatchCompute(DirectXCommandBuffer* commandList, uint32_t dispatchThreadCountX, uint32_t dispatchThreadCountY, uint32_t dispatchThreadCountZ)
 		{
 			sRendererAPI->DispatchCompute(commandList, dispatchThreadCountX, dispatchThreadCountY, dispatchThreadCountZ);
 		}
@@ -64,12 +49,12 @@ namespace QRender
 			sRendererAPI->SetSwapchainRenderTarget();
 		}
 
-		inline static void BlitToTexture(Ref<Texture2D> srcTx, Ref<Texture2D> dstTx)
+		inline static void BlitToTexture(Texture2D* srcTx, Texture2D* dstTx)
 		{
 			sRendererAPI->BlitToTexture(srcTx, dstTx);
 		}
 
-		inline static void BlitToSwapchain(Ref<Texture2D> srcTx)
+		inline static void BlitToSwapchain(Texture2D* srcTx)
 		{
 			sRendererAPI->BlitToSwapchain(srcTx);
 		}
@@ -84,62 +69,62 @@ namespace QRender
 			return sRendererAPI->GetFinalRenderTextureId();
 		}
 
-		inline static uint32_t AppendBufferRegion(Ref<DirectXCommandBuffer> commandList, Ref<QRender::Buffer> dstBuffer, Ref<QRender::Buffer> srcBuffer)
+		inline static uint32_t AppendBufferRegion(DirectXCommandBuffer* commandList, Buffer* dstBuffer, Buffer* srcBuffer)
 		{
 			return sRendererAPI->AppendBufferRegion(commandList, dstBuffer, srcBuffer);
 		}
 
-		inline static void BindPipeline(Ref<DirectXCommandBuffer> commandList, Ref<QRender::Technique> technique)
+		inline static void BindPipeline(DirectXCommandBuffer* commandList, Technique* technique)
 		{
 			sRendererAPI->BindPipeline(commandList, technique);
 		}
 
-		inline static void BindVertexBuffer(Ref<DirectXCommandBuffer> commandList, Ref<QRender::Buffer> buffer)
+		inline static void BindVertexBuffer(DirectXCommandBuffer* commandList, Buffer* buffer)
 		{
 			sRendererAPI->BindVertexBuffer(commandList, buffer);
 		}
 
-		inline static void BindIndexBuffer(Ref<DirectXCommandBuffer> commandList, Ref<QRender::Buffer> buffer)
+		inline static void BindIndexBuffer(DirectXCommandBuffer* commandList, Buffer* buffer)
 		{
 			sRendererAPI->BindIndexBuffer(commandList,buffer);
 		}
 
-		inline static void BindUniformBuffer(Ref<DirectXCommandBuffer> commandList, Ref<QRender::Buffer> buffer, uint32_t bindslot)
+		inline static void BindUniformBuffer(DirectXCommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 		{
 			sRendererAPI->BindUniformBuffer(commandList, buffer, bindslot);
 		}
 
-		inline static void BindStructuredBuffer(Ref<DirectXCommandBuffer> commandList, Ref<QRender::Buffer> buffer, uint32_t bindslot)
+		inline static void BindStructuredBuffer(DirectXCommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 		{
 			sRendererAPI->BindStructuredBuffer(commandList, buffer, bindslot);
 		}
 
-		inline static void SetRootConstant(Ref<DirectXCommandBuffer> commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues)
+		inline static void SetRootConstant(DirectXCommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues)
 		{
 			sRendererAPI->SetRootConstant(commandList, rootParameterIndex, srcData, destOffsetIn32BitValues);
 		}
 
-		inline static void SetRootConstants(Ref<DirectXCommandBuffer> commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* data, uint32_t destOffsetIn32BitValues)
+		inline static void SetRootConstants(DirectXCommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* data, uint32_t destOffsetIn32BitValues)
 		{
 			sRendererAPI->SetRootConstants(commandList, rootParameterIndex, numValuesSet, data, destOffsetIn32BitValues);
 		}
 
-		inline static void SetConstantBufferView(Ref<DirectXCommandBuffer> commandList, uint32_t bindSlot, UINT64 gpuAddress)
+		inline static void SetConstantBufferView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 		{
 			sRendererAPI->SetConstantBufferView(commandList, bindSlot, gpuAddress);
 		}
 
-		inline static void SetShaderResourceView(Ref<DirectXCommandBuffer> commandList, uint32_t bindSlot, UINT64 gpuAddress)
+		inline static void SetShaderResourceView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 		{
 			sRendererAPI->SetShaderResourceView(commandList, bindSlot, gpuAddress);
 		}
 
-		inline static void SetUnorderedAccessView(Ref<DirectXCommandBuffer> commandList, uint32_t bindSlot, UINT64 gpuAddress)
+		inline static void SetUnorderedAccessView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 		{
 			sRendererAPI->SetUnorderedAccessView(commandList, bindSlot, gpuAddress);
 		}
 
-		inline static void SetRootDescriptorTable(Ref<DirectXCommandBuffer> commandList, uint32_t bindSlot, UINT64 startGPUAddress)
+		inline static void SetRootDescriptorTable(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 startGPUAddress)
 		{
 			sRendererAPI->SetRootDescriptorTable(commandList, bindSlot, startGPUAddress);
 		}

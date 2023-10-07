@@ -1,10 +1,7 @@
 #pragma once
-#include "core/core.h"
-#include "maths/maths.h"
-#include "maths/geometry.hpp"
 #include "framebuffer.h"
 
-namespace QRender
+namespace KNR
 {
 	enum class TextureUsage
 	{
@@ -77,6 +74,6 @@ namespace QRender
 		: public Texture
 	{
 	public:
-		static Ref<Texture2D> Create(const TextureDescriptor& desc);
+		static Texture2D* Create(const TextureDescriptor& desc);
 	};
 }

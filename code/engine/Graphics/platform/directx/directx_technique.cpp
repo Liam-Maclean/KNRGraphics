@@ -1,12 +1,11 @@
-#include "qlpch.h"
 #include "directx_technique.h"
-#include "graphics/platform/directx/directx_graphics_context.h"
+#include "directx_graphics_context.h"
 
-namespace QRender
+namespace KNR
 {
-	Ref<Technique> Technique::Create(PipelineCreateInfo pipelineCreateInfo)
+	Technique* Technique::Create(PipelineCreateInfo pipelineCreateInfo)
 	{
-		return MakeRef<DirectXTechnique>(pipelineCreateInfo);
+		return new DirectXTechnique(pipelineCreateInfo);
 	}
 
 	DirectXTechnique::DirectXTechnique(PipelineCreateInfo pipelineCreateInfo)
@@ -20,12 +19,12 @@ namespace QRender
 
 	}
 
-	void DirectXTechnique::Bind(Ref<DirectXCommandBuffer> commandList) const
+	void DirectXTechnique::Bind(DirectXCommandBuffer* commandList) const
 	{
 		m_pipeline->Bind(commandList);
 	}
 
-	void DirectXTechnique::Unbind(Ref<DirectXCommandBuffer> commandList) const
+	void DirectXTechnique::Unbind(DirectXCommandBuffer* commandList) const
 	{
 
 	}

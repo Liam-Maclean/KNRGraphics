@@ -1,9 +1,9 @@
 #pragma once
 #include <cstdint>
-#include "graphics/buffer.h"
+#include "buffer.h"
 #include "directx_graphics_context.h"
 #include <d3d12.h>
-namespace QRender
+namespace KNR
 {
 	class DirectXBuffer
 		: public Buffer
@@ -12,8 +12,8 @@ namespace QRender
 		DirectXBuffer(const BufferDescriptor& desc);
 		~DirectXBuffer();
 
-		virtual void Bind(Ref<DirectXCommandBuffer> commandList) const override;
-		virtual void Unbind(Ref<DirectXCommandBuffer> commandList) const override;
+		virtual void Bind(DirectXCommandBuffer* commandList) const override;
+		virtual void Unbind(DirectXCommandBuffer* commandList) const override;
 
 		virtual void* Map() override;
 		virtual void UnMap() override;

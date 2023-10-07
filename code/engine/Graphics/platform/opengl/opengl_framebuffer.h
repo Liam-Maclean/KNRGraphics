@@ -1,8 +1,8 @@
 #pragma once 
-#include "graphics/framebuffer.h"
+#include "framebuffer.h"
 
 
-namespace Qualia
+namespace KNR
 {
 	class OpenGLFramebuffer 
 		: public Framebuffer

@@ -1,8 +1,9 @@
 #pragma once 
-#include "graphics/framebuffer.h"
+#include "framebuffer.h"
 #include <cassert>
 #include "vulkan/vulkan.h"
-#include "graphics/platform/vulkan/vulkan_util.h"
+#include "platform/vulkan/vulkan_util.h"
+
 
 namespace Qualia
 {

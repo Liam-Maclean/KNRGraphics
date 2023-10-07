@@ -2,11 +2,11 @@
 #include "directx_graphics_context.h"
 #include "directx_copy_context.h"
 #include "d3dx12.h"
-namespace QRender
+namespace KNR
 {
-	Ref<Buffer> Buffer::Create(const BufferDescriptor& desc)
+	Buffer* Buffer::Create(const BufferDescriptor& desc)
 	{
-		return MakeRef<DirectXBuffer>(desc);
+		return new DirectXBuffer(desc);
 	}
 
 	DirectXBuffer::DirectXBuffer(const BufferDescriptor& desc)
@@ -149,12 +149,12 @@ namespace QRender
 		m_resource = nullptr;
 	}
 
-	void DirectXBuffer::Bind(Ref<DirectXCommandBuffer> commandList) const
+	void DirectXBuffer::Bind(DirectXCommandBuffer* commandList) const
 	{
 
 	}
 
-	void DirectXBuffer::Unbind(Ref<DirectXCommandBuffer> commandList) const
+	void DirectXBuffer::Unbind(DirectXCommandBuffer* commandList) const
 	{
 
 	}

@@ -1,19 +1,13 @@
-#include "qlpch.h"
 #include "directx_graphics_context.h"
-#include <d3dcompiler.h>
-#include "d3dx12.h"
-#include <d3d12.h>
-#include <dxgi1_5.h>
-#include "GLFW/glfw3.h"
-#include "platform/window_interface.h"
 #include "directx_texture.h"
-
+#include "window.h"
+#include "d3dx12.h"
 #pragma comment(lib, "dxgi")
 #pragma comment(lib, "d3d12")
 
 #define DX12_FEATURE_LEVEL D3D_FEATURE_LEVEL_12_1
 
-namespace QRender
+namespace KNR
 {
 	CDirectXContext::CDirectXContext()
 	{
@@ -21,7 +15,7 @@ namespace QRender
 		m_commandList = 0;
 		m_swapChain = 0;
 	}
-	CDirectXContext::CDirectXContext(IWindow* windowHandle)
+	CDirectXContext::CDirectXContext(WindowDesc* windowHandle)
 		: m_window(windowHandle)
 	{
 		m_device = 0;
@@ -64,7 +58,7 @@ namespace QRender
 
 	}
 
-	void CDirectXContext::Init(IWindow* windowHandle)
+	void CDirectXContext::Init(WindowDesc* windowHandle)
 	{
 		m_window = windowHandle;
 
@@ -76,12 +70,12 @@ namespace QRender
 
 		m_blitFence = new DirectXFence(false);
 		m_frameHeap = new DirectXFrameHeap();
-		m_copyCommandBuffer = new DirectXCommandBuffer(QRender::CommandBufferType::graphics);
+		m_copyCommandBuffer = new DirectXCommandBuffer(KNR::CommandBufferType::graphics);
 	}
 
 	void CDirectXContext::SwapBuffers()
 	{
-		glfwPollEvents();
+		//glfwPollEvents();
 	}
 
 	void CDirectXContext::StartBlit(ID3D12Resource* srcResource, ID3D12Resource* dstResource, int width, int height)
@@ -156,7 +150,6 @@ namespace QRender
 		ID3D12Debug* debugInterface;
 		ID3D12Debug1* debugInterface1;
 
-		Q_RENDER_INFO("Creating D3D12Device");
 		HRESULT hr = D3D12GetDebugInterface(IID_PPV_ARGS(&debugInterface));
 		if (FAILED(hr))
 		{
@@ -210,16 +203,8 @@ namespace QRender
 		int error = wcstombs_s(&stringLength, m_videoCardDescription, 128, adapterDesc.Description, 128);
 		if (error != 0)
 		{
-			Q_RENDER_WARN("Failed to retrieve video card description");
-		}
 
-		Q_RENDER_INFO("");
-		Q_RENDER_INFO("");
-		Q_RENDER_INFO("Graphics card: {0}", m_videoCardDescription);
-		Q_RENDER_INFO("VRAM: {0}MB", m_videoCardMemory);
-		Q_RENDER_INFO("Shared System Memory: {0}MB", m_systemMemory);
-		Q_RENDER_INFO("");
-		Q_RENDER_INFO("");
+		}
 	}
 
 	void CDirectXContext::CreateQueues()
@@ -262,12 +247,9 @@ namespace QRender
 	void CDirectXContext::CreateSwapchain()
 	{
 		//Liam fix - need IWindow size here (width and height)
-		int width = m_window->GetWidth();
-		int height = m_window->GetHeight();
-		Q_RENDER_INFO("Creating Swapchain with dimensions");
-		Q_RENDER_INFO("Width: {0}", width);
-		Q_RENDER_INFO("Height: {0}", height);
-		m_swapChain = new DirectXSwapchain(m_window->GetNativeWindow(), m_window->GetWidth(), m_window->GetHeight());
+		int width = m_window->width;
+		int height = m_window->height;
+		m_swapChain = new DirectXSwapchain(m_window->hwnd, m_window->width, m_window->height);
 	}
 
 	void CDirectXContext::CreateCommandList()

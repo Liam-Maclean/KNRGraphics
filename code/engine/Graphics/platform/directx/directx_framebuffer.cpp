@@ -1,15 +1,14 @@
 #include "directx_framebuffer.h"
 #include <cassert>
-#include <logging/log.h>
 #include "d3dx12.h"
 #include "directx_frame_heap.h"
 
 
-namespace QRender
+namespace KNR
 {
-	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpecification& spec)
+	Framebuffer* Framebuffer::Create(const FramebufferSpecification& spec)
 	{
-		return MakeRef<DirectXFramebuffer>(spec);
+		return new DirectXFramebuffer(spec);
 	}
 
 	static const uint32_t s_MaxFramebufferSize = 8192;
@@ -97,14 +96,14 @@ namespace QRender
 				m_ColorAttachments.resize(m_ColorAttachmentSpecifications.size());
 				for (int i = 0; i < m_ColorAttachmentSpecifications.size(); ++i)
 				{
-					QRender::TextureDescriptor textureDesc = {};
+					KNR::TextureDescriptor textureDesc = {};
 					textureDesc.textureType = TextureType::FRAMEBUFFER;
 					textureDesc.textureUsage = TextureUsage::RENDERTARGET;
 					textureDesc.textureFramebuffer.framebufferSpec = &m_Specification;
 					textureDesc.textureFramebuffer.framebufferTextureSpec = &m_ColorAttachmentSpecifications[i];
 					textureDesc.debugName = L"Color Render Target";
 
-					m_framebufferTexture.push_back(std::static_pointer_cast<DirectXTexture2D>(Texture2D::Create(textureDesc)));
+					m_framebufferTexture.push_back(reinterpret_cast<DirectXTexture2D*>(Texture2D::Create(textureDesc)));
 					m_RendererID = m_framebufferTexture[i]->GetEditorRenderId();
 					m_framebufferTexture[i]->CreateRTV(&m_RTVHeap);
 				}
@@ -124,14 +123,14 @@ namespace QRender
 		{
 			if (m_DepthAttachmentSpecification.TextureFormat != FramebufferTextureFormat::None)
 			{
-				QRender::TextureDescriptor textureDesc = {};
+				KNR::TextureDescriptor textureDesc = {};
 				textureDesc.textureType = TextureType::FRAMEBUFFER;
 				textureDesc.textureUsage = TextureUsage::RENDERTARGET;
 				textureDesc.textureFramebuffer.framebufferSpec = &m_Specification;
 				textureDesc.textureFramebuffer.framebufferTextureSpec = &m_DepthAttachmentSpecification;
 				textureDesc.debugName = L"Depth Render Target";
 
-				m_framebufferDepthTexture = std::static_pointer_cast<DirectXTexture2D>(Texture2D::Create(textureDesc));
+				m_framebufferDepthTexture = reinterpret_cast<DirectXTexture2D*>(Texture2D::Create(textureDesc));
 				m_framebufferDepthTexture->CreateDSV(&m_DSVHeap);
 
 				m_DepthAttachment = 1;
@@ -145,7 +144,7 @@ namespace QRender
 		m_srvLastFrame = true;
 	}
 
-	void DirectXFramebuffer::Bind(Ref<DirectXCommandBuffer> commandList)
+	void DirectXFramebuffer::Bind(DirectXCommandBuffer* commandList)
 	{
 		DirectXFrameHeap* frameHeap = DirectXContext.GetFrameHeap();
 		//Starts the frame, initializing the descriptor table index to 0
@@ -222,7 +221,7 @@ namespace QRender
 		}
 	}
 
-	void DirectXFramebuffer::Unbind(Ref<DirectXCommandBuffer> commandList)
+	void DirectXFramebuffer::Unbind(DirectXCommandBuffer* commandList)
 	{
 		std::vector<D3D12_RESOURCE_BARRIER> rtvToResourceBarriers;
 		if (m_framebufferTexture.size() != 0)

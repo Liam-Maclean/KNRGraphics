@@ -1,10 +1,10 @@
-#include "qlpch.h"
 #include "directx_pipeline_layout.h"
 #include "directx_graphics_context.h"
 #include <d3dcompiler.h>
 #include "d3dx12.h"
 #include <vector>
-namespace QRender
+#include <utility>
+namespace KNR
 {
 	constexpr D3D12_SHADER_VISIBILITY _ConvertShaderVisibility(ShaderVisibility visibility)
 	{

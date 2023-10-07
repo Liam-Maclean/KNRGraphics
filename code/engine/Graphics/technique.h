@@ -1,11 +1,8 @@
 #pragma once
-#include "core/core.h"
-#include "logging/log.h"
-#include "maths/maths.h"
-#include "graphics/platform/directx/directx_pipeline.h"
+#include "platform/directx/directx_pipeline.h"
 
 
-namespace QRender
+namespace KNR
 {
 	class DirectXCommandBuffer;
 	class Technique
@@ -15,10 +12,10 @@ namespace QRender
 
 		std::string GetName() { return m_name; }
 
-		virtual void Bind(Ref<DirectXCommandBuffer> commandList) const = 0;
-		virtual void Unbind(Ref<DirectXCommandBuffer> commandList) const = 0;
+		virtual void Bind(DirectXCommandBuffer* commandList) const = 0;
+		virtual void Unbind(DirectXCommandBuffer* commandList) const = 0;
 
-		static Ref<Technique> Create(PipelineCreateInfo pipelineCreateInfo);
+		static Technique* Create(PipelineCreateInfo pipelineCreateInfo);
 	protected:
 		std::string m_name;
 	};

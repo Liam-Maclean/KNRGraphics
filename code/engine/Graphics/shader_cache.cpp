@@ -1,7 +1,6 @@
 #include "shader_cache.h"
-#include "core/core.h"
 
-namespace QRender
+namespace KNR
 {
 	void ShaderCache::Init(const std::string& sourcePath)
 	{
@@ -18,14 +17,9 @@ namespace QRender
 	}
 	std::string ShaderCache::ParseFileAndIncludes(const std::string& sourcePath)
 	{
-        if (!std::filesystem::exists(sourcePath))
-            Q_CORE_ERROR("file does not exist!");
-
         std::filesystem::path path(sourcePath);
         std::ifstream file;
         file.open(path.string(), std::ios::in | std::ios::ate | std::ios::binary);
-        if(!file.is_open())
-            Q_CORE_ERROR("file could not be opened!");
 
         //read the file out to code string
         std::string code;
@@ -43,8 +37,6 @@ namespace QRender
 	{
 		std::ifstream file;
 		file.open(m_tempFilePath, std::ios::in | std::ios::binary);
-		if (!file.is_open())
-			Q_CORE_ERROR("failed to open file!");
 
 		//Read everything out using a string stream and grab the string for it 
 		std::string buffer;
@@ -71,9 +63,6 @@ namespace QRender
 
 		std::ofstream file;
 		file.open(path.string(), std::ios::out | std::ios::trunc | std::ios::binary);
-
-		if (!file.is_open())
-			Q_CORE_ERROR("failed to open file!");
 
 		file.write(reinterpret_cast<char*>(shaderBytecode.data()), shaderBytecode.size() * sizeof(uint32_t));
 		file.close();

@@ -1,9 +1,9 @@
 #pragma once
-#include "graphics/swapchain.h"
+#include "swapchain.h"
 #include <d3d12.h>
 #include <dxgi1_4.h>
-class GLFWWindow;
-namespace QRender
+
+namespace KNR
 {
 	class DirectXSwapchain : public Swapchain
 	{
@@ -13,7 +13,6 @@ namespace QRender
 		IDXGISwapChain3* GetSwapchain(){return m_swapChain; }
 	private:
 		IDXGISwapChain3* m_swapChain;
-
 	};
 }
 

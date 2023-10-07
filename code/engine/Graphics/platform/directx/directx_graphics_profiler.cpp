@@ -3,13 +3,12 @@
 #include "directx_graphics_profiler.h"
 #include "directx_graphics_context.h"
 #include <algorithm>
-#include "imgui.h"
 
-namespace QRender
+namespace KNR
 {
-	Ref<GraphicsProfiler> GraphicsProfiler::Create()
+	GraphicsProfiler* GraphicsProfiler::Create()
 	{
-		return MakeRef<DirectXGraphicsProfiler>();
+		return new DirectXGraphicsProfiler();
 	}
 
 	struct ProfileData
@@ -47,7 +46,7 @@ namespace QRender
 		m_readbackBuffer = 0;
 	}
 
-	uint64_t DirectXGraphicsProfiler::StartProfiler(Ref<DirectXCommandBuffer> commandList, const char* name)
+	uint64_t DirectXGraphicsProfiler::StartProfiler(DirectXCommandBuffer* commandList, const char* name)
 	{
 		PIXBeginEvent(commandList->Get(), 0, name);
 		uint64_t profileIdx = -1;
@@ -82,7 +81,7 @@ namespace QRender
 		return profileIdx;
 	}
 
-	void DirectXGraphicsProfiler::EndProfiler(Ref<DirectXCommandBuffer> commandList, uint64_t idx)
+	void DirectXGraphicsProfiler::EndProfiler(DirectXCommandBuffer* commandList, uint64_t idx)
 	{
 
 		const uint32_t startQueryIdx = (uint32_t)(idx * 2);

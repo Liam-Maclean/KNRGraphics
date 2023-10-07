@@ -1,8 +1,7 @@
 #pragma once
-#include "graphics/platform/directx/directx_fence.h"
-#include "utilities/callback.h"
+#include "platform/directx/directx_fence.h"
 #include <d3d12.h>
-namespace QRender
+namespace KNR
 {
 	enum class CommandBufferType
 	{

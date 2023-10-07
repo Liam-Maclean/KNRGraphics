@@ -1,69 +1,72 @@
 using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
-
-public enum GraphicsPlatform 
-{
-    DIRECTX12,
-    DIRECTX11,
-    VULKAN,
-}
 [Generate]
 public class KNRGraphics : Sharpmake.Project
 {
+
+    public enum GraphicsPlatform 
+    {
+        DIRECTX12,
+        DIRECTX11,
+        VULKAN,
+        OPENGL,
+    }
+
     public GraphicsPlatform m_GraphicsAPI = GraphicsPlatform.DIRECTX12;
 
     public string[] GetIncludeDirectoriesByGraphicsAPI(GraphicsPlatform platform)
     {
         switch (platform)
         {
-            case DIRECTX12:
+            case GraphicsPlatform.DIRECTX12:
                 return new[] {
                     "platform/directx12",
                 };
-            case DIRECTX11:
+            case GraphicsPlatform.DIRECTX11:
                 return new[] {
                     "platform/directx11",
                 };
-            case VULKAN:
+            case GraphicsPlatform.VULKAN:
                 return new[] {
                     "platform/vulkan",
                 };
-                case OPENGL:
+            case GraphicsPlatform.OPENGL:
                 return new[] {
                     "platform/opengl",
                 };         
         }
+
+        return null;
     }
 
     public string[] GetExcludeDirectoriesByGraphicsAPI(GraphicsPlatform platform)
     {
         switch (platform)
         {
-            case DIRECTX12:
+            case GraphicsPlatform.DIRECTX12:
                 return new[] {
-                    "platform/directx11",
-                    "platform/vulkan",
-                    "platform/opengl",
+                    "directx11",
+                    "vulkan",
+                    "opengl",
                 };
-            case DIRECTX11:
+            case GraphicsPlatform.DIRECTX11:
                 return new[] {
-                    "platform/directx12",
-                    "platform/vulkan",
-                    "platform/opengl",
+                    "directx12",
+                    "vulkan",
+                    "opengl",
                 };
-            case VULKAN:
+            case GraphicsPlatform.VULKAN:
                 return new[] {
-                    "platform/directx12",
-                    "platform/directx11",
-                    "platform/opengl",
+                    "directx12",
+                    "directx11",
+                    "opengl",
                 };
-            case OPENGL:
+            case GraphicsPlatform.OPENGL:
                 return new[] {
-                    "platform/directx12",
-                    "platform/directx11",
-                    "platform/vulkan",
-                    "platform/opengl",
+                    "directx12",
+                    "directx11",
+                    "vulkan",
                 };       
         }
 
@@ -75,24 +78,49 @@ public class KNRGraphics : Sharpmake.Project
     {
         switch (platform)
         {
-            case DIRECTX12:
+            case GraphicsPlatform.DIRECTX12:
                 return new[] {
                     "PLATFORM_DX12",
                 };
-            case DIRECTX11:
+            case GraphicsPlatform.DIRECTX11:
                 return new[] {
                     "PLATFORM_DX11",
                 };
-            case VULKAN:
+            case GraphicsPlatform.VULKAN:
                 return new[] {
                     "PLATFORM_VULKAN",
                 };
-            case OPENGL:
+            case GraphicsPlatform.OPENGL:
                 return new[] {
                     "PLATFORM_OPENGL",
                 };       
         }
 
+        return null;
+    }
+
+    public string[] GetLibrariesByGraphicsAPI(GraphicsPlatform platform)
+    {
+        switch (platform)
+        {
+            case GraphicsPlatform.DIRECTX12:
+                return new[] {
+                    "d3d12.lib",
+                    "dxgi.lib",
+                };
+            case GraphicsPlatform.DIRECTX11:
+                return new[] {
+                    "PLATFORM_DX11",
+                };
+            case GraphicsPlatform.VULKAN:
+                return new[] {
+                    "PLATFORM_VULKAN",
+                };
+            case GraphicsPlatform.OPENGL:
+                return new[] {
+                    "PLATFORM_OPENGL",
+                };       
+        }
         return null;
     }
 
@@ -110,16 +138,27 @@ public class KNRGraphics : Sharpmake.Project
         //AdditionalSourceRootPaths.AddRange(new[]{
         //    Path.Combine(Globals.GraphicsDir, ),
         //};);
+        SourceFilesExcludeRegex.AddRange(GetExcludeDirectoriesByGraphicsAPI(m_GraphicsAPI));
+    }
 
-        //SourceFilesExtension.AddRange(new string[]{
-        //  ".cpp",
-        //    ".h"
-        //};);
+    void SetupStaticLibraryPaths(Configuration configuration, DependencySetting dependencySetting, Configuration dependency)
+    {
+
     }
 
     [Configure]
     public void ConfigureAll(Configuration conf, Target target)
     {
+        //Platform specific set-up
+        conf.Defines.AddRange(GetDefinesByGraphicsAPI(m_GraphicsAPI));
+        conf.LibraryFiles.AddRange(GetLibrariesByGraphicsAPI(m_GraphicsAPI));
+        conf.IncludePaths.Add(Globals.GraphicsDir);
+
+        //PCH
+        conf.PrecompHeader = "knrpch.h";//Path.Combine(Globals.GraphicsDir, "knrpch.h");
+        conf.PrecompSource = "knrpch.cpp";//Path.Combine(Globals.GraphicsDir, "knrpch.cpp");
+        conf.ForcedIncludes.Add("knrpch.h");
+        //Project include and output
         conf.ProjectFileName = "[project.Name]";
         conf.ProjectPath = Path.Combine(Globals.BuildDir, "[project.Name]");
 
