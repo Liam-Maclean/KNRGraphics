@@ -1,84 +1,78 @@
 #pragma once
 #include <cstdint>
-#include "graphics/vertex_array.h"
-#include "vulkan/vulkan.h"
-
-namespace Qualia
+#include "buffer.h"
+#include "directx_graphics_context.h"
+#include <d3d12.h>
+namespace KNR
 {
-	class VulkanVertexBuffer
-		: public VertexBuffer
+	class DirectXBuffer
+		: public Buffer
 	{
 	public:
-		VulkanVertexBuffer(float* vertices, uint32_t size);
-		~VulkanVertexBuffer() override;
+		DirectXBuffer(const BufferDescriptor& desc);
+		~DirectXBuffer();
 
-		void Bind() const override;
-		void Unbind() const override;
+		virtual void Bind(DirectXCommandBuffer* commandList) const override;
+		virtual void Unbind(DirectXCommandBuffer* commandList) const override;
 
-		virtual const BufferLayout& GetLayout() const override { return layout; }
-		virtual void SetLayout(const BufferLayout& layout) override { this->layout = layout; }
-		virtual void SetData(const void* data, uint32_t size, uint32_t offset) {};
+		virtual void* Map() override;
+		virtual void UnMap() override;
+
+		virtual size_t GetCapacitySize() override { return m_allocatedSize; }
+		virtual size_t GetUsedSize() override { return m_usedSize; }
+
+		virtual uint32_t AppendData(uint32_t size, void* data) override;
+		ID3D12Resource* GetD3D() { return m_resource; }
 		
+		DirectXDescriptorHandleBlock GetDescriptorBlock() { return m_descriptorHandleBlock; }
+
+		inline static void Destroy(ID3D12Resource* uploadBuffer) { uploadBuffer->Release(); uploadBuffer = 0; };
+
+		template<class T>
+		T GetD3DView();
+
 	private:
-		uint32_t renderer_id;
-		BufferLayout layout;
-
-
-		VkDevice device;
-		VkBuffer buffer;
-		VkDeviceMemory memory;
-		VkDescriptorBufferInfo descriptor;
-		void* mapped = nullptr;
-
+		DirectXDescriptorHandleBlock m_descriptorHandleBlock;
+		uint32_t m_cbvHeapIndex;
+		
+		union {
+			D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
+			D3D12_INDEX_BUFFER_VIEW m_indexBufferView;
+			D3D12_CONSTANT_BUFFER_VIEW_DESC m_constantBufferView;
+			D3D12_UNORDERED_ACCESS_VIEW_DESC m_unorderedBufferView;
+			D3D12_SHADER_RESOURCE_VIEW_DESC m_structuredBufferView;
+		};
+		BufferUsageType m_bufferType;
+		ID3D12Resource* m_resource;
+		uint32_t m_rendererId;
+		size_t m_allocatedSize;
+		size_t m_usedSize;
+		UINT8* m_mappingAddress;
 	};
 
-	class VulkanIndexBuffer
-		: public Qualia::IndexBuffer
+	template<> inline D3D12_VERTEX_BUFFER_VIEW* DirectXBuffer::GetD3DView()
 	{
-	public:
-		VulkanIndexBuffer(uint32_t* indices, uint32_t size);
-		~VulkanIndexBuffer() override;
+		return &m_vertexBufferView;
+	}
 
-		void Bind() const override;
-		void Unbind() const override;
+	template<> inline D3D12_INDEX_BUFFER_VIEW* DirectXBuffer::GetD3DView()
+	{
+		return &m_indexBufferView;
+	}
 
-		virtual void SetData(const void* data, uint32_t size) override{}
-		virtual uint32_t GetCount() const override;
+	template<> inline D3D12_CONSTANT_BUFFER_VIEW_DESC* DirectXBuffer::GetD3DView()
+	{
+		return &m_constantBufferView;
+	}
 
-	private:
-		uint32_t renderer_id;
-		uint32_t count;
-
-		VkDevice device;
-		VkBuffer buffer;
-		VkDeviceMemory memory;
-		VkDescriptorBufferInfo descriptor;
-		void* mapped = nullptr;
-	};
-
-	//class VulkanUniformBuffer
-	//	: public Qualia::UniformBuffer
-	//{
-	//public:
-	//	VulkanUniformBuffer(void* data, uint32_t size);
-	//	~VulkanUniformBuffer() override;
-	//
-	//	void Bind() const override;
-	//	void Unbind() const override;
-	//
-	//	virtual const BufferLayout& GetLayout() const override { return layout; }
-	//	virtual void SetLayout(const BufferLayout& layout) override { this->layout = layout; }
-	//
-	//private:
-	//	uint32_t renderer_id;
-	//	BufferLayout layout;
-	//
-	//
-	//	VkDevice device;
-	//	VkBuffer buffer;
-	//	VkDeviceMemory memory;
-	//	VkDescriptorBufferInfo descriptor;
-	//	void* mapped = nullptr;
-	//
-	//};
+	template<> inline D3D12_UNORDERED_ACCESS_VIEW_DESC* DirectXBuffer::GetD3DView()
+	{
+		return &m_unorderedBufferView;
+	}
+	
+	template<> inline D3D12_SHADER_RESOURCE_VIEW_DESC* DirectXBuffer::GetD3DView()
+	{
+		return &m_structuredBufferView;
+	}
 }
+

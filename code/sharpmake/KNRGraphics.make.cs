@@ -4,7 +4,6 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 [Generate]
 public class KNRGraphics : Sharpmake.Project
 {
-
     public enum GraphicsPlatform 
     {
         DIRECTX12,
@@ -13,7 +12,7 @@ public class KNRGraphics : Sharpmake.Project
         OPENGL,
     }
 
-    public GraphicsPlatform m_GraphicsAPI = GraphicsPlatform.DIRECTX12;
+    public GraphicsPlatform m_GraphicsAPI = GraphicsPlatform.VULKAN;
 
     public string[] GetIncludeDirectoriesByGraphicsAPI(GraphicsPlatform platform)
     {
@@ -21,19 +20,20 @@ public class KNRGraphics : Sharpmake.Project
         {
             case GraphicsPlatform.DIRECTX12:
                 return new[] {
-                    "platform/directx12",
+                    Globals.GraphicsDir,
                 };
             case GraphicsPlatform.DIRECTX11:
                 return new[] {
-                    "platform/directx11",
+                    Globals.GraphicsDir,
                 };
             case GraphicsPlatform.VULKAN:
                 return new[] {
-                    "platform/vulkan",
+                    Path.Combine(Globals.ExternalDir,"vulkan", "include"),
+                    Globals.GraphicsDir,
                 };
             case GraphicsPlatform.OPENGL:
                 return new[] {
-                    "platform/opengl",
+                    Globals.GraphicsDir,
                 };         
         }
 
@@ -110,7 +110,8 @@ public class KNRGraphics : Sharpmake.Project
                 };
             case GraphicsPlatform.DIRECTX11:
                 return new[] {
-                    "PLATFORM_DX11",
+                    "d3d11.lib",
+                    "dxgi.lib",
                 };
             case GraphicsPlatform.VULKAN:
                 return new[] {
@@ -134,16 +135,10 @@ public class KNRGraphics : Sharpmake.Project
                 Optimization.Debug | Optimization.Release, OutputType.Lib
         ));
 
+        System.Console.WriteLine(Path.Combine(Globals.ExternalDir,"vulkan", "include"));
+
         SourceRootPath = Globals.GraphicsDir;
-        //AdditionalSourceRootPaths.AddRange(new[]{
-        //    Path.Combine(Globals.GraphicsDir, ),
-        //};);
         SourceFilesExcludeRegex.AddRange(GetExcludeDirectoriesByGraphicsAPI(m_GraphicsAPI));
-    }
-
-    void SetupStaticLibraryPaths(Configuration configuration, DependencySetting dependencySetting, Configuration dependency)
-    {
-
     }
 
     [Configure]
@@ -153,6 +148,7 @@ public class KNRGraphics : Sharpmake.Project
         conf.Defines.AddRange(GetDefinesByGraphicsAPI(m_GraphicsAPI));
         conf.LibraryFiles.AddRange(GetLibrariesByGraphicsAPI(m_GraphicsAPI));
         conf.IncludePaths.Add(Globals.GraphicsDir);
+        conf.IncludePaths.AddRange(GetIncludeDirectoriesByGraphicsAPI(m_GraphicsAPI));
 
         //PCH
         conf.PrecompHeader = "knrpch.h";//Path.Combine(Globals.GraphicsDir, "knrpch.h");

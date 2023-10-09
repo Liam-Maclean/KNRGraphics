@@ -32,6 +32,8 @@
 *.app
 *.sln
 
+#debug
+*.pdb
 
 # folders
 /build

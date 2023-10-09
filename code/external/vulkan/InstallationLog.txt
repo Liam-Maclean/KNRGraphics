@@ -1,0 +1,277 @@
+************************************* Invoked: Sun Oct 8 17:52:24 2023
+[0] Arguments: C:\Users\liamm\Downloads\VulkanSDK-1.3.261.1-Installer.exe
+[5] Operations sanity check succeeded.
+[5] Language: en-GB
+[766] Loaded control script ":/metadata/installer-config/installscript_qs.qs"
+[766] Using control script: ":/metadata/installer-config/installscript_qs.qs"
+[6887] Preparing meta information download...
+[7514] Retrieving meta information from remote repository...
+[7704] Extracting meta information...
+[78258] Installation space required: "828.74 MB" Temporary space required: "346.67 MB" Local repository size: "0.00 bytes"
+[78262] Tmp is on a different volume than the installation directory. Tmp volume mount point: "C:\\" Free space available: "8.49 GB" Install volume mount point: "S:\\" Free space available: "477.88 GB"
+[79456] backup  operation: Mkdir
+[79456] 	- arguments: S:/github/KNR/KNRGraphics/code/external/vulkan
+[79456] Done
+[79456] perform  operation: Mkdir
+[79456] 	- arguments: S:/github/KNR/KNRGraphics/code/external/vulkan
+[79457] Done
+[79457] Preparing the installation...
+[79457] Install size: 3 components
+[79457] Downloading packages...
+[79457] Downloading archive "1.3.261.1VMA.7z.sha1" for component Vulkan Memory Allocator header..
+[80014] Downloading archive "1.3.261.1VMA.7z" for component Vulkan Memory Allocator header..
+[80586] Installing component The Vulkan SDK
+[80587] backup com.lunarg.vulkan operation: License
+[80587] 	- arguments:
+[80587] Done
+[80587] perform com.lunarg.vulkan operation: License
+[80587] 	- arguments:
+[80589] Done
+[80595] Installing component The Vulkan SDK Core (Always Installed)
+[80595] backup com.lunarg.vulkan.core operation: Extract
+[80595] 	- arguments: installer://com.lunarg.vulkan.core/1.3.261.1core.7z, S:\github\KNR\KNRGraphics\code\external\vulkan
+[80595] Done
+[80595] perform com.lunarg.vulkan.core operation: Extract
+[80595] 	- arguments: installer://com.lunarg.vulkan.core/1.3.261.1core.7z, S:\github\KNR\KNRGraphics\code\external\vulkan
+[84879] Done
+[84879] Starting elevated process "C:\\Users\\liamm\\Downloads\\VulkanSDK-1.3.261.1-Installer.exe" with arguments " --start-server PRODUCTION,{b4ba2637-23d2-4c02-80ba-d8e310f1c461},{d5bcd0d8-34d1-427d-be61-ebc2f2cec8e3}"
+[86782] Finished starting elevated process.
+[86941] "Execute" as admin: true
+[86941] backup com.lunarg.vulkan.core operation: Execute
+[86944] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, S:\github\KNR\KNRGraphics\code\external\vulkan, SHORTCUTS, Vulkan SDK 1.3.261.1, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, REMOVESHORTCUTS, Vulkan SDK 1.3.261.1
+[86944] Done
+[86944] perform com.lunarg.vulkan.core operation: Execute
+[86947] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, S:\github\KNR\KNRGraphics\code\external\vulkan, SHORTCUTS, Vulkan SDK 1.3.261.1, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, REMOVESHORTCUTS, Vulkan SDK 1.3.261.1
+[86950] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan SHORTCUTS Vulkan SDK 1.3.261.1
+[87831] Done
+[87831] "Execute" as admin: true
+[87831] backup com.lunarg.vulkan.core operation: Execute
+[87832] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_api_dump.json
+[87832] Done
+[87832] perform com.lunarg.vulkan.core operation: Execute
+[87833] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_api_dump.json
+[87835] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "CLEANEXPLICIT VkLayer_api_dump.json
+[87938] Done
+[87939] "Execute" as admin: true
+[87939] backup com.lunarg.vulkan.core operation: Execute
+[87940] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_api_dump.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_api_dump.json
+[87941] Done
+[87941] perform com.lunarg.vulkan.core operation: Execute
+[87943] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_api_dump.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_api_dump.json
+[87944] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "ADDEXPLICIT S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin\\VkLayer_api_dump.json
+[88044] Done
+[88045] "Execute" as admin: true
+[88045] backup com.lunarg.vulkan.core operation: Execute
+[88046] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_gfxreconstruct.json
+[88046] Done
+[88046] perform com.lunarg.vulkan.core operation: Execute
+[88047] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_gfxreconstruct.json
+[88048] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "CLEANEXPLICIT VkLayer_gfxreconstruct.json
+[88148] Done
+[88148] "Execute" as admin: true
+[88148] backup com.lunarg.vulkan.core operation: Execute
+[88151] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_gfxreconstruct.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_gfxreconstruct.json
+[88151] Done
+[88151] perform com.lunarg.vulkan.core operation: Execute
+[88153] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_gfxreconstruct.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_gfxreconstruct.json
+[88154] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "ADDEXPLICIT S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin\\VkLayer_gfxreconstruct.json
+[88253] Done
+[88253] "Execute" as admin: true
+[88253] backup com.lunarg.vulkan.core operation: Execute
+[88254] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_khronos_synchronization2.json
+[88254] Done
+[88255] perform com.lunarg.vulkan.core operation: Execute
+[88255] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_khronos_synchronization2.json
+[88257] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "CLEANEXPLICIT VkLayer_khronos_synchronization2.json
+[88357] Done
+[88357] "Execute" as admin: true
+[88357] backup com.lunarg.vulkan.core operation: Execute
+[88359] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_synchronization2.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_synchronization2.json
+[88359] Done
+[88359] perform com.lunarg.vulkan.core operation: Execute
+[88361] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_synchronization2.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_synchronization2.json
+[88362] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "ADDEXPLICIT S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin\\VkLayer_khronos_synchronization2.json
+[88466] Done
+[88466] "Execute" as admin: true
+[88466] backup com.lunarg.vulkan.core operation: Execute
+[88467] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_khronos_validation.json
+[88467] Done
+[88467] perform com.lunarg.vulkan.core operation: Execute
+[88468] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_khronos_validation.json
+[88470] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "CLEANEXPLICIT VkLayer_khronos_validation.json
+[88578] Done
+[88579] "Execute" as admin: true
+[88579] backup com.lunarg.vulkan.core operation: Execute
+[88581] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_validation.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_validation.json
+[88581] Done
+[88581] perform com.lunarg.vulkan.core operation: Execute
+[88583] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_validation.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_validation.json
+[88584] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "ADDEXPLICIT S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin\\VkLayer_khronos_validation.json
+[88693] Done
+[88693] "Execute" as admin: true
+[88693] backup com.lunarg.vulkan.core operation: Execute
+[88694] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_monitor.json
+[88694] Done
+[88694] perform com.lunarg.vulkan.core operation: Execute
+[88695] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_monitor.json
+[88697] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "CLEANEXPLICIT VkLayer_monitor.json
+[88804] Done
+[88804] "Execute" as admin: true
+[88804] backup com.lunarg.vulkan.core operation: Execute
+[88806] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_monitor.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_monitor.json
+[88806] Done
+[88807] perform com.lunarg.vulkan.core operation: Execute
+[88808] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_monitor.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_monitor.json
+[88810] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "ADDEXPLICIT S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin\\VkLayer_monitor.json
+[88924] Done
+[88925] "Execute" as admin: true
+[88925] backup com.lunarg.vulkan.core operation: Execute
+[88926] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_screenshot.json
+[88926] Done
+[88926] perform com.lunarg.vulkan.core operation: Execute
+[88927] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_screenshot.json
+[88928] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "CLEANEXPLICIT VkLayer_screenshot.json
+[89031] Done
+[89031] "Execute" as admin: true
+[89031] backup com.lunarg.vulkan.core operation: Execute
+[89033] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_screenshot.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_screenshot.json
+[89033] Done
+[89033] perform com.lunarg.vulkan.core operation: Execute
+[89035] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_screenshot.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_screenshot.json
+[89037] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "ADDEXPLICIT S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin\\VkLayer_screenshot.json
+[89153] Done
+[89154] "Execute" as admin: true
+[89154] backup com.lunarg.vulkan.core operation: Execute
+[89155] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_khronos_profiles.json
+[89155] Done
+[89155] perform com.lunarg.vulkan.core operation: Execute
+[89156] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_khronos_profiles.json
+[89157] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "CLEANEXPLICIT VkLayer_khronos_profiles.json
+[89271] Done
+[89271] "Execute" as admin: true
+[89271] backup com.lunarg.vulkan.core operation: Execute
+[89273] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_profiles.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_profiles.json
+[89273] Done
+[89273] perform com.lunarg.vulkan.core operation: Execute
+[89275] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_profiles.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_profiles.json
+[89277] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "ADDEXPLICIT S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin\\VkLayer_khronos_profiles.json
+[89381] Done
+[89381] "Execute" as admin: true
+[89381] backup com.lunarg.vulkan.core operation: Execute
+[89382] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_khronos_shader_object.json
+[89382] Done
+[89382] perform com.lunarg.vulkan.core operation: Execute
+[89383] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_khronos_shader_object.json
+[89385] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "CLEANEXPLICIT VkLayer_khronos_shader_object.json
+[89505] Done
+[89505] "Execute" as admin: true
+[89505] backup com.lunarg.vulkan.core operation: Execute
+[89508] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_shader_object.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_shader_object.json
+[89508] Done
+[89508] perform com.lunarg.vulkan.core operation: Execute
+[89510] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, ADDEXPLICIT, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_shader_object.json, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, DELKEYVALUE, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin\VkLayer_khronos_shader_object.json
+[89512] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "ADDEXPLICIT S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin\\VkLayer_khronos_shader_object.json
+[89623] Done
+[89624] "Execute" as admin: true
+[89624] backup com.lunarg.vulkan.core operation: Execute
+[89625] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_device_simulation.json
+[89625] Done
+[89625] perform com.lunarg.vulkan.core operation: Execute
+[89626] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, CLEANEXPLICIT, VkLayer_device_simulation.json
+[89627] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "CLEANEXPLICIT VkLayer_device_simulation.json
+[89735] Done
+[89735] "Execute" as admin: true
+[89735] backup com.lunarg.vulkan.core operation: Execute
+[89739] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin, NOP, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin, REMOVE
+[89739] Done
+[89739] perform com.lunarg.vulkan.core operation: Execute
+[89743] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin, NOP, UNDOEXECUTE, S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin, REMOVE
+[89745] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin NOP
+[89889] Done
+[89889] "Execute" as admin: true
+[89889] backup com.lunarg.vulkan.core operation: Execute
+[89892] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin, ADD
+[89892] Done
+[89892] perform com.lunarg.vulkan.core operation: Execute
+[89894] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan\Helpers\install_helper.exe, S:\github\KNR\KNRGraphics\code\external\vulkan\Bin, ADD
+[89897] S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Helpers\\install_helper.exe" started, arguments: "S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan\\Bin ADD
+[90352] Done
+[90355] backup com.lunarg.vulkan.core operation: License
+[90355] 	- arguments:
+[90355] Done
+[90356] perform com.lunarg.vulkan.core operation: License
+[90356] 	- arguments:
+[90358] Done
+[90362] Installing component Vulkan Memory Allocator header.
+[90362] backup com.lunarg.vulkan.vma operation: Extract
+[90362] 	- arguments: installer://com.lunarg.vulkan.vma/1.3.261.1VMA.7z, S:\github\KNR\KNRGraphics\code\external\vulkan
+[90362] Done
+[90363] perform com.lunarg.vulkan.vma operation: Extract
+[90363] 	- arguments: installer://com.lunarg.vulkan.vma/1.3.261.1VMA.7z, S:\github\KNR\KNRGraphics\code\external\vulkan
+[90377] Done
+[90378] backup com.lunarg.vulkan.vma operation: License
+[90378] 	- arguments:
+[90378] Done
+[90378] perform com.lunarg.vulkan.vma operation: License
+[90378] 	- arguments:
+[90380] Done
+[90388] Writing maintenance tool: "S:\\github\\KNR\\KNRGraphics\\code\\external\\vulkan/maintenancetool.exe.new"
+[90388] Writing maintenance tool.
+[90439] Wrote permissions for maintenance tool.
+[90811] Maintenance tool restart: false.
+[90814] Installation finished!
+[91267] perform  operation: Delete
+[91267] 	- arguments: S:\github\KNR\KNRGraphics\code\external\vulkan/Helpers/VC_redist.x64.exe
+[91268] Warning: QString::arg: Argument missing: Run the Vulkan Configurator and Hardware Capabilities Viewer, Vulkan SDK 1.3.261.1
+[91269] Component name: com.lunarg.vulkan.core
+[91269] perform  operation: Execute
+[91269] 	- arguments: reg, ADD, HKEY_LOCAL_MACHINE\SOFTWARE\LunarG\VulkanSDK, /v, com.lunarg.vulkan.core, /t, REG_DWORD, /d, 1, /f
+[91269] Done
+[91270] reg" started, arguments: "ADD HKEY_LOCAL_MACHINE\\SOFTWARE\\LunarG\\VulkanSDK /v com.lunarg.vulkan.core /t REG_DWORD /d 1 /f
+[91368] Done
+[91369] Is Installed
+[91369] Component name: com.lunarg.vulkan.32bit
+[91369] perform  operation: Execute
+[91369] 	- arguments: reg, ADD, HKEY_LOCAL_MACHINE\SOFTWARE\LunarG\VulkanSDK, /v, com.lunarg.vulkan.32bit, /t, REG_DWORD, /d, 0, /f
+[91369] reg" started, arguments: "ADD HKEY_LOCAL_MACHINE\\SOFTWARE\\LunarG\\VulkanSDK /v com.lunarg.vulkan.32bit /t REG_DWORD /d 0 /f
+[91468] Done
+[91469] Was not installed
+[91469] Component name: com.lunarg.vulkan.debug
+[91469] perform  operation: Execute
+[91469] 	- arguments: reg, ADD, HKEY_LOCAL_MACHINE\SOFTWARE\LunarG\VulkanSDK, /v, com.lunarg.vulkan.debug, /t, REG_DWORD, /d, 0, /f
+[91469] reg" started, arguments: "ADD HKEY_LOCAL_MACHINE\\SOFTWARE\\LunarG\\VulkanSDK /v com.lunarg.vulkan.debug /t REG_DWORD /d 0 /f
+[91566] Done
+[91567] Was not installed
+[91567] Component name: com.lunarg.vulkan.debug32
+[91567] perform  operation: Execute
+[91567] 	- arguments: reg, ADD, HKEY_LOCAL_MACHINE\SOFTWARE\LunarG\VulkanSDK, /v, com.lunarg.vulkan.debug32, /t, REG_DWORD, /d, 0, /f
+[91567] reg" started, arguments: "ADD HKEY_LOCAL_MACHINE\\SOFTWARE\\LunarG\\VulkanSDK /v com.lunarg.vulkan.debug32 /t REG_DWORD /d 0 /f
+[91666] Done
+[91666] Was not installed
+[91666] Component name: com.lunarg.vulkan.glm
+[91666] perform  operation: Execute
+[91666] 	- arguments: reg, ADD, HKEY_LOCAL_MACHINE\SOFTWARE\LunarG\VulkanSDK, /v, com.lunarg.vulkan.glm, /t, REG_DWORD, /d, 0, /f
+[91666] reg" started, arguments: "ADD HKEY_LOCAL_MACHINE\\SOFTWARE\\LunarG\\VulkanSDK /v com.lunarg.vulkan.glm /t REG_DWORD /d 0 /f
+[91765] Done
+[91766] Was not installed
+[91766] Component name: com.lunarg.vulkan.sdl2
+[91766] perform  operation: Execute
+[91766] 	- arguments: reg, ADD, HKEY_LOCAL_MACHINE\SOFTWARE\LunarG\VulkanSDK, /v, com.lunarg.vulkan.sdl2, /t, REG_DWORD, /d, 0, /f
+[91766] reg" started, arguments: "ADD HKEY_LOCAL_MACHINE\\SOFTWARE\\LunarG\\VulkanSDK /v com.lunarg.vulkan.sdl2 /t REG_DWORD /d 0 /f
+[91867] Done
+[91868] Was not installed
+[91868] Component name: com.lunarg.vulkan.volk
+[91868] perform  operation: Execute
+[91868] 	- arguments: reg, ADD, HKEY_LOCAL_MACHINE\SOFTWARE\LunarG\VulkanSDK, /v, com.lunarg.vulkan.volk, /t, REG_DWORD, /d, 0, /f
+[91868] reg" started, arguments: "ADD HKEY_LOCAL_MACHINE\\SOFTWARE\\LunarG\\VulkanSDK /v com.lunarg.vulkan.volk /t REG_DWORD /d 0 /f
+[91969] Done
+[91970] Was not installed
+[91970] Component name: com.lunarg.vulkan.vma
+[91970] perform  operation: Execute
+[91970] 	- arguments: reg, ADD, HKEY_LOCAL_MACHINE\SOFTWARE\LunarG\VulkanSDK, /v, com.lunarg.vulkan.vma, /t, REG_DWORD, /d, 1, /f
+[91970] reg" started, arguments: "ADD HKEY_LOCAL_MACHINE\\SOFTWARE\\LunarG\\VulkanSDK /v com.lunarg.vulkan.vma /t REG_DWORD /d 1 /f
+[92069] Done
+[92070] Is Installed
+[92073] Component name: com.lunarg.vulkan.core
+[92073] Component name: com.lunarg.vulkan.32bit
+[92073] 32Bit Is NOT Installed

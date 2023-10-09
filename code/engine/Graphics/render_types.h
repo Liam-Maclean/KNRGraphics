@@ -2,6 +2,20 @@
 
 namespace KNR
 {
+	struct GPUInfoCache
+	{
+		char hardwareNames[128];
+		uint32_t vramSize;
+		uint32_t availableMemory;
+		bool rtxSupport;
+	};
+
+	struct HardwareGPUTelemetry
+	{
+		uint32_t gpuCount;
+		std::vector<GPUInfoCache> hardwareInfo;
+	};
+
 	enum class TopologyType
 	{
 		undefined = 0,

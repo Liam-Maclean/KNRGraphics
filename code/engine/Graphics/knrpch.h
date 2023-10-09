@@ -8,6 +8,7 @@
 #include <cstdint>			//uint32_t, U64_t
 #include <assert.h>			//assert
 #include <utility>			//std::pair
+#include <set>				//std::set
 
 #ifdef _WIN32
 #include <Windows.h>
