@@ -125,17 +125,17 @@ namespace KNR
 			{
 				if (queueFamily.queueFlags & VK_QUEUE_GRAPHICS_BIT)
 				{
-					m_commandQueueFamilyidx = i;
+					m_graphicsQueueFamilyIdx = i;
+					m_presentQueueFamilyIdx = i;
 				}
 				else if (queueFamily.queueFlags & VK_QUEUE_COMPUTE_BIT)
 				{
-					m_computeQueueFamilyidx = i;
+					m_computeQueueFamilyIdx = i;
 				}
 				else if (queueFamily.queueFlags & VK_QUEUE_TRANSFER_BIT)
 				{
-					m_copyQueueFamilyidx = i;
+					m_copyQueueFamilyIdx = i;
 				}
-
 			}
 			i++;
 		}
@@ -234,7 +234,7 @@ namespace KNR
 
 		QueryFamilyQueueIndices(m_physicalDevice);
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
-		std::set<uint32_t> uniqueQueueFamilies = { m_commandQueueFamilyidx, m_copyQueueFamilyidx, m_computeQueueFamilyidx };
+		std::set<uint32_t> uniqueQueueFamilies = { m_graphicsQueueFamilyIdx, m_copyQueueFamilyIdx, m_computeQueueFamilyIdx, m_presentQueueFamilyIdx };
 
 		//QUEUE DEVICE INFO FOR THE GRAPHICS FAMILY QUEUE WE ARE INTERSTED IN
 		float queue_priorities[]{ 1.0f };
@@ -309,9 +309,10 @@ namespace KNR
 
 	void CVulkanContext::CreateQueues()
 	{
-		vkGetDeviceQueue(m_device, m_commandQueueFamilyidx, 0, &m_commandQueue);
-		vkGetDeviceQueue(m_device, m_copyQueueFamilyidx, 0, &m_copyQueue);
-		vkGetDeviceQueue(m_device, m_computeQueueFamilyidx, 0, &m_computeQueue);
+		vkGetDeviceQueue(m_device, m_graphicsQueueFamilyIdx, 0, &m_graphicsQueue);
+		vkGetDeviceQueue(m_device, m_copyQueueFamilyIdx, 0, &m_copyQueue);
+		vkGetDeviceQueue(m_device, m_computeQueueFamilyIdx, 0, &m_computeQueue);
+		vkGetDeviceQueue(m_device, m_presentQueueFamilyIdx, 0, &m_presentQueue);
 	}
 
 	void CVulkanContext::CreateSwapchain()

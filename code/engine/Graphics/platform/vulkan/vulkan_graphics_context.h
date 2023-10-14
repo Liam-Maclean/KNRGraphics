@@ -1,5 +1,6 @@
 #pragma once
-#define DirectXContext (*KNR::CDirectXContext::Get())
+#define VulkanContext (*KNR::CVulkanContext::Get())
+#define VK_USE_PLATFORM_WIN32_KHR 1
 #include "graphics_context.h"
 #include "window.h"
 #include "render_types.h"
@@ -30,10 +31,16 @@ namespace KNR
 
         inline VkDevice GetDevice() { return m_device; }
         inline VkPhysicalDevice GetPhysicalDevice() { return m_physicalDevice; }
+        inline VkInstance GetInstance() { return m_instance; }
         inline VkSwapchainKHR GetSwapchain() { return m_swapChain->GetSwapchain(); }
-        inline VkQueue GetCommandQueue() { return m_commandQueue; }
+        inline VkQueue GetCommandQueue() { return m_graphicsQueue; }
         inline VkQueue GetComputeQueue() { return m_computeQueue; }
         inline VulkanCommandBuffer* GetCopyCommandBuffer() { return m_copyCommandBuffer; }
+        inline uint32_t GetComputeQueueIndex() { return m_computeQueueFamilyIdx; }
+        inline uint32_t GetCopyQueueIndex() { return m_copyQueueFamilyIdx; }
+        inline uint32_t GetGraphicsQueueIndex() { return m_graphicsQueueFamilyIdx; }
+        inline uint32_t GetPresentQueueIndex() { return m_presentQueueFamilyIdx; }
+
 
         void StartBlit(VkBuffer srcResource, VkBuffer dstResource, int width, int height);
         void EndBlit();
@@ -53,7 +60,8 @@ namespace KNR
 
         //Device extentions
         const std::vector<const char*> m_requiredDeviceExtensions = {
-            VK_KHR_SWAPCHAIN_EXTENSION_NAME
+            VK_KHR_SWAPCHAIN_EXTENSION_NAME,
+            VK_KHR_dynamic_rendering
         };
 
         WindowDesc* m_window;
@@ -62,7 +70,8 @@ namespace KNR
         VkDevice m_device;
         VkPhysicalDevice m_physicalDevice;
         VkInstance m_instance;
-        VkQueue m_commandQueue;
+        VkQueue m_graphicsQueue;
+        VkQueue m_presentQueue;
         VkQueue m_computeQueue;
         VkQueue m_copyQueue;
 
@@ -82,9 +91,10 @@ namespace KNR
         VkDebugReportCallbackEXT m_debugCallbackReport = VK_NULL_HANDLE;
 
         //Vulkan requires a ridiculous amount of shit to set up 
-        uint32_t m_computeQueueFamilyidx;
-        uint32_t m_commandQueueFamilyidx;
-        uint32_t m_copyQueueFamilyidx;
+        uint32_t m_computeQueueFamilyIdx;
+        uint32_t m_graphicsQueueFamilyIdx;
+        uint32_t m_presentQueueFamilyIdx;
+        uint32_t m_copyQueueFamilyIdx;
 
         std::vector<const char*> m_instanceLayers;
         std::vector<const char*> m_instanceExtensions;

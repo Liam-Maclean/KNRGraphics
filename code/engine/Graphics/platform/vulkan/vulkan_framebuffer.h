@@ -1,19 +1,17 @@
 #pragma once 
 #include "framebuffer.h"
-#include "platform/directx/directx_heap.h"
-#include "platform/directx/directx_graphics_context.h"
-#include "platform/directx/directx_texture.h"
+#include "platform/vulkan/vulkan_graphics_context.h"
+#include "platform/vulkan/vulkan_texture.h"
 
 
 namespace KNR
 {
-	class DirectXCommandBuffer;
-	class DirectXFramebuffer
+	class VulkanFramebuffer
 		: public Framebuffer
 	{
 	public:
-		DirectXFramebuffer(const FramebufferSpecification& spec);
-		virtual ~DirectXFramebuffer();
+		VulkanFramebuffer(const FramebufferSpecification& spec);
+		virtual ~VulkanFramebuffer();
 
 		void Invalidate();
 
@@ -39,10 +37,8 @@ namespace KNR
 		FramebufferTextureSpecification m_DepthAttachmentSpecification = FramebufferTextureFormat::None;
 		std::vector<uint32_t> m_ColorAttachments;
 		uint32_t m_DepthAttachment = 0;
-		DirectXHeap m_RTVHeap;
-		DirectXHeap m_DSVHeap;
-		std::vector<DirectXTexture2D*> m_framebufferTexture;
-		DirectXTexture2D* m_framebufferDepthTexture;
+		std::vector<VulkanTexture2D*> m_framebufferTexture;
+		VulkanTexture2D* m_framebufferDepthTexture;
 
 		bool m_resize = false;
 		bool m_createOnce = false;

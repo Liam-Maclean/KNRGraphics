@@ -1,14 +1,11 @@
-#include "directx_framebuffer.h"
+#include "vulkan_framebuffer.h"
 #include <cassert>
-#include "d3dx12.h"
-#include "directx_frame_heap.h"
-
 
 namespace KNR
 {
 	Framebuffer* Framebuffer::Create(const FramebufferSpecification& spec)
 	{
-		return new DirectXFramebuffer(spec);
+		return new VulkanFramebuffer(spec);
 	}
 
 	static const uint32_t s_MaxFramebufferSize = 8192;
@@ -36,7 +33,7 @@ namespace KNR
 
 	}
 
-	DirectXFramebuffer::DirectXFramebuffer(const FramebufferSpecification& spec)
+	VulkanFramebuffer::VulkanFramebuffer(const FramebufferSpecification& spec)
 		: m_Specification(spec)
 	{
 		for (auto spec : m_Specification.Attachments.Attachments)
@@ -56,12 +53,12 @@ namespace KNR
 		Invalidate();
 	}
 
-	DirectXFramebuffer::~DirectXFramebuffer()
+	VulkanFramebuffer::~VulkanFramebuffer()
 	{
 
 	}
 
-	void DirectXFramebuffer::Invalidate()
+	void VulkanFramebuffer::Invalidate()
 	{
 		//Reset these heap sizes to overwrite the previous ones if this is a resize
 		ID3D12Device* device = DirectXContext.GetDevice();
@@ -144,7 +141,7 @@ namespace KNR
 		m_srvLastFrame = true;
 	}
 
-	void DirectXFramebuffer::Bind(DirectXCommandBuffer* commandList)
+	void VulkanFramebuffer::Bind(DirectXCommandBuffer* commandList)
 	{
 		DirectXFrameHeap* frameHeap = DirectXContext.GetFrameHeap();
 		//Starts the frame, initializing the descriptor table index to 0
@@ -221,7 +218,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXFramebuffer::Unbind(DirectXCommandBuffer* commandList)
+	void VulkanFramebuffer::Unbind(DirectXCommandBuffer* commandList)
 	{
 		std::vector<D3D12_RESOURCE_BARRIER> rtvToResourceBarriers;
 		if (m_framebufferTexture.size() != 0)
@@ -243,7 +240,7 @@ namespace KNR
 		m_srvLastFrame = true;
 	}
 
-	void DirectXFramebuffer::Resize(uint32_t width, uint32_t height)
+	void VulkanFramebuffer::Resize(uint32_t width, uint32_t height)
 	{
 		if (width == 0 || height == 0 || width > s_MaxFramebufferSize || height > s_MaxFramebufferSize)
 		{
@@ -255,13 +252,13 @@ namespace KNR
 		Invalidate();
 	}
 
-	int DirectXFramebuffer::ReadPixel(uint32_t attachmentIndex, int x, int y)
+	int VulkanFramebuffer::ReadPixel(uint32_t attachmentIndex, int x, int y)
 	{
 		int pixelData = 0;
 		return pixelData;
 	}
 
-	void DirectXFramebuffer::ClearAttachment(uint32_t attachmentIndex, int value)
+	void VulkanFramebuffer::ClearAttachment(uint32_t attachmentIndex, int value)
 	{
 
 	}

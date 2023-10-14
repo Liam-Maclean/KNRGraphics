@@ -7,6 +7,7 @@ namespace KNR
 	{
 	public:
 		Swapchain();
+		Swapchain(void* windowPtr, void* instance, int screenWidth, int screenHeight);
 		Swapchain(GLFWwindow* hwnd, int screenWidth, int screenHeight);
 		~Swapchain();
 

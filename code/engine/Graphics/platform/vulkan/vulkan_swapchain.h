@@ -14,10 +14,17 @@ namespace KNR
 		};
 
 	public:
+		VulkanSwapchain(void* windowPtr, void* instance, int screenWidth, int screenHeight);
 		VulkanSwapchain(void* windowPtr, int screenWidth, int screenHeight);
 		~VulkanSwapchain();
 		VkSwapchainKHR GetSwapchain(){return m_swapChain; }
 	private:
+		void Initialize();
+		void QuerySwapChainSupport();
+		VkSurfaceFormatKHR  ChooseSurfaceFormat();
+		VkPresentModeKHR ChoosePresentMode();
+		VkExtent2D ChooseSwapchainExtent();
+
 		VkSwapchainKHR m_swapChain;
 
 		VkSurfaceKHR m_surface;

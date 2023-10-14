@@ -76,6 +76,27 @@ namespace KNR
 				assert(0 && "Vulkan runtime error.");
 			}
 		}
+
+		VkFormat GetVulkanFormatFromGenericType(FramebufferTextureFormat textureFormat)
+		{
+			switch (textureFormat)
+			{
+			case  FramebufferTextureFormat::RGBA8:
+				imageCreateInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
+				break;
+			case FramebufferTextureFormat::RG16:
+				imageCreateInfo.format = VK_FORMAT_R16G16_SFLOAT;
+				break;
+			case  FramebufferTextureFormat::RED_INTEGER:
+				imageCreateInfo.format = VK_FORMAT_R32_SFLOAT;
+				break;
+			default:
+				//UNEXPECTED FORMAT
+				break;
+			}
+
+			return VkFormat();
+		}
 	}
 }
 
