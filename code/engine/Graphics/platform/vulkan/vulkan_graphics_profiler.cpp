@@ -38,36 +38,7 @@ namespace KNR
 
 	uint64_t VulkanGraphicsProfiler::StartProfiler(CommandBuffer* commandList, const char* name)
 	{
-		PIXBeginEvent(commandList->Get(), 0, name);
-		uint64_t profileIdx = -1;
-		//Loop through the profile data we have set up
-		for (int i = 0; i < m_profiles.size(); ++i)
-		{
-			//If the profile already exists
-			if (m_profiles[i].name == name)
-			{
-				//This is the profile idx we're looking for
-				profileIdx = i;
-			}
-		}
-
-		//if the profile doesn't already exist
-		if (profileIdx == -1)
-		{
-			//Assign the profile index and increment
-			profileIdx = m_numOfProfiles++;
-			m_profiles[profileIdx].name = name;
-		}
-
-		ProfileData& profileData = m_profiles[profileIdx];
-		profileData.active = true;
-
-		//Profile idx start and end come in pairs, this is why we multiply by 2
-		const int startQueryIdx = int(profileIdx * 2);
-		commandList->Get()->EndQuery(m_queryHeap, D3D12_QUERY_TYPE_TIMESTAMP, startQueryIdx);
-
-		profileData.queryStarted = true;
-
+		uint64_t profileIdx;
 		return profileIdx;
 	}
 
@@ -76,13 +47,9 @@ namespace KNR
 
 		const uint32_t startQueryIdx = (uint32_t)(idx * 2);
 		const uint32_t endQueryIdx = startQueryIdx + 1;
-		commandList->Get()->EndQuery(m_queryHeap, D3D12_QUERY_TYPE_TIMESTAMP, endQueryIdx);
-
+	
 		// Resolve the data
 		const uint64_t dstOffset = (startQueryIdx * sizeof(uint64_t));
-		commandList->Get()->ResolveQueryData(m_queryHeap, D3D12_QUERY_TYPE_TIMESTAMP, startQueryIdx, 2, m_readbackBuffer, dstOffset);
-
-		PIXEndEvent(commandList->Get());
 	}
 
 	void VulkanGraphicsProfiler::DisplayFrameData()

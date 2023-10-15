@@ -24,7 +24,7 @@ namespace KNR
 	{
 	}
 
-	void ScreenQuad::Draw(DirectXCommandBuffer* commandList)
+	void ScreenQuad::Draw(CommandBuffer* commandList)
 	{
 		commandList->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 		m_vertexBuffer->Bind(commandList);

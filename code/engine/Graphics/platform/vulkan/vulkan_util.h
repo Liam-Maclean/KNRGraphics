@@ -7,5 +7,6 @@ namespace KNR
 	{
 		static void ErrorCheck(VkResult result);
 		static VkFormat GetVulkanFormatType(TextureFormat textureFormat);
+		static bool IsDepthFormat(TextureFormat format);
 	}
 }

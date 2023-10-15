@@ -4,12 +4,6 @@
 #include "vulkan/vulkan.h"
 namespace KNR
 {
-	enum class CommandBufferType
-	{
-		copy,
-		compute,
-		graphics,
-	};
 	class VulkanCommandBuffer : CommandBuffer
 	{
 	public:

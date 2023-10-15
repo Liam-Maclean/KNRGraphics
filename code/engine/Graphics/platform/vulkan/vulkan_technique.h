@@ -11,8 +11,8 @@ namespace KNR
 		VulkanTechnique(PipelineCreateInfo pipelineCreateInfo);
 		virtual ~VulkanTechnique();
 
-		virtual void Bind(DirectXCommandBuffer* commandList) const override;
-		virtual void Unbind(DirectXCommandBuffer* commandList) const override;
+		virtual void Bind(CommandBuffer* commandList) const override;
+		virtual void Unbind(CommandBuffer* commandList) const override;
 		//VulkanPipelinelayout GetVulkanPipelineLayout() { return m_pipelineLayout; }
 
 	private:

@@ -14,8 +14,8 @@ namespace KNR
 	{
 		if (desc.textureType == TextureType::ASSET)
 		{
-			//Just load the asset, nothing special. Upload the texture later to prevent threading issues with command lists
-			m_data = stbi_load(desc.textureAsset.path, &m_width, &m_height, &m_channels, 4);
+			//Store the data pointer, we are going to upload this texture later
+			m_data = std::move(desc.textureAsset.data);
 			assert(m_data, "Failed to load image!");
 		}
 		else if (desc.textureType == TextureType::FRAMEBUFFER)
@@ -37,7 +37,7 @@ namespace KNR
 			VkFormat imageFormat = {};
 			VkImageAspectFlags imageAspectFlags = {};
 			//we need to handle depth texture buffers slightly differently
-			if (framebufferTextureSpec->TextureFormat == FramebufferTextureFormat::DEPTH24STENCIL8)
+			if (Util::IsDepthFormat(framebufferTextureSpec->textureFormat))
 			{
 				imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
 				imageCreateInfo.imageType = VK_IMAGE_TYPE_2D;
@@ -46,7 +46,7 @@ namespace KNR
 				imageCreateInfo.extent.depth = 1;
 				imageCreateInfo.mipLevels = 1;
 				imageCreateInfo.arrayLayers = 1;
-				imageCreateInfo.format = VK_FORMAT_D24_UNORM_S8_UINT;
+				imageCreateInfo.format = Util::GetVulkanFormatType(framebufferTextureSpec->textureFormat);
 				imageCreateInfo.tiling = VK_IMAGE_TILING_OPTIMAL;
 				imageCreateInfo.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 				imageCreateInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
@@ -55,7 +55,6 @@ namespace KNR
 
 				Util::ErrorCheck(vkCreateImage(device, &imageCreateInfo, nullptr, &m_image));
 			}
-			//Standard RTVC 
 			else
 			{
 				imageCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO;
@@ -71,22 +70,8 @@ namespace KNR
 				imageCreateInfo.usage = VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT;
 				imageCreateInfo.sharingMode = VK_SHARING_MODE_EXCLUSIVE;
 				imageCreateInfo.samples = VK_SAMPLE_COUNT_1_BIT;
+				imageCreateInfo.format = Util::GetVulkanFormatType(framebufferTextureSpec->textureFormat);
 
-				//Move to a enum converter function
-				switch (framebufferTextureSpec->TextureFormat)
-				{
-				case FramebufferTextureFormat::RGBA8:
-					imageCreateInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
-					break;
-				case FramebufferTextureFormat::RG16:
-					imageCreateInfo.format = VK_FORMAT_R16G16_SFLOAT;
-					break;
-				case  FramebufferTextureFormat::RED_INTEGER:
-					imageCreateInfo.format = VK_FORMAT_R32_SFLOAT;
-					break;
-				default:
-					break;
-				}
 				Util::ErrorCheck(vkCreateImage(device, &imageCreateInfo, nullptr, &m_image));
 			}
 			
@@ -115,7 +100,7 @@ namespace KNR
 
 	void VulkanTexture2D::Upload()
 	{
-		
+		//Staging buffer
 	}
 
 	VulkanTexture2D::~VulkanTexture2D()

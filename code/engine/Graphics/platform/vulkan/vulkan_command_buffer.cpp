@@ -1,11 +1,14 @@
-#include "directx_command_buffer.h"
-#include "directx_graphics_context.h"
-#include <d3d12.h>
-#include "d3dx12.h"
+#include "vulkan_command_buffer.h"
+#include "vulkan_graphics_context.h"
 
 namespace KNR
 {
-	DirectXCommandBuffer::DirectXCommandBuffer(CommandBufferType type)
+	CommandBuffer* CommandBuffer::Create(CommandBufferType type)
+	{
+		return new VulkanCommandBuffer(type);
+	}
+
+	VulkanCommandBuffer::VulkanCommandBuffer(CommandBufferType type)
 	{
 		ID3D12Device* device = DirectXContext.GetDevice();
 		D3D12_COMMAND_LIST_TYPE commandListType;
@@ -45,7 +48,7 @@ namespace KNR
 		m_workToBeSubmitted = true;
 	}
 
-	DirectXCommandBuffer::~DirectXCommandBuffer()
+	VulkanCommandBuffer::~VulkanCommandBuffer()
 	{
 		m_commandList->Release();
 		m_commandList = 0;
@@ -57,7 +60,7 @@ namespace KNR
 		m_fence = 0;
 	}
 
-	void DirectXCommandBuffer::Reset()
+	void VulkanCommandBuffer::Reset()
 	{
 		assert(!m_workToBeSubmitted);
 		m_commandAllocator->Reset();
@@ -65,7 +68,7 @@ namespace KNR
 		m_workToBeSubmitted = true;
 	}
 
-	void DirectXCommandBuffer::Reset(ID3D12CommandAllocator* customAllocator)
+	void VulkanCommandBuffer::Reset(ID3D12CommandAllocator* customAllocator)
 	{
 		assert(!m_workToBeSubmitted);
 		customAllocator->Reset();
@@ -73,14 +76,14 @@ namespace KNR
 		m_workToBeSubmitted = true;
 	}
 
-	void DirectXCommandBuffer::Close()
+	void VulkanCommandBuffer::Close()
 	{
 		assert(m_workToBeSubmitted);
 		m_commandList->Close();
 		m_workToBeSubmitted = false;
 	}
 
-	void DirectXCommandBuffer::Submit(ID3D12CommandQueue* queue)
+	void VulkanCommandBuffer::Submit(ID3D12CommandQueue* queue)
 	{
 		ID3D12CommandList* ppCommandLists[] = { m_commandList };
 		queue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);	
@@ -88,7 +91,7 @@ namespace KNR
 		m_fence->Signal(queue);
 	}
 
-	void DirectXCommandBuffer::SubmitWorkImmediate()
+	void VulkanCommandBuffer::SubmitWorkImmediate()
 	{
 		ID3D12CommandQueue* queue;
 		switch (m_type)
@@ -111,7 +114,7 @@ namespace KNR
 		Wait();
 	}
 
-	void DirectXCommandBuffer::Wait()
+	void VulkanCommandBuffer::Wait()
 	{
 		m_fence->WaitForFenceEvent();
 
@@ -123,7 +126,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXCommandBuffer::UpdateCopyResource(ID3D12Resource* dstResource, ID3D12Resource* srcResource, D3D12_SUBRESOURCE_DATA subresources)
+	void VulkanCommandBuffer::UpdateCopyResource(ID3D12Resource* dstResource, ID3D12Resource* srcResource, D3D12_SUBRESOURCE_DATA subresources)
 	{
 		if (!m_workToBeSubmitted)
 		{
@@ -133,7 +136,7 @@ namespace KNR
 		UpdateSubresources(m_commandList, dstResource, srcResource, 0, 0, 1, &subresources);
 	}
 
-	void DirectXCommandBuffer::UpdateCopyResource(ID3D12Resource* dstResource, ID3D12Resource* srcResource, std::vector<D3D12_SUBRESOURCE_DATA> subresources)
+	void VulkanCommandBuffer::UpdateCopyResource(ID3D12Resource* dstResource, ID3D12Resource* srcResource, std::vector<D3D12_SUBRESOURCE_DATA> subresources)
 	{
 		if (!m_workToBeSubmitted)
 		{
@@ -144,7 +147,7 @@ namespace KNR
 	}
 
 
-	void DirectXCommandBuffer::CopyResource(ID3D12Resource* dstResource, ID3D12Resource* srcResource)
+	void VulkanCommandBuffer::CopyResource(ID3D12Resource* dstResource, ID3D12Resource* srcResource)
 	{
 		if (!m_workToBeSubmitted)
 		{
@@ -154,7 +157,7 @@ namespace KNR
 		m_commandList->CopyResource(dstResource, srcResource);
 	}
 
-	void DirectXCommandBuffer::AddToCommandCallbackList(QCore::Delegate<>::Func_type&& func)
+	void VulkanCommandBuffer::AddToCommandCallbackList(QCore::Delegate<>::Func_type&& func)
 	{
 		m_commandBufferCallbackList += std::forward<QCore::Delegate<>::Func_type>(func);
 	}

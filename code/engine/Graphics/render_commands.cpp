@@ -12,13 +12,11 @@
 
 namespace KNR
 {
-#ifdef PLATFORM_VULKAN
-	RendererAPI* RenderCommand::sRendererAPI = new DirectXRendererAPI;
+#ifdef PLATFORM_OPENGL
+	RendererAPI* RenderCommand::sRendererAPI = new VulkanRendererAPI;
 #elif PLATFORM_VULKAN
 	RendererAPI* RenderCommand::sRendererAPI = new VulkanRendererAPI;
 #elif PLATFORM_DX11
-	RendererAPI* RenderCommand::sRendererAPI = new DirectXRendererAPI;
-#elif PLATFORM_DX12
 	RendererAPI* RenderCommand::sRendererAPI = new DirectXRendererAPI;
 #elif PLATFORM_DX12
 	RendererAPI* RenderCommand::sRendererAPI = new DirectXRendererAPI;

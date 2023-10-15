@@ -8,10 +8,10 @@ namespace KNR
 	{
 		HRESULT hr;
 		m_pipelineCreateInfo = desc;
-		m_pipelineLayout = &m_pipelineCreateInfo.pipelineLayout;
+		m_pipelineLayout = m_pipelineCreateInfo.pipelineLayout;
 
 		//If the shader is a compute shader, we need an entirely different kind of pipeline create info
-		if (m_pipelineCreateInfo.computeShader.pShaderBytecode != nullptr)
+		if (m_pipelineCreateInfo.computeShader != nullptr)
 		{
 
 		}
@@ -37,12 +37,12 @@ namespace KNR
 
 			}
 
-			if (m_pipelineCreateInfo.hullShader.pShaderBytecode)
+			if (m_pipelineCreateInfo.hullShader)
 			{
 
 			}
 
-			if (m_pipelineCreateInfo.domainShader.pShaderBytecode)
+			if (m_pipelineCreateInfo.domainShader)
 			{
 
 			}
@@ -71,19 +71,7 @@ namespace KNR
 
 	void VulkanPipeline::Bind(CommandBuffer* commandList)
 	{
-		//bind compute
-		if (m_pipelineCreateInfo.computeShader.pShaderBytecode != nullptr)
-		{
-			commandList->Get()->SetPipelineState(m_pipelineState);
-			commandList->Get()->SetGraphicsRootSignature(m_pipelineLayout->GetRootSignature());
-
-		}
-		else //bind rasterizer pipeline
-		{
-			commandList->Get()->SetPipelineState(m_pipelineState);
-			commandList->Get()->SetGraphicsRootSignature(m_pipelineLayout->GetRootSignature());
-			commandList->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // HACK LIAM - FIX We probably shouldn't be doing this here
-		}
+		
 	}
 
 	void VulkanPipeline::Unbind(CommandBuffer* commandList)

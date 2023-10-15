@@ -12,6 +12,7 @@
 
 namespace KNR
 {
+    class VulkanCommandBuffer;
     class CVulkanContext :
         public CGraphicsContext
     {
@@ -26,7 +27,7 @@ namespace KNR
         CVulkanContext(WindowDesc* windowHandle);
         ~CVulkanContext();
 
-        void Init(WindowDesc* windowHandle);
+        virtual void Init(WindowDesc* windowHandle) override;
         virtual void Init() override;
         virtual void SwapBuffers() override;
 
@@ -42,13 +43,13 @@ namespace KNR
         inline uint32_t GetGraphicsQueueIndex() { return m_graphicsQueueFamilyIdx; }
         inline uint32_t GetPresentQueueIndex() { return m_presentQueueFamilyIdx; }
         inline VmaAllocator GetVMAAllocator() { return m_vmaAllocator; }
-
+    private:
+        
         void StartBlit(VkBuffer srcResource, VkBuffer dstResource, int width, int height);
         void EndBlit();
 
         void StartBlitToSwapchain(VkBuffer srcResource, VkBuffer dstResource, int width, int height);
-    private:
-        
+
         bool CheckDeviceExtentionSupport(VkPhysicalDevice device);
         void QueryFamilyQueueIndices(VkPhysicalDevice device);
         bool IsDeviceSuitable(VkPhysicalDevice device);
@@ -82,7 +83,7 @@ namespace KNR
 
         VulkanSwapchain* m_swapChain;
         VulkanCommandBuffer* m_copyCommandBuffer;
-        VulkanCommandList* m_blitCommandList;
+        VulkanCommandBuffer* m_blitCommandList;
 
         HardwareGPUTelemetry m_gpuTelemetry;
 

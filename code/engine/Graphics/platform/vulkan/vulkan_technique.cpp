@@ -20,12 +20,12 @@ namespace KNR
 
 	}
 
-	void VulkanTechnique::Bind(DirectXCommandBuffer* commandList) const
+	void VulkanTechnique::Bind(CommandBuffer* commandList) const
 	{
 		
 	}
 
-	void VulkanTechnique::Unbind(DirectXCommandBuffer* commandList) const
+	void VulkanTechnique::Unbind(CommandBuffer* commandList) const
 	{
 
 	}

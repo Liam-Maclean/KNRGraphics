@@ -27,6 +27,8 @@ namespace KNR
 	struct TextureAssetDesc 
 	{
 		const char* path;
+		void* data;
+		int width, height, bitdepth;
 	};
 
 	struct TextureFramebufferDesc 

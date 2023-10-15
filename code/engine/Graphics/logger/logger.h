@@ -23,8 +23,8 @@ namespace KNR
 #define KNT_ERROR(...) ::KNR::Logger::GetConsoleLogger()->error(__VA_ARGS__); \
 					   ::KNR::Logger::GetFileLogger()->error(__VA_ARGS__);
 
-#define KNT_WARN(...) ::KNR::Logger::GetConsoleLogger()->warn(__VA_ARGS__); \ 
-					  ::KNR::Logger::GetFileLogger()->warn(__VA_ARGS__);
+//#define KNT_WARN(...) ::KNR::Logger::GetConsoleLogger()->warn(__VA_ARGS__); \ 
+//					  ::KNR::Logger::GetFileLogger()->warn(__VA_ARGS__);
 
 #define KNT_DEBUG(...) ::KNR::Logger::GetConsoleLogger()->debug(__VA_ARGS__); \
 					   ::KNR::Logger::GetFileLogger()->debug(__VA_ARGS__);

@@ -34,14 +34,15 @@ namespace KNR
 
 		bool SwapChainTarget = false;
 	};
-	class DirectXCommandBuffer;
+
+	class CommandBuffer;
 	class Framebuffer
 	{
 	public:
 		virtual ~Framebuffer() = default;
 
-		virtual void Bind(DirectXCommandBuffer* commandList) = 0;
-		virtual void Unbind(DirectXCommandBuffer* commandList) = 0;
+		virtual void Bind(CommandBuffer* commandList) = 0;
+		virtual void Unbind(CommandBuffer* commandList) = 0;
 
 		virtual void Resize(uint32_t width, uint32_t height) = 0;
 		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) = 0;

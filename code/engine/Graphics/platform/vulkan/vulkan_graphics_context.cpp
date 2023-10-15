@@ -3,6 +3,7 @@
 #include "vulkan_texture.h"
 #include "vulkan_util.h"
 #include "window.h"
+#include "logger/logger.h"
 
 #define VULKAN_FEATURE_LEVEL 0
 
@@ -16,22 +17,27 @@ namespace KNR
 		//stream << "VKDBG: ";
 		if (flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT)
 		{
+			KNT_INFO("PERFORMANCE: ");
 			//stream << "INFO: ";
 		}
 		if (flags & VK_DEBUG_REPORT_WARNING_BIT_EXT)
 		{
+			KNT_INFO("WARNING: ");
 			//stream << "WARNING: ";
 		}
 		if (flags & VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)
 		{
+			KNT_INFO("PERFORMANCE: ");
 			//stream << "PERFORMANCE: ";
 		}
 		if (flags & VK_DEBUG_REPORT_ERROR_BIT_EXT)
 		{
+			KNT_ERROR("ERROR");
 			//stream << "ERROR: ";
 		}
 		if (flags & VK_DEBUG_REPORT_DEBUG_BIT_EXT)
 		{
+			KNT_DEBUG("ERROR");
 			//stream << "DEBUG: ";
 		}
 		//stream << "@[" << layer_prefix << "]: ";

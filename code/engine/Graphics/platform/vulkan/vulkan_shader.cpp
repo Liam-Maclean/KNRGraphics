@@ -51,13 +51,8 @@ namespace KNR
 			{
 				m_shaderBytecode = vertCache.ReadFromFile();
 			}
-
-			m_pipelineShaderBytecode.BytecodeLength = (m_shaderBytecode.size() * sizeof(uint32_t));
-			m_pipelineShaderBytecode.pShaderBytecode = m_shaderBytecode.data();
 		}
 	}
-
-
 
 	VulkanShader::~VulkanShader()
 	{
@@ -76,6 +71,6 @@ namespace KNR
 
 	void* VulkanShader::GetShaderBytecode()
 	{
-		return static_cast<void*>(&m_pipelineShaderBytecode);
+		return nullptr;
 	}
 }

@@ -1,20 +1,13 @@
 #pragma once
-#include "vertex.h"
-#include <cassert>
-#include <string>
-#include <vector>
+#include "render_types.h"
 
 namespace KNR
 {
 	class CommandBuffer
 	{
 	public:
-		CommandBuffer();
 		~CommandBuffer();
 
-	protected:
-
-
-	private:
+		static CommandBuffer* Create(CommandBufferType type);
 	};
 }

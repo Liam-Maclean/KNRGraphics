@@ -6,7 +6,7 @@
 
 namespace KNR
 {
-	class DirectXCommandBuffer;
+	class CommandBuffer;
 	enum class BufferUsageType
 	{
 		VERTEX,
@@ -67,8 +67,8 @@ namespace KNR
 		Buffer() {}
 		virtual ~Buffer() {}
 
-		virtual void Bind(DirectXCommandBuffer* commandList) const = 0;
-		virtual void Unbind(DirectXCommandBuffer* commandList) const = 0;
+		virtual void Bind(CommandBuffer* commandList) const = 0;
+		virtual void Unbind(CommandBuffer* commandList) const = 0;
 
 		virtual void* Map() = 0;
 		virtual void UnMap() = 0;

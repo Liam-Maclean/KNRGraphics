@@ -1,7 +1,7 @@
 #pragma once
 #include "buffer.h"
 #include "vertex.h"
-#include "platform/directx/directx_graphics_context.h"
+#include "command_buffer.h"
 
 namespace KNR
 {
@@ -11,7 +11,7 @@ namespace KNR
 	public:
 		ScreenQuad();
 		~ScreenQuad();
-		void Draw(DirectXCommandBuffer* commandList);
+		void Draw(CommandBuffer* commandList);
 
 	private:
 		Buffer* m_vertexBuffer;

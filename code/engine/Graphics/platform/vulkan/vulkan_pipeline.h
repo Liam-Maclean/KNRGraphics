@@ -5,18 +5,18 @@ namespace KNR
 	enum class CullingMode;
 	struct PipelineCreateInfo
 	{
-		D3D12_SHADER_BYTECODE vertShader; //vert shader
-		D3D12_SHADER_BYTECODE pixelShader; 	//pixel shader
-		D3D12_SHADER_BYTECODE computeShader; 	//compute shader
-		D3D12_SHADER_BYTECODE hullShader; //hull shader
-		D3D12_SHADER_BYTECODE domainShader; //domain shader
-		D3D12_PRIMITIVE_TOPOLOGY_TYPE topologyType; 	//Topology type
-		D3D12_INPUT_LAYOUT_DESC vertexInputLayout; 	//Vertex input Layout
-		DirectXPipelineLayout pipelineLayout;
+		void* vertShader; //vert shader
+		void* pixelShader; 	//pixel shader
+		void* computeShader; 	//compute shader
+		void* hullShader; //hull shader
+		void* domainShader; //domain shader
+		Topology topologyType; 	//Topology type
+		void* vertexInputLayout; 	//Vertex input Layout
+		VkPipelineLayout pipelineLayout;
 		CullingMode cullMode;
 		bool wireframeModeEnabled;
 		bool depthTestEnabled;
-		std::vector<DXGI_FORMAT> rtvFormats;
+		std::vector<TextureFormat> rtvFormats;
 	};
 
 	class CommandBuffer;

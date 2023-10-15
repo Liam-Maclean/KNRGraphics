@@ -61,8 +61,10 @@ public class SandboxProject : Sharpmake.Project
     [Configure]
     public void ConfigureAll(Configuration conf, Target target)
     {
-        conf.ProjectFileName = "[project.Name]_[target.DevEnv]_[target.Platform]";
+        conf.ProjectFileName = "[project.Name]";
         conf.ProjectPath = Globals.BuildDir;
+
+        conf.AddPublicDependency<KNRGraphics>(target);
 
         conf.Defines.AddRange(GetDefinesByOptimization(target));
 

@@ -16,6 +16,13 @@ namespace KNR
 		std::vector<GPUInfoCache> hardwareInfo;
 	};
 
+	enum class CommandBufferType
+	{
+		copy,
+		compute,
+		graphics,
+	};
+
 	enum class TopologyType
 	{
 		undefined = 0,
@@ -46,6 +53,14 @@ namespace KNR
 		backface = 0,
 		frontface = 0,
 		none
+	};
+
+	enum class Topology
+	{
+		point = 0,
+		line = 1,
+		triangle = 2,
+		patch = 3
 	};
 
 	enum class TextureFormat

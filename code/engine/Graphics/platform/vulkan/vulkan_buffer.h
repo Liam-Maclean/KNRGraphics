@@ -11,8 +11,8 @@ namespace KNR
 		VulkanBuffer(const BufferDescriptor& desc);
 		~VulkanBuffer();
 
-		virtual void Bind(DirectXCommandBuffer* commandList) const override;
-		virtual void Unbind(DirectXCommandBuffer* commandList) const override;
+		virtual void Bind(CommandBuffer* commandList) const override;
+		virtual void Unbind(CommandBuffer* commandList) const override;
 
 		virtual void* Map() override;
 		virtual void UnMap() override;

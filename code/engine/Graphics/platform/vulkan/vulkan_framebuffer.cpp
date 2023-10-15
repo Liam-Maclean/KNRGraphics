@@ -144,7 +144,7 @@ namespace KNR
 		m_srvLastFrame = true;
 	}
 
-	void VulkanFramebuffer::Bind(DirectXCommandBuffer* commandList)
+	void VulkanFramebuffer::Bind(CommandBuffer* commandList)
 	{
 		DirectXFrameHeap* frameHeap = DirectXContext.GetFrameHeap();
 		//Starts the frame, initializing the descriptor table index to 0
@@ -221,7 +221,7 @@ namespace KNR
 		}
 	}
 
-	void VulkanFramebuffer::Unbind(DirectXCommandBuffer* commandList)
+	void VulkanFramebuffer::Unbind(CommandBuffer* commandList)
 	{
 		std::vector<D3D12_RESOURCE_BARRIER> rtvToResourceBarriers;
 		if (m_framebufferTexture.size() != 0)

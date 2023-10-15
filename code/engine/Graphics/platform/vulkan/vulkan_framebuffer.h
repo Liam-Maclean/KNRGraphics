@@ -14,8 +14,8 @@ namespace KNR
 
 		void Invalidate();
 
-		virtual void Bind(DirectXCommandBuffer* commandList) override;
-		virtual void Unbind(DirectXCommandBuffer* commandList) override;
+		virtual void Bind(CommandBuffer* commandList) override;
+		virtual void Unbind(CommandBuffer* commandList) override;
 
 		virtual void Resize(uint32_t width, uint32_t height) override;
 		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) override;
