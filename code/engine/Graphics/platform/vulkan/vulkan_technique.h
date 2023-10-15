@@ -1,21 +1,22 @@
 #pragma once
 #include "technique.h"
-
+class VulkanPipelinelayout;
+class VulkanPipeline;
 namespace KNR
 {
-	class DirectXTechnique
+	class VulkanTechnique
 		: public Technique
 	{
 	public:
-		DirectXTechnique(PipelineCreateInfo pipelineCreateInfo);
-		virtual ~DirectXTechnique();
+		VulkanTechnique(PipelineCreateInfo pipelineCreateInfo);
+		virtual ~VulkanTechnique();
 
 		virtual void Bind(DirectXCommandBuffer* commandList) const override;
 		virtual void Unbind(DirectXCommandBuffer* commandList) const override;
-		DirectXPipelineLayout* GetDirectXPipelineLayout() { return m_pipeline->GetPipelineLayout(); }
-		ID3D12RootSignature* GetRootSignature() { return m_pipeline->GetPipelineLayout()->GetRootSignature(); }
+		//VulkanPipelinelayout GetVulkanPipelineLayout() { return m_pipelineLayout; }
+
 	private:
-		DirectXPipeline* m_pipeline;
-		DirectXPipelineLayout* m_pipelineLayout;
+		VulkanPipeline* m_pipeline;
+		//VulkanPipelinelayout m_pipelineLayout;
 	};
 }

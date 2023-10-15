@@ -1,19 +1,13 @@
-#include "directx_buffer.h"
-#include "directx_graphics_context.h"
-#include "directx_copy_context.h"
-#include "directx_renderer_api.h"
-#include "directx_heap.h"
-#include "directx_texture.h"
-#include "directx_technique.h"
-#include "directx_indirect_signature.h"
-#include "d3dx12.h"
-#include <d3dcompiler.h>
+#include "vulkan_buffer.h"
+#include "vulkan_graphics_context.h"
+#include "vulkan_renderer_api.h"
+#include "vulkan_texture.h"
+#include "vulkan_technique.h"
 #include <basetsd.h>
-#pragma comment(lib, "d3dcompiler")
 
 namespace KNR
 {
-	DirectXRendererAPI::~DirectXRendererAPI()
+	VulkanRendererAPI::~VulkanRendererAPI()
 	{
 		for (int i = 0; i < 3; ++i)
 		{
@@ -25,7 +19,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::Init()
+	void VulkanRendererAPI::Init()
 	{
 		m_rtvHeapIndex = 0;
 		for (int i = 0; i < 3; ++i)
@@ -39,17 +33,17 @@ namespace KNR
 		m_height = 1080;
 	}
 
-	void DirectXRendererAPI::SetClearColor(const Vector4f& color)
+	void VulkanRendererAPI::SetClearColor(const Vector4f& color)
 	{
 
 	}
 
-	void DirectXRendererAPI::Clear() const
+	void VulkanRendererAPI::Clear() const
 	{
 
 	}
 
-	uint32_t DirectXRendererAPI::AppendBufferRegion(DirectXCommandBuffer* commandList, KNR::Buffer* dstBuffer, KNR::Buffer* srcBuffer)
+	uint32_t VulkanRendererAPI::AppendBufferRegion(DirectXCommandBuffer* commandList, KNR::Buffer* dstBuffer, KNR::Buffer* srcBuffer)
 	{
 		uint32_t destUsedSize = dstBuffer->GetUsedSize();
 		uint32_t destMaxCapacity = dstBuffer->GetCapacitySize();
@@ -69,7 +63,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::BindPipeline(DirectXCommandBuffer* commandList, KNR::Technique* technique)
+	void VulkanRendererAPI::BindPipeline(DirectXCommandBuffer* commandList, KNR::Technique* technique)
 	{
 		//Bind as normal
 		technique->Bind(commandList);
@@ -83,42 +77,42 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::BindVertexBuffer(DirectXCommandBuffer* commandList, Buffer* buffer)
+	void VulkanRendererAPI::BindVertexBuffer(DirectXCommandBuffer* commandList, Buffer* buffer)
 	{
 		commandList->Get()->IASetVertexBuffers(0, 1, reinterpret_cast<DirectXBuffer*>(buffer)->GetD3DView<D3D12_VERTEX_BUFFER_VIEW*>());
 	}
 
-	void DirectXRendererAPI::BindIndexBuffer(DirectXCommandBuffer* commandList, Buffer* buffer)
+	void VulkanRendererAPI::BindIndexBuffer(DirectXCommandBuffer* commandList, Buffer* buffer)
 	{
 		commandList->Get()->IASetIndexBuffer(reinterpret_cast<DirectXBuffer*>(buffer)->GetD3DView<D3D12_INDEX_BUFFER_VIEW*>());
 	}
 
-	void DirectXRendererAPI::BindUniformBuffer(DirectXCommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
+	void VulkanRendererAPI::BindUniformBuffer(DirectXCommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 	{
 		SetConstantBufferView(commandList, bindslot, reinterpret_cast<DirectXBuffer*>(buffer)->GetD3D()->GetGPUVirtualAddress());
 	}
 
-	void DirectXRendererAPI::BindStructuredBuffer(DirectXCommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
+	void VulkanRendererAPI::BindStructuredBuffer(DirectXCommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 	{
 		SetShaderResourceView(commandList, bindslot, reinterpret_cast<DirectXBuffer*>(buffer)->GetD3D()->GetGPUVirtualAddress());
 	}
 
-	void DirectXRendererAPI::DrawIndexedInstanced(DirectXCommandBuffer* commandList, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t baseVertexLocation, uint32_t startInstanceLocation)
+	void VulkanRendererAPI::DrawIndexedInstanced(DirectXCommandBuffer* commandList, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t baseVertexLocation, uint32_t startInstanceLocation)
 	{
 		commandList->Get()->DrawIndexedInstanced(indexCount, instanceCount, firstIndex, baseVertexLocation, startInstanceLocation);
 	}
 
-	void DirectXRendererAPI::DrawIndirect(DirectXCommandBuffer* commandList, IndirectSignature* indirectSignature, UINT commandCount, Buffer* argumentBuffer, UINT64 argumentBufferOffset, KNR::Buffer* countBuffer, UINT64 countBufferOffset)
+	void VulkanRendererAPI::DrawIndirect(DirectXCommandBuffer* commandList, IndirectSignature* indirectSignature, UINT commandCount, Buffer* argumentBuffer, UINT64 argumentBufferOffset, KNR::Buffer* countBuffer, UINT64 countBufferOffset)
 	{
 		commandList->Get()->ExecuteIndirect(indirectSignature->GetCommandSignature(), commandCount, reinterpret_cast<DirectXBuffer*>(argumentBuffer)->GetD3D(), argumentBufferOffset, nullptr, countBufferOffset);
 	}
 
-	void DirectXRendererAPI::DispatchCompute(DirectXCommandBuffer* commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ)
+	void VulkanRendererAPI::DispatchCompute(DirectXCommandBuffer* commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ)
 	{
 
 	}
 
-	void DirectXRendererAPI::SetViewport(const float x, const float y, const float width, const float height)
+	void VulkanRendererAPI::SetViewport(const float x, const float y, const float width, const float height)
 	{
 		//This should never be hit but lets make sure this doesn't happen anyway
 		assert(width > 0);
@@ -163,17 +157,17 @@ namespace KNR
 		CreateRenderTargets();
 	}
 
-	void DirectXRendererAPI::SetWireframeMode(int i)
+	void VulkanRendererAPI::SetWireframeMode(int i)
 	{
 
 	}
 
-	void DirectXRendererAPI::PopState()
+	void VulkanRendererAPI::PopState()
 	{
 
 	}
 
-	void DirectXRendererAPI::RecordCommandBuffers()
+	void VulkanRendererAPI::RecordCommandBuffers()
 	{
 		WaitForPreviousFrame();
 		ID3D12Device* device = DirectXContext.GetDevice();
@@ -195,13 +189,13 @@ namespace KNR
 	}
 
 
-	void DirectXRendererAPI::BeginRenderSilent()
+	void VulkanRendererAPI::BeginRenderSilent()
 	{
 
 	}
 
 	//Geometry render begin
-	void DirectXRendererAPI::BeginRender()
+	void VulkanRendererAPI::BeginRender()
 	{
 		ID3D12CommandQueue* copyQueue = static_cast<ID3D12CommandQueue*>(DirectXContext.GetCommandQueue());
 		DirectXCommandBuffer* copyCommandBuffer = DirectXContext.GetCopyCommandBuffer();
@@ -217,7 +211,7 @@ namespace KNR
 	}
 
 	//Geometry render end
-	void DirectXRendererAPI::EndRender()
+	void VulkanRendererAPI::EndRender()
 	{
 		ID3D12GraphicsCommandList* m_commandList = DirectXContext.GetCommandList();
 		ID3D12CommandQueue* m_commandQueue = DirectXContext.GetCommandQueue();
@@ -232,7 +226,7 @@ namespace KNR
 		m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 	}
 
-	void DirectXRendererAPI::Present()
+	void VulkanRendererAPI::Present()
 	{
 		if (m_imguiEnabled)
 		{
@@ -261,7 +255,7 @@ namespace KNR
 	}
 
 
-	void DirectXRendererAPI::SetSwapchainRenderTarget()
+	void VulkanRendererAPI::SetSwapchainRenderTarget()
 	{
 		ID3D12Device* device = DirectXContext.GetDevice();
 		ID3D12GraphicsCommandList* commandList = m_imguiEnabled ? DirectXContext.GetImguiCommandList() : DirectXContext.GetCommandList();
@@ -304,19 +298,19 @@ namespace KNR
 		commandList->RSSetScissorRects(1, &m_scissorRect);
 	}
 
-	void DirectXRendererAPI::SetFinalRenderTextureId(void* textureId)
+	void VulkanRendererAPI::SetFinalRenderTextureId(void* textureId)
 	{
 		m_framebuffer = textureId;
 	}
 
 
 
-	void* DirectXRendererAPI::GetFinalRenderTextureId()
+	void* VulkanRendererAPI::GetFinalRenderTextureId()
 	{
 		return m_framebuffer;
 	}
 
-	void DirectXRendererAPI::WaitForGPU()
+	void VulkanRendererAPI::WaitForGPU()
 	{
 		for (int i = 0; i < 3; ++i)
 		{
@@ -326,19 +320,19 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::BlitToTexture(Texture2D* srcTx, Texture2D* dstTx)
+	void VulkanRendererAPI::BlitToTexture(Texture2D* srcTx, Texture2D* dstTx)
 	{
 		DirectXContext.StartBlit(reinterpret_cast<DirectXTexture2D*>(srcTx)->GetTextureHandle(), reinterpret_cast<DirectXTexture2D*>(dstTx)->GetTextureHandle(), srcTx->GetWidth(), srcTx->GetHeight());
 		DirectXContext.EndBlit();
 	}
 
-	void DirectXRendererAPI::BlitToSwapchain(Texture2D* srcTx)
+	void VulkanRendererAPI::BlitToSwapchain(Texture2D* srcTx)
 	{
 		DirectXContext.StartBlitToSwapchain(reinterpret_cast<DirectXTexture2D*>(srcTx)->GetTextureHandle(), m_backBufferRenderTarget[m_bufferIndex].Get(), srcTx->GetWidth(), srcTx->GetHeight());
 		DirectXContext.EndBlit();
 	}
 
-	void DirectXRendererAPI::SetRootConstant(DirectXCommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues)
+	void VulkanRendererAPI::SetRootConstant(DirectXCommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -350,7 +344,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::SetRootConstants(DirectXCommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* srcData, uint32_t destOffsetIn32BitValues)
+	void VulkanRendererAPI::SetRootConstants(DirectXCommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* srcData, uint32_t destOffsetIn32BitValues)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -362,7 +356,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::SetConstantBufferView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
+	void VulkanRendererAPI::SetConstantBufferView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -374,7 +368,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::SetShaderResourceView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
+	void VulkanRendererAPI::SetShaderResourceView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -386,7 +380,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::SetUnorderedAccessView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
+	void VulkanRendererAPI::SetUnorderedAccessView(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -398,7 +392,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::SetRootDescriptorTable(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 startGPUAddress)
+	void VulkanRendererAPI::SetRootDescriptorTable(DirectXCommandBuffer* commandList, uint32_t bindSlot, UINT64 startGPUAddress)
 	{
 		if (commandList->GetType() == CommandBufferType::graphics)
 		{
@@ -410,7 +404,7 @@ namespace KNR
 		}
 	}
 
-	void DirectXRendererAPI::WaitForPreviousFrame()
+	void VulkanRendererAPI::WaitForPreviousFrame()
 	{
 		IDXGISwapChain3* swapchain = DirectXContext.GetSwapchain();
 		//wait for the previous frame to compile
@@ -420,13 +414,13 @@ namespace KNR
 		m_fences[m_bufferIndex]->IncrementFenceValue();
 	}
 
-	void DirectXRendererAPI::CreateCPUHeaps()
+	void VulkanRendererAPI::CreateCPUHeaps()
 	{
 		//Liam Fix - Load the frameheap (Only do this one, we can deal with safely doing this later)
 		m_rtvHeap.Create(DirectXContext.GetDevice(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 3); //unbound texture heap
 	}
 
-	void DirectXRendererAPI::CreateRenderTargets()
+	void VulkanRendererAPI::CreateRenderTargets()
 	{
 		IDXGISwapChain3* swapchain = DirectXContext.GetSwapchain();
 		m_rtvHeapIndex = 0;

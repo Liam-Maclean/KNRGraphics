@@ -27,7 +27,7 @@ public class KNRGraphics : Sharpmake.Project
                     Globals.GraphicsDir,
                 };
             case GraphicsPlatform.VULKAN:
-                return new[] {
+                return new[] { 
                     Path.Combine(Globals.ExternalDir,"vulkan", "include"),
                     Globals.GraphicsDir,
                 };
@@ -150,9 +150,13 @@ public class KNRGraphics : Sharpmake.Project
         conf.IncludePaths.Add(Globals.GraphicsDir);
         conf.IncludePaths.AddRange(GetIncludeDirectoriesByGraphicsAPI(m_GraphicsAPI));
 
+        //Spdlog (we should make this a library at some point)
+        conf.IncludePaths.Add(Path.Combine(Globals.ExternalDir, "spdlog", "include"));
+
         //PCH
-        conf.PrecompHeader = "knrpch.h";//Path.Combine(Globals.GraphicsDir, "knrpch.h");
-        conf.PrecompSource = "knrpch.cpp";//Path.Combine(Globals.GraphicsDir, "knrpch.cpp");
+        conf.PrecompHeader = "knrpch.h";
+        conf.PrecompSource = "knrpch.cpp";
+
         conf.ForcedIncludes.Add("knrpch.h");
         //Project include and output
         conf.ProjectFileName = "[project.Name]";

@@ -1,30 +1,31 @@
-#include "directx_technique.h"
-#include "directx_graphics_context.h"
+#include "vulkan_technique.h"
+#include "vulkan_pipeline.h"
+#include "Vulkan_graphics_context.h"
 
 namespace KNR
 {
 	Technique* Technique::Create(PipelineCreateInfo pipelineCreateInfo)
 	{
-		return new DirectXTechnique(pipelineCreateInfo);
+		return new VulkanTechnique(pipelineCreateInfo);
 	}
 
-	DirectXTechnique::DirectXTechnique(PipelineCreateInfo pipelineCreateInfo)
+	VulkanTechnique::VulkanTechnique(PipelineCreateInfo pipelineCreateInfo)
 	{
 		//Create the pipeline
-		m_pipeline = new DirectXPipeline(pipelineCreateInfo);
+		m_pipeline = new VulkanPipeline(pipelineCreateInfo);
 	}
 
-	DirectXTechnique::~DirectXTechnique()
+	VulkanTechnique::~VulkanTechnique()
 	{
 
 	}
 
-	void DirectXTechnique::Bind(DirectXCommandBuffer* commandList) const
+	void VulkanTechnique::Bind(DirectXCommandBuffer* commandList) const
 	{
-		m_pipeline->Bind(commandList);
+		
 	}
 
-	void DirectXTechnique::Unbind(DirectXCommandBuffer* commandList) const
+	void VulkanTechnique::Unbind(DirectXCommandBuffer* commandList) const
 	{
 
 	}

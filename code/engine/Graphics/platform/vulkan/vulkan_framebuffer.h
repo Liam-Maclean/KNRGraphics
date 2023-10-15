@@ -3,7 +3,6 @@
 #include "platform/vulkan/vulkan_graphics_context.h"
 #include "platform/vulkan/vulkan_texture.h"
 
-
 namespace KNR
 {
 	class VulkanFramebuffer
@@ -34,7 +33,7 @@ namespace KNR
 		FramebufferSpecification m_Specification;
 
 		std::vector<FramebufferTextureSpecification> m_ColorAttachmentSpecifications;
-		FramebufferTextureSpecification m_DepthAttachmentSpecification = FramebufferTextureFormat::None;
+		FramebufferTextureSpecification m_DepthAttachmentSpecification;
 		std::vector<uint32_t> m_ColorAttachments;
 		uint32_t m_DepthAttachment = 0;
 		std::vector<VulkanTexture2D*> m_framebufferTexture;

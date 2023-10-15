@@ -8,6 +8,7 @@
 #include "vulkan_command_buffer.h"
 #include "vulkan_swapchain.h"
 #include "vulkan/vulkan.h"
+#include "vma/vk_mem_alloc.h"
 
 namespace KNR
 {
@@ -40,7 +41,7 @@ namespace KNR
         inline uint32_t GetCopyQueueIndex() { return m_copyQueueFamilyIdx; }
         inline uint32_t GetGraphicsQueueIndex() { return m_graphicsQueueFamilyIdx; }
         inline uint32_t GetPresentQueueIndex() { return m_presentQueueFamilyIdx; }
-
+        inline VmaAllocator GetVMAAllocator() { return m_vmaAllocator; }
 
         void StartBlit(VkBuffer srcResource, VkBuffer dstResource, int width, int height);
         void EndBlit();
@@ -57,7 +58,7 @@ namespace KNR
         void CreateQueues();
         void CreateSwapchain();
         void CreateReservedHeapAllocations();
-
+        void CreateVMAAllocator();
         //Device extentions
         const std::vector<const char*> m_requiredDeviceExtensions = {
             VK_KHR_SWAPCHAIN_EXTENSION_NAME,
@@ -85,6 +86,7 @@ namespace KNR
 
         HardwareGPUTelemetry m_gpuTelemetry;
 
+        VmaAllocator m_vmaAllocator;
 
         //Debug reporting callbacks
         VkDebugReportCallbackCreateInfoEXT m_debugCallbackCreateInfo = {};

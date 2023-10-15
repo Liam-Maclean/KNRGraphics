@@ -21,11 +21,15 @@ namespace KNR
 
 		}
 
-		static bool IsDepthFormat(FramebufferTextureFormat format)
+		static bool IsDepthFormat(TextureFormat format)
 		{
 			switch (format)
 			{
-			case FramebufferTextureFormat::DEPTH24STENCIL8:  return true;
+			case TextureFormat::TEXTURE_FORMAT_D32_FLOAT:
+			case TextureFormat::TEXTURE_FORMAT_D24_UNORM_S8_UINT:
+			case TextureFormat::TEXTURE_FORMAT_R32_UINT:
+			case TextureFormat::TEXTURE_FORMAT_D16_UNORM: 
+				return true;
 			}
 
 			return false;
@@ -38,7 +42,7 @@ namespace KNR
 	{
 		for (auto spec : m_Specification.Attachments.Attachments)
 		{
-			if (!Utils::IsDepthFormat(spec.TextureFormat))
+			if (!Utils::IsDepthFormat(spec.textureFormat))
 				m_ColorAttachmentSpecifications.emplace_back(spec);
 			else
 				m_DepthAttachmentSpecification = spec;
@@ -46,10 +50,9 @@ namespace KNR
 
 		if (m_ColorAttachmentSpecifications.size())
 		{
-			m_RTVHeap.Create(DirectXContext.GetDevice(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, m_ColorAttachmentSpecifications.size());
+
 		}
 
-		m_DSVHeap.Create(DirectXContext.GetDevice(), D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
 		Invalidate();
 	}
 

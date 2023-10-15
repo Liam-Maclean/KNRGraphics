@@ -23,12 +23,10 @@ namespace KNR
 		virtual uint32_t AppendData(uint32_t size, void* data) override;
 		VkBuffer GetD3D() { return m_buffer; }
 
-
 	private:		
 		BufferUsageType m_bufferType;
-
 		VkBuffer m_buffer;
-		VkDeviceMemory m_memory;
+		VmaAllocation m_allocation;
 		VkDescriptorBufferInfo m_descriptor;
 
 		uint32_t m_rendererId;

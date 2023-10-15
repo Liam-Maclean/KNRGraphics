@@ -1,5 +1,4 @@
 #pragma once
-#include "directx_pipeline_layout.h"
 #include <vector>
 namespace KNR
 {
@@ -20,22 +19,23 @@ namespace KNR
 		std::vector<DXGI_FORMAT> rtvFormats;
 	};
 
-	class DirectXCommandBuffer;
-	class DirectXPipeline
+	class CommandBuffer;
+	class VulkanPipeline
 	{
 	public:
-		DirectXPipeline(const PipelineCreateInfo& desc);
-		DirectXPipeline();
-		~DirectXPipeline();
+		VulkanPipeline(const PipelineCreateInfo& desc);
+		VulkanPipeline();
+		~VulkanPipeline();
 
-		virtual void Bind(DirectXCommandBuffer* commandList);
-		virtual void Unbind(DirectXCommandBuffer* commandList);
+		virtual void Bind(CommandBuffer* commandList);
+		virtual void Unbind(CommandBuffer* commandList);
 
-		inline DirectXPipelineLayout* GetPipelineLayout() { return m_pipelineLayout; }
-		inline ID3D12PipelineState* GetPipeline() {return m_pipelineState; }
+		inline VkPipelineLayout GetPipelineLayout() { return m_pipelineLayout; }
+		inline VkPipeline GetPipeline() {return m_pipeline; }
 	private:
-		DirectXPipelineLayout* m_pipelineLayout; //root signature class
-		ID3D12PipelineState* m_pipelineState;
+
+		VkPipelineLayout m_pipelineLayout;
+		VkPipeline m_pipeline;
 		PipelineCreateInfo m_pipelineCreateInfo;
 	};
 }

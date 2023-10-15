@@ -1,33 +1,19 @@
 #pragma once
+#include "render_types.h"
 
 namespace KNR
 {
 	class Texture2D;
-	enum class FramebufferTextureFormat
-	{
-		None = 0,
-
-		// Color
-		RGBA8,
-		RG16,
-		RED_INTEGER,
-
-		// Depth/stencil
-		DEPTH24STENCIL8,
-
-		// Defaults
-		Depth = DEPTH24STENCIL8
-	};
 
 	struct FramebufferTextureSpecification
 	{
 		FramebufferTextureSpecification() = default;
-		FramebufferTextureSpecification(FramebufferTextureFormat format)
-			: TextureFormat(format) {}
-		FramebufferTextureSpecification(FramebufferTextureFormat format, uint32_t samples)
-			: TextureFormat(format), Samples(samples) {}
-		FramebufferTextureFormat TextureFormat = FramebufferTextureFormat::None;
-		uint32_t Samples = 1;
+		FramebufferTextureSpecification(TextureFormat format)
+			: textureFormat(format) {}
+		FramebufferTextureSpecification(TextureFormat format, uint32_t samples)
+			: textureFormat(format), samples(samples) {}
+		TextureFormat textureFormat = TextureFormat::TEXTURE_FORMAT_R8G8B8A8_UNORM;
+		uint32_t samples = 1;
 		// TODO: filtering/wrap
 	};
 

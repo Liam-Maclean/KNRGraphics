@@ -78,6 +78,7 @@ namespace KNR
 		CreateDevice();
 		CreateQueues();
 		CreateSwapchain();
+		CreateVMAAllocator();
 
 		m_copyCommandBuffer = new VulkanCommandBuffer(KNR::CommandBufferType::graphics);
 	}
@@ -157,6 +158,20 @@ namespace KNR
 		}
 
 		return requiredExtensions.empty();
+	}
+
+	void CVulkanContext::CreateVMAAllocator()
+	{
+		uint32_t apiVersion;
+		vkEnumerateInstanceVersion(&apiVersion);
+
+		VmaAllocatorCreateInfo allocator_info = {};
+		allocator_info.physicalDevice = m_physicalDevice;
+		allocator_info.device = m_device;
+		allocator_info.instance = m_instance;
+		allocator_info.vulkanApiVersion = apiVersion;
+
+		Util::ErrorCheck(vmaCreateAllocator(&allocator_info, &m_vmaAllocator));
 	}
 
 

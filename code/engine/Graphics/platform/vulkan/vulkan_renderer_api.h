@@ -1,18 +1,15 @@
 #pragma once
 
 #include "renderer_api.h"
-#include "platform/directx/directx_frame_heap.h"
-#include "platform/directx/directx_heap.h"
-#include "platform/directx/directx_pipeline.h"
-#include "platform/directx/directx_fence.h"
+#include "vulkan_pipeline.h"
+#include "vulkan_fence.h"
 #include <combaseapi.h>
 
 namespace KNR
 {
 	class Buffer;
 	class Technique;
-	class DirectXCommandBuffer;
-	class DirectXRendererAPI
+	class VulkanRendererAPI
 		: public RendererAPI
 	{
 	public:
@@ -60,15 +57,7 @@ namespace KNR
 		void CreateRenderTargets();
 		void RecordCommandBuffers();
 
-		//For creating the backbuffer for the swapchain
-		Microsoft::WRL::ComPtr<ID3D12Resource> m_backBufferRenderTarget[3];
-		DirectXFence* m_fences[3];
-
-		D3D12_VIEWPORT m_viewport;							//What we see in the output of the rasterizer
-		D3D12_RECT m_scissorRect;							//Area to draw into
-
 		//Frame heap stuff
-		DirectXHeap m_rtvHeap;
 		int m_rtvHeapIndex;
 		int m_bufferIndex;
 		int m_width, m_height;

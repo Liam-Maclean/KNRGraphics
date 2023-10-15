@@ -1,8 +1,11 @@
+
+#pragma once
+#include "render_types.h"
 namespace KNR
 {
 	namespace Util
 	{
 		static void ErrorCheck(VkResult result);
-		static VkFormat GetVulkanFormatFromGenericType(FramebufferTextureFormat textureFormat);
+		static VkFormat GetVulkanFormatType(TextureFormat textureFormat);
 	}
 }

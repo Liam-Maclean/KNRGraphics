@@ -77,25 +77,105 @@ namespace KNR
 			}
 		}
 
-		VkFormat GetVulkanFormatFromGenericType(FramebufferTextureFormat textureFormat)
+		VkFormat GetVulkanFormatType(TextureFormat textureFormat)
 		{
 			switch (textureFormat)
 			{
-			case  FramebufferTextureFormat::RGBA8:
-				imageCreateInfo.format = VK_FORMAT_R8G8B8A8_UNORM;
-				break;
-			case FramebufferTextureFormat::RG16:
-				imageCreateInfo.format = VK_FORMAT_R16G16_SFLOAT;
-				break;
-			case  FramebufferTextureFormat::RED_INTEGER:
-				imageCreateInfo.format = VK_FORMAT_R32_SFLOAT;
-				break;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32G32B32A32_FLOAT:
+				return VK_FORMAT_R32G32B32A32_SFLOAT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32G32B32A32_UINT:
+				return VK_FORMAT_R32G32B32A32_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32G32B32A32_SINT:
+				return VK_FORMAT_R32G32B32A32_SINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32G32B32_FLOAT:
+				return VK_FORMAT_R32G32B32_SFLOAT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32G32B32_UINT:
+				return VK_FORMAT_R32G32B32_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32G32B32_SINT:
+				return VK_FORMAT_R32G32B32_SINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16B16A16_FLOAT:
+				return VK_FORMAT_R16G16B16A16_SFLOAT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16B16A16_UNORM:
+				return VK_FORMAT_R16G16B16A16_UNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16B16A16_UINT:
+				return VK_FORMAT_R16G16B16A16_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16B16A16_SNORM:
+				return VK_FORMAT_R16G16B16A16_SNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16B16A16_SINT:
+				return VK_FORMAT_R16G16B16A16_SINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32G32_FLOAT:
+				return VK_FORMAT_R32G32_SFLOAT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32G32_UINT:
+				return VK_FORMAT_R32G32_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32G32_SINT:
+				return VK_FORMAT_R32G32_SINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_D32_FLOAT_S8X24_UINT:
+				return VK_FORMAT_D24_UNORM_S8_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32_FLOAT_X8X24_TYPELESS:
+				return VK_FORMAT_D24_UNORM_S8_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_X32_TYPELESS_G8X24_UINT:
+				return VK_FORMAT_D24_UNORM_S8_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R10G10B10A2_UNORM:
+				return VK_FORMAT_A2R10G10B10_UNORM_PACK32;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R10G10B10A2_UINT:
+				return VK_FORMAT_A2R10G10B10_UINT_PACK32;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R11G11B10_FLOAT:
+				return VK_FORMAT_B10G11R11_UFLOAT_PACK32;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R8G8B8A8_UNORM:
+				return VK_FORMAT_R8G8B8A8_UNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R8G8B8A8_UNORM_SRGB:
+				return VK_FORMAT_B8G8R8A8_SRGB;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R8G8B8A8_UINT:
+				return VK_FORMAT_B8G8R8A8_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R8G8B8A8_SNORM:
+				return VK_FORMAT_B8G8R8A8_SNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R8G8B8A8_SINT:
+				return VK_FORMAT_B8G8R8A8_SINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16_FLOAT:
+				return VK_FORMAT_R16G16_SFLOAT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16_UNORM:
+				return VK_FORMAT_R16G16_UNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16_UINT:
+				return VK_FORMAT_R16G16_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16_SNORM:
+				return VK_FORMAT_R16G16_SNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16G16_SINT:
+				return VK_FORMAT_R16G16_SINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_D32_FLOAT:
+				return VK_FORMAT_D32_SFLOAT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32_FLOAT:
+				return VK_FORMAT_R32_SFLOAT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32_UINT:
+				return VK_FORMAT_R32_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R32_SINT:
+				return VK_FORMAT_R32_SINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_D24_UNORM_S8_UINT:
+				return VK_FORMAT_D24_UNORM_S8_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_D16_UNORM:
+				return VK_FORMAT_D16_UNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16_UNORM:
+				return VK_FORMAT_R16_UNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16_UINT:
+				return VK_FORMAT_R16_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16_SNORM:
+				return VK_FORMAT_R16_SNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R16_SINT:
+				return VK_FORMAT_R16_SINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R8_UNORM:
+				return VK_FORMAT_R8_SSCALED;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R8_UINT:
+				return VK_FORMAT_R8_UINT;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R8_SNORM:
+				return VK_FORMAT_R8_SNORM;
+			case KNR::TextureFormat::TEXTURE_FORMAT_R8_SINT:
+				return VK_FORMAT_R8_SINT;
 			default:
-				//UNEXPECTED FORMAT
 				break;
 			}
 
-			return VkFormat();
+
+			//Unknown texture format
+			assert(0);
 		}
 	}
 }

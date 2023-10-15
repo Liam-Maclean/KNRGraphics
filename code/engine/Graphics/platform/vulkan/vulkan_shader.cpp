@@ -1,6 +1,5 @@
-#include <d3d12.h>
-#include "platform/directx/directx_shader.h"
-#include "platform/directx/directx_graphics_context.h"
+#include "vulkan_shader.h"
+#include "vulkan_graphics_context.h"
 #include "shader_util.h"
 #include "shader_cache.h"
 
@@ -8,7 +7,7 @@ namespace KNR
 {
 	Shader* Shader::Create(const std::filesystem::path& shader)
 	{
-		return new DirectXShader(shader);
+		return new VulkanShader(shader);
 	}
 
 	ShaderStage _ConvertExtensionToShaderStage(const std::string& extension)
@@ -31,7 +30,7 @@ namespace KNR
 		return ShaderStage::vertex;
 	}
 
-	DirectXShader::DirectXShader(const std::filesystem::path& shader)
+	VulkanShader::VulkanShader(const std::filesystem::path& shader)
 	{
 		//If the vertex src path exists
 		if (!shader.empty())
@@ -60,22 +59,22 @@ namespace KNR
 
 
 
-	DirectXShader::~DirectXShader()
+	VulkanShader::~VulkanShader()
 	{
 
 	}
 
-	void DirectXShader::Bind() const
+	void VulkanShader::Bind() const
 	{
 
 	}
 
-	void DirectXShader::Unbind() const
+	void VulkanShader::Unbind() const
 	{
 		
 	}
 
-	void* DirectXShader::GetShaderBytecode()
+	void* VulkanShader::GetShaderBytecode()
 	{
 		return static_cast<void*>(&m_pipelineShaderBytecode);
 	}

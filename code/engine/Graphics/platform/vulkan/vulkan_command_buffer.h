@@ -1,4 +1,5 @@
 #pragma once
+#include "command_buffer.h"
 #include "platform/vulkan/vulkan_fence.h"
 #include "vulkan/vulkan.h"
 namespace KNR
@@ -9,7 +10,7 @@ namespace KNR
 		compute,
 		graphics,
 	};
-	class VulkanCommandBuffer
+	class VulkanCommandBuffer : CommandBuffer
 	{
 	public:
 		VulkanCommandBuffer(CommandBufferType type);
@@ -21,6 +22,8 @@ namespace KNR
 		void Submit(VkQueue queue);
 		void SubmitWorkImmediate();
 		void Wait();
+
+	private:
 		void UpdateCopyResource(VkBuffer* dstResource, VkBuffer* srcResource,  std::vector<D3D12_SUBRESOURCE_DATA> subresources);
 		void UpdateCopyResource(VkBuffer* dstResource, VkBuffer* srcResource, D3D12_SUBRESOURCE_DATA subresources);
 		void CopyResource(VkBuffer* dstResource, VkBuffer* srcResource);
