@@ -3,8 +3,6 @@
 
 namespace KNR
 {
-	
-
 	class VulkanSwapchain : public Swapchain
 	{
 		struct VulkanSwapChainSupportDetails {
@@ -12,7 +10,6 @@ namespace KNR
 			std::vector<VkSurfaceFormatKHR> formats;
 			std::vector<VkPresentModeKHR> presentModes;
 		};
-
 	public:
 		VulkanSwapchain(void* windowPtr, void* instance, int screenWidth, int screenHeight);
 		VulkanSwapchain(void* windowPtr, int screenWidth, int screenHeight);
@@ -36,8 +33,6 @@ namespace KNR
 		std::vector<VkImage> m_swapChainImages;
 		std::vector<VkImageView> m_swapChainImageViews;
 		std::vector<VkFramebuffer> m_swapChainFramebuffers;
-
-
 	};
 }
 

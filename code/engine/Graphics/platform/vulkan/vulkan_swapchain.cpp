@@ -13,7 +13,7 @@ namespace KNR
 		VkWin32SurfaceCreateInfoKHR createInfo{};
 		createInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
 		createInfo.hwnd = (HWND)(windowPtr);
-		createInfo.hinstance = (INSTANCE)(instance);
+		createInfo.hinstance = (HINSTANCE)(instance);
 
 		if (vkCreateWin32SurfaceKHR(vulkanInstance, &createInfo, nullptr, &m_surface) != VK_SUCCESS) {
 

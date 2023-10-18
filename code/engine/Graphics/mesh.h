@@ -12,6 +12,5 @@ namespace KNR
 		uint32_t indexCount;
 		uint32_t vertexCount;
 		std::vector<uint32_t> indices;
-		std::vector<PrimitiveVertex> vertices;
 	};
 }

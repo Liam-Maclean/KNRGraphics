@@ -15,6 +15,5 @@ namespace KNR
 
 	private:
 		Buffer* m_vertexBuffer;
-		std::vector< QuadVertex> m_quadVertices;
 	};
 }

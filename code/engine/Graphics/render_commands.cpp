@@ -3,7 +3,7 @@
 #ifdef PLATFORM_OPENGL
 #include "platform/opengl/opengl_renderer_api.h"
 #elif PLATFORM_VULKAN
-#include "platform/vulkan/vulkan_renderer_api.h";
+#include <platform/vulkan/vulkan_renderer_api.h>;
 #elif PLATFORM_DX12
 #include "platform/directx/directx_renderer_api.h"
 #elif PLATFORM_DX11

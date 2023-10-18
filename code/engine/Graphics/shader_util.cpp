@@ -6,11 +6,13 @@ namespace KNR
 {
 	std::vector<uint32_t> ShaderUtil::CompileHLSL(ShaderInfo info)
 	{
+		std::vector<uint32_t> bytecode;
+		/*
 		//cut off the "bin" suffix and append hlsl on the end
 		//All compiled shader files have 5 characters (QVert, QFrag, QMesh, QComp etc..)
 		std::wstring hlslPath = std::wstring(info.sourcePath.begin(), info.sourcePath.end() - 5);
 		std::wstring outputName = std::wstring(info.sourcePath.begin(), info.sourcePath.end());
-		std::vector<uint32_t> bytecode;
+		
 		
 		//Args for shader compilation
 		std::vector<LPCWSTR> args{};
@@ -116,6 +118,7 @@ namespace KNR
 		//Copy the dxc output to uint32_t vector and return
 		bytecode.resize(pObject->GetBufferSize() / sizeof(uint32_t));
 		memcpy(bytecode.data(), pObject->GetBufferPointer(), pObject->GetBufferSize());
+		*/
 		return bytecode;
 	}
 }

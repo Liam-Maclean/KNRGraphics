@@ -33,7 +33,8 @@ namespace KNR
 
 	uint32_t VulkanRendererAPI::AppendBufferRegion(CommandBuffer* commandList, KNR::Buffer* dstBuffer, KNR::Buffer* srcBuffer)
 	{
-	
+		uint32_t offset;
+		return offset;
 	}
 
 	void VulkanRendererAPI::BindPipeline(CommandBuffer* commandList, KNR::Technique* technique)
@@ -79,6 +80,11 @@ namespace KNR
 	void VulkanRendererAPI::SetViewport(const float x, const float y, const float width, const float height)
 	{
 		
+	}
+
+	void VulkanRendererAPI::SetScissor(const float left, const float top, const float right, const float bottom)
+	{
+
 	}
 
 	void VulkanRendererAPI::SetWireframeMode(int i)
@@ -133,6 +139,22 @@ namespace KNR
 	void VulkanRendererAPI::WaitForGPU()
 	{
 		
+	}
+
+	void VulkanRendererAPI::BeginCommandList()
+	{
+	}
+
+	void VulkanRendererAPI::SubmitCommandBufferImmediate(CommandBuffer* commandList)
+	{
+	}
+
+	void VulkanRendererAPI::SubmitCommandBuffer(CommandBuffer* commandList)
+	{
+	}
+
+	void VulkanRendererAPI::WaitOnCommandList(CommandBuffer* commandList)
+	{
 	}
 
 	void VulkanRendererAPI::BlitToTexture(Texture2D* srcTx, Texture2D* dstTx)

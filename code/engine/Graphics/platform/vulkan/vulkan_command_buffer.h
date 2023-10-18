@@ -1,27 +1,19 @@
 #pragma once
 #include "command_buffer.h"
-#include "platform/vulkan/vulkan_fence.h"
+#include "vulkan_fence.h"
 #include "vulkan/vulkan.h"
+#include "delegate/callback.h"
+
 namespace KNR
 {
-	class VulkanCommandBuffer : CommandBuffer
+	class VulkanCommandBuffer : public CommandBuffer
 	{
 	public:
 		VulkanCommandBuffer(CommandBufferType type);
 		~VulkanCommandBuffer();
 
-		void Reset();
-		void Reset(VkCommandPool customPool);
-		void Close();
-		void Submit(VkQueue queue);
-		void SubmitWorkImmediate();
-		void Wait();
-
 	private:
-		void UpdateCopyResource(VkBuffer* dstResource, VkBuffer* srcResource,  std::vector<D3D12_SUBRESOURCE_DATA> subresources);
-		void UpdateCopyResource(VkBuffer* dstResource, VkBuffer* srcResource, D3D12_SUBRESOURCE_DATA subresources);
-		void CopyResource(VkBuffer* dstResource, VkBuffer* srcResource);
-		void AddToCommandCallbackList(QCore::Delegate<>::Func_type&& func);
+		void AddToCommandCallbackList(Delegate<>::Func_type&& func);
 
 		CommandBufferType GetType() { return m_type; }
 		bool GetWorkToBeSubmitted() { return m_workToBeSubmitted; }
@@ -32,9 +24,10 @@ namespace KNR
 		VkCommandBuffer m_commandList;
 		VkCommandPool m_commandPool;
 		VulkanFence* m_fence;
-		bool m_workToBeSubmitted;
 		CommandBufferType m_type;
-		QCore::Delegate<> m_commandBufferCallbackList;
+		Delegate<> m_commandBufferCallbackList;
+
+		bool m_workToBeSubmitted;
 		
 	};
 

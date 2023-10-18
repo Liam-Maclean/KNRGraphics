@@ -1,5 +1,6 @@
 #pragma once
-
+#include <basetsd.h>
+#include <minwindef.h>
 namespace KNR
 {
 	class VertexArray;
@@ -40,14 +41,15 @@ namespace KNR
 		virtual void Clear() const = 0;
 		virtual void SetClearColor(float r, float g, float b, float a) = 0;
 		virtual void SetViewport(const float x, const float y, const float w, const float h) = 0;
+		virtual void SetScissor(const float left, const float top, const float right, const float bottom) = 0;
 		virtual void SetWireframeMode(int i) = 0;
 
 		//CommandBuffer calls
 		virtual void WaitForGPU() = 0;
-		virtual void BeginCommandList();
+		virtual void BeginCommandList() = 0;
 		virtual void SubmitCommandBufferImmediate(CommandBuffer* commandList) = 0;
-		virtual void SubmitCommandBuffer(CommandBuffer* commandList);
-		virtual void WaitOnCommandList(CommandBuffer* commandList);
+		virtual void SubmitCommandBuffer(CommandBuffer* commandList) = 0;
+		virtual void WaitOnCommandList(CommandBuffer* commandList) = 0;
 
 
 		//Render Calls

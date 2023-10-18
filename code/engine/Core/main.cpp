@@ -17,8 +17,6 @@ int main()
     KNR::Buffer* buffer;
     KNR::Texture* texture;
     KNR::Framebuffer* framebuffer;
-    KNR::Shader* shader;
-    KNR::Technique* technique;
     KNR::CommandBuffer* commandBuffer;
 
     //Initialize KNR (make sure this is done before initializing any KNR types)
@@ -38,7 +36,6 @@ int main()
     framebufferSpec.Samples = 1;
     framebufferSpec.SwapChainTarget = true;
     framebufferSpec.Attachments = attachmentSpec;
-
     framebuffer = KNR::Framebuffer::Create(framebufferSpec);
 
     //Create a buffer using a descriptor
@@ -46,7 +43,6 @@ int main()
     bufferDesc.bufferType = KNR::BufferUsageType::VERTEX;
     bufferDesc.bufferAccessType = KNR::BufferAccessType::DEFAULT;
     bufferDesc.vertexBuffer.stride = 0;
-
     buffer = KNR::Buffer::Create(bufferDesc);
 
     //Create a command buffer
@@ -61,11 +57,9 @@ int main()
 
     framebuffer->Unbind(commandBuffer);
 
-
     KNR::RenderCommand::SetSwapchainRenderTarget();
     KNR::RenderCommand::EndRender(); //End rendering
     KNR::RenderCommand::Present(); //Present to swapchain
-
 
     return 0;
 }

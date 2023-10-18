@@ -1,4 +1,3 @@
-#include "knrpch.h"
 #include "vulkan_graphics_context.h"
 #include "vulkan_texture.h"
 #include "vulkan_util.h"
@@ -12,37 +11,28 @@ namespace KNR
 	//API call for debugcallbacks
 	VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT obj_type, uint64_t src_obj, size_t location, int32_t msg_code, const char* layer_prefix, const char* msg, void* user_data)
 	{
-		//Logging needed
-		//std::ostringstream stream;
-		//stream << "VKDBG: ";
 		if (flags & VK_DEBUG_REPORT_INFORMATION_BIT_EXT)
 		{
 			KNT_INFO("PERFORMANCE: ");
-			//stream << "INFO: ";
 		}
 		if (flags & VK_DEBUG_REPORT_WARNING_BIT_EXT)
 		{
 			KNT_INFO("WARNING: ");
-			//stream << "WARNING: ";
 		}
 		if (flags & VK_DEBUG_REPORT_PERFORMANCE_WARNING_BIT_EXT)
 		{
 			KNT_INFO("PERFORMANCE: ");
-			//stream << "PERFORMANCE: ";
 		}
 		if (flags & VK_DEBUG_REPORT_ERROR_BIT_EXT)
 		{
-			KNT_ERROR("ERROR");
-			//stream << "ERROR: ";
+			KNT_ERROR("ERROR: ");
 		}
 		if (flags & VK_DEBUG_REPORT_DEBUG_BIT_EXT)
 		{
-			KNT_DEBUG("ERROR");
-			//stream << "DEBUG: ";
+			KNT_DEBUG("ERROR: ");
 		}
-		//stream << "@[" << layer_prefix << "]: ";
-		//stream << msg << std::endl;
-		//std::cout << stream.str();
+
+		KNT_DEBUG("@[%s]  %s", layer_prefix, msg);
 		return false;
 	}
 
@@ -243,15 +233,11 @@ namespace KNR
 		vkEnumerateInstanceLayerProperties(&layerCount, layerPropertyList.data());
 
 		//write out all layers found using iostream
-		
-		//Logging needed
-		//std::cout << "Instance Layers: \n";
+		KNT_INFO("Instance Layers: ");
 		for (auto& i : layerPropertyList)
 		{
-			//std::cout << "	" << i.layerName << "\t\t | " << i.description << std::endl;
+			KNT_INFO("%s       %s", i.layerName, i.description);
 		}
-		//std::cout << std::endl;
-
 
 		QueryFamilyQueueIndices(m_physicalDevice);
 		std::vector<VkDeviceQueueCreateInfo> queueCreateInfos;
@@ -292,10 +278,8 @@ namespace KNR
 		//output the available instance extentions to the console window
 		for (auto i = 0; i < extentions.size(); i++)
 		{
-			//Logger
-			//std::cout << "Available Extentions: " << extentions[i].extensionName << std::endl;
+			KNT_INFO("Available Extentions: %s", extentions[i].extensionName);
 		}
-		//std::cout << std::endl;
 
 		//add glfw extentions to extention list
 		//glfwExtentions = glfwGetRequiredInstanceExtensions(&glfwExtentionCount);

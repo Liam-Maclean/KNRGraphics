@@ -1,9 +1,10 @@
 #pragma once
 #include "technique.h"
-class VulkanPipelinelayout;
-class VulkanPipeline;
+
 namespace KNR
 {
+	class VulkanPipelinelayout;
+	class VulkanPipeline;
 	class VulkanTechnique
 		: public Technique
 	{

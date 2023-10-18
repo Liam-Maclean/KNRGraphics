@@ -1,6 +1,7 @@
 #pragma once
 #include "shader.h"
 #include "shader_cache.h"
+#include <filesystem>
 
 namespace KNR
 {

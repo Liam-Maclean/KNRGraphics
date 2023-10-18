@@ -3,7 +3,7 @@
 #include <cassert>
 #include <string>
 #include <vector>
-
+#include <Windows.h>
 namespace KNR
 {
 	class CommandBuffer;

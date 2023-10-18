@@ -118,11 +118,6 @@ namespace KNR
 
 	}
 
-	void VulkanTexture2D::SetData(void* data, uint32_t size)
-	{
-
-	}
-
 	void VulkanTexture2D::Bind(uint32_t slot) const
 	{
 

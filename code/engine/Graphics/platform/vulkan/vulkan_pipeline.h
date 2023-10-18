@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "vulkan_util.h"
 namespace KNR
 {
 	enum class CullingMode;

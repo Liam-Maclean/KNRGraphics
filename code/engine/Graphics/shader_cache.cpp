@@ -1,5 +1,8 @@
 #include "shader_cache.h"
-
+#include <fstream>
+#include <iostream>
+#include <filesystem>
+#include <iosfwd>
 namespace KNR
 {
 	void ShaderCache::Init(const std::string& sourcePath)

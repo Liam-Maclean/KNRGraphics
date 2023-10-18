@@ -3,10 +3,11 @@
 #include "render_types.h"
 namespace KNR
 {
-	namespace Util
+	class Util
 	{
+	public:
 		static void ErrorCheck(VkResult result);
 		static VkFormat GetVulkanFormatType(TextureFormat textureFormat);
 		static bool IsDepthFormat(TextureFormat format);
-	}
+	};
 }

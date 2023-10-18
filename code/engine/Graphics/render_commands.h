@@ -14,9 +14,9 @@ namespace KNR
  			sRendererAPI->Initialize();
 		}
 
-		inline static void SetClearColor(const glm::vec4& color)
+		inline static void SetClearColor(float r, float g, float b, float a)
 		{
-			sRendererAPI->SetClearColor(color);
+			sRendererAPI->SetClearColor(r,g,b,a);
 		}
 
 		inline static void Clear()
@@ -26,7 +26,7 @@ namespace KNR
 
 		inline static void IndirectDraw(CommandBuffer* commandList, IndirectSignature* indirectSignature, uint32_t commandCount, Buffer* commandArgBuffer, uint32_t argOffset, Buffer* countBuffer, uint32_t countBufferOffset)
 		{
-			sRendererAPI->DrawIndirect(commandList, indirectSignature, commandCount, commandArgBuffer, argOffset, nullptr, countBufferOffset);
+			sRendererAPI->DrawIndirect(commandList, indirectSignature, commandCount, commandArgBuffer, argOffset, countBuffer, countBufferOffset);
 		}
 
 		inline static void DispatchCompute(CommandBuffer* commandList, uint32_t dispatchThreadCountX, uint32_t dispatchThreadCountY, uint32_t dispatchThreadCountZ)
@@ -37,6 +37,11 @@ namespace KNR
 		inline static void SetViewport(const float x, const float y, const float width, const float height)
 		{
 			sRendererAPI->SetViewport(x, y, width, height);
+		}
+
+		inline static void SetScissor(const float left, const float top, const float right, const float bottom)
+		{
+			sRendererAPI->SetScissor(left, top, right, bottom);
 		}
 
 		inline static void SetWireframeMode(int i)

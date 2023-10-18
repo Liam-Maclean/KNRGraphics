@@ -25,7 +25,7 @@
 #endif
 
 #ifdef PLATFORM_VULKAN
-#include "vulkan\vulkan.h";	//Vulkan raw header
+#include <vulkan/vulkan.h>	//Vulkan raw header
 #endif
 
 #ifdef PLATFORM_OPENGL

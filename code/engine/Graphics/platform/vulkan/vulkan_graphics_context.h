@@ -27,7 +27,7 @@ namespace KNR
         CVulkanContext(WindowDesc* windowHandle);
         ~CVulkanContext();
 
-        virtual void Init(WindowDesc* windowHandle) override;
+        virtual void Init(WindowDesc* windowHandle);
         virtual void Init() override;
         virtual void SwapBuffers() override;
 
@@ -63,7 +63,7 @@ namespace KNR
         //Device extentions
         const std::vector<const char*> m_requiredDeviceExtensions = {
             VK_KHR_SWAPCHAIN_EXTENSION_NAME,
-            VK_KHR_dynamic_rendering
+            VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME,
         };
 
         WindowDesc* m_window;

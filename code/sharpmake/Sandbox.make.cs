@@ -6,6 +6,7 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 
 [module: Sharpmake.Include("globals.cs")]
 [module: Sharpmake.Include("KNRGraphics.make.cs")]
+[module: Sharpmake.Include("KNRBaseProject.make.cs")]
 
 [Generate]
 public class KNRSln : Solution
@@ -64,7 +65,7 @@ public class SandboxProject : Sharpmake.Project
         conf.ProjectFileName = "[project.Name]";
         conf.ProjectPath = Globals.BuildDir;
 
-        conf.AddPublicDependency<KNRGraphics>(target);
+        conf.AddPrivateDependency<KNRGraphics>(target);
 
         conf.Defines.AddRange(GetDefinesByOptimization(target));
 

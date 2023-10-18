@@ -1,5 +1,5 @@
 #pragma once
-#include "platform/vulkan/vulkan_graphics_context.h"
+#include "vulkan_graphics_context.h"
 #include "texture.h"
 #include <string>
 
@@ -43,8 +43,8 @@ namespace KNR
 		int m_channels = 0;
 		void* m_data = nullptr;
 
-		uint32_t m_framebufferRTVHeapIndex = -1;
-		uint32_t m_framebufferDSVHeapIndex = -1;
+		uint32_t m_framebufferRTVHeapIndex = 0;
+		uint32_t m_framebufferDSVHeapIndex = 0;
 		uint32_t m_rendererID;
 		uint32_t m_editorID;
 	};

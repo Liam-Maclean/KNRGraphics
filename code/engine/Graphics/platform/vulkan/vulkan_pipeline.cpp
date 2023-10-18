@@ -6,7 +6,7 @@ namespace KNR
 {
 	VulkanPipeline::VulkanPipeline(const PipelineCreateInfo& desc)
 	{
-		HRESULT hr;
+		//HRESULT hr;
 		m_pipelineCreateInfo = desc;
 		m_pipelineLayout = m_pipelineCreateInfo.pipelineLayout;
 

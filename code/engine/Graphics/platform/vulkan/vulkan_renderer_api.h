@@ -30,10 +30,15 @@ namespace KNR
 		virtual void Clear() const override;
 		virtual void SetClearColor(float r, float g, float b, float a) override;
 		virtual void SetViewport(const float x, const float y, const float w, const float h) override;
+		virtual void SetScissor(const float left, const float top, const float right, const float bottom) override;
 		virtual void SetWireframeMode(int i) override;
 
 		//CommandBuffer calls
 		virtual void WaitForGPU() override;
+		virtual void BeginCommandList() override;
+		virtual void SubmitCommandBufferImmediate(CommandBuffer* commandList) override;
+		virtual void SubmitCommandBuffer(CommandBuffer* commandList) override;
+		virtual void WaitOnCommandList(CommandBuffer* commandList) override;
 
 		//Render Calls
 		virtual void DispatchCompute(CommandBuffer* commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ) override;

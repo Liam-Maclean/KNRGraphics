@@ -2,7 +2,7 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 
 [Generate]
-public class KNRGraphics : Sharpmake.Project
+public class KNRGraphics : KNRLibBase
 {
     public enum GraphicsPlatform 
     {
@@ -72,8 +72,7 @@ public class KNRGraphics : Sharpmake.Project
 
         return null;
     }
-
-   
+    
     public string[] GetDefinesByGraphicsAPI(GraphicsPlatform platform)
     {
         switch (platform)
@@ -81,18 +80,22 @@ public class KNRGraphics : Sharpmake.Project
             case GraphicsPlatform.DIRECTX12:
                 return new[] {
                     "PLATFORM_DX12",
+                    "NOMINMAX",
                 };
             case GraphicsPlatform.DIRECTX11:
                 return new[] {
                     "PLATFORM_DX11",
+                    "NOMINMAX",
                 };
             case GraphicsPlatform.VULKAN:
                 return new[] {
                     "PLATFORM_VULKAN",
+                    "NOMINMAX",
                 };
             case GraphicsPlatform.OPENGL:
                 return new[] {
                     "PLATFORM_OPENGL",
+                    "NOMINMAX",
                 };       
         }
 
@@ -126,17 +129,8 @@ public class KNRGraphics : Sharpmake.Project
     }
 
     public KNRGraphics()
+        : base("KNRGraphics")
     {
-        Name = "KNRGraphics";
-
-        AddTargets(new Target(
-                Platform.win32 | Platform.win64,
-                DevEnv.vs2019,
-                Optimization.Debug | Optimization.Release, OutputType.Lib
-        ));
-
-        System.Console.WriteLine(Path.Combine(Globals.ExternalDir,"vulkan", "include"));
-
         SourceRootPath = Globals.GraphicsDir;
         SourceFilesExcludeRegex.AddRange(GetExcludeDirectoriesByGraphicsAPI(m_GraphicsAPI));
     }
@@ -144,6 +138,8 @@ public class KNRGraphics : Sharpmake.Project
     [Configure]
     public void ConfigureAll(Configuration conf, Target target)
     {
+        SetUpVisualStudioOptions(conf, target);
+
         //Platform specific set-up
         conf.Defines.AddRange(GetDefinesByGraphicsAPI(m_GraphicsAPI));
         conf.LibraryFiles.AddRange(GetLibrariesByGraphicsAPI(m_GraphicsAPI));

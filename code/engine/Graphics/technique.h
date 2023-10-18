@@ -2,6 +2,7 @@
 
 namespace KNR
 {
+	struct PipelineCreateInfo;
 	class CommandBuffer;
 	class Technique
 	{
