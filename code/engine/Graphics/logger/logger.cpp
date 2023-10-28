@@ -4,7 +4,6 @@
 #include "spdlog/sinks/stdout_color_sinks.h"
 
 std::shared_ptr<spdlog::logger> KNR::Logger::s_console_logger;
-std::shared_ptr<spdlog::logger> KNR::Logger::s_file_logger;
 
 namespace KNR
 {
@@ -15,14 +14,22 @@ namespace KNR
 		// colour-timestamp-logger_name-message
 		spdlog::set_pattern("%^[%T] %n: %v%$");
 
+		auto console_sink = std::make_shared<spdlog::sinks::stderr_color_sink_mt>();
+		console_sink->set_level(spdlog::level::trace);
+		console_sink->set_pattern("%^[%T] %n: %v%$");
+
+
+		auto file_logger = std::make_shared<spdlog::sinks::basic_file_sink_mt>("knt_log.txt", true);
+		file_logger->set_level(spdlog::level::trace);
+		file_logger->set_pattern("%^[%T] %n: %v%$");
+
+		auto logger = spdlog::logger("[KNT]", { console_sink , file_logger });
 		// init console logger
-		s_console_logger = spdlog::stdout_color_mt("[KNT]");
+		s_console_logger = std::make_shared<spdlog::logger>(logger);
 		s_console_logger->set_level(spdlog::level::trace);
 		s_console_logger->set_pattern("%^[%T] %n: %v%$");
 
 
-		s_file_logger = std::make_shared<spdlog::sinks::basic_file_sink_mt>("knt_log.txt", true);
-		s_file_logger->set_level(spdlog::level::trace);
-		s_file_logger->set_pattern("%^[%T] %n: %v%$");
+	
 	}
 }

@@ -16,6 +16,41 @@ namespace KNR
 		std::vector<GPUInfoCache> hardwareInfo;
 	};
 
+	enum class BlendValue
+	{
+		Zero,
+		One,
+		SrcColor,
+		InvSrcColor,
+		SrcAlpha,
+		InvSrcAlpha,
+		DestAlpha,
+		InvDestAlpha,
+		DestColor,
+		InvDestColor
+	};
+
+	enum class BlendOp
+	{
+		Add,
+		Subtract,
+		Min,
+		Max
+	};
+
+	enum class DepthComparisonOp
+	{
+		Never,
+		Less,
+		Equal,
+		LessEqual,
+		Greater,
+		GreaterEqual,
+		NotEqual,
+		Always
+	};
+
+
 	enum class CommandBufferType
 	{
 		copy,
@@ -48,6 +83,12 @@ namespace KNR
 		CW = 0,
 	};
 
+	enum class FillMode
+	{
+		solid,
+		wireframe
+	};
+
 	enum class CullingMode
 	{
 		backface = 0,
@@ -61,6 +102,27 @@ namespace KNR
 		line = 1,
 		triangle = 2,
 		patch = 3
+	};
+
+	enum class VertexElementFormat
+	{
+		Byte4,
+		Color,
+		Half,
+		Unorm,
+		Short,
+		Float,
+	};
+
+	enum class VertexElementUsage
+	{
+		Position,
+		Texcoord,
+		BlendIndices,
+		BlendWeights,
+		Normal,
+		Tangent,
+		Binormal,
 	};
 
 	enum class TextureFormat

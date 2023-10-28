@@ -55,7 +55,7 @@ namespace KNR
 					//m_framebufferTexture[i]->ResizeResource(m_ColorAttachmentSpecifications[i], m_Specification);
 					//m_framebufferTexture[i]->RecreateRTV(&m_RTVHeap);
 
-					m_RendererID = m_framebufferTexture[i]->GetEditorRenderId();
+					//m_RendererID = m_framebufferTexture[i]->GetEditorRenderId();
 				}
 			}
 		}
@@ -75,7 +75,7 @@ namespace KNR
 					textureDesc.debugName = L"Color Render Target";
 
 					//m_framebufferTexture.push_back(reinterpret_cast<DirectXTexture2D*>(Texture2D::Create(textureDesc)));
-					m_RendererID = m_framebufferTexture[i]->GetEditorRenderId();
+					//m_RendererID = m_framebufferTexture[i]->GetEditorRenderId();
 					//m_framebufferTexture[i]->CreateRTV(&m_RTVHeap);
 				}
 			}

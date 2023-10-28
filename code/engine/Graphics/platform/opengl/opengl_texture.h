@@ -1,37 +1,45 @@
 #pragma once
-#include "graphics/texture.h"
+#include "opengl_graphics_context.h"
+#include "texture.h"
 #include <string>
 
-#include <glad/glad.h>
-
-namespace Qualia
+namespace KNR
 {
-	class OpenGLTexture2D : public Texture2D
+	class OpenglTexture2D : public Texture2D
 	{
 	public:
-		OpenGLTexture2D(const char* path);
-		OpenGLTexture2D(uint32_t width, uint32_t height);
-		virtual ~OpenGLTexture2D();
+		OpenglTexture2D(const TextureDescriptor& desc);
+		virtual ~OpenglTexture2D();
 
+		virtual void Upload() override;
 		virtual uint32_t GetWidth() const override { return m_width; }
 		virtual uint32_t GetHeight() const override { return m_height; }
-		virtual uint32_t GetRendererId() const override { return m_rendererID; }
+		virtual uint32_t GetRenderId() const override { return m_rendererID; }
+		virtual uint32_t GetEditorRenderId() const override { return m_editorID; }
+		virtual uint64_t GetHandle() const override;
+		
+		virtual void ResizeResource(FramebufferTextureSpecification framebufferTextureSpec, FramebufferSpecification framebufferSpec);
 
-		virtual void SetData(void* data, uint32_t size) override;
 		virtual void Bind(uint32_t slot = 0) const override;
 		virtual void Unbind(uint32_t slot = 0) const override;
 
 		virtual bool operator ==(const Texture& other) const override
 		{
-			return m_rendererID == other.GetRendererId();
+			return m_rendererID == other.GetRenderId();
 		}
+
 	private:
+		std::vector<std::string> m_cubemapFilenames;
+
 		std::string m_path = "";
-		uint32_t m_width = 0;
-		uint32_t m_height = 0;
-		RENDERERID m_rendererID = -1;
-		uint32_t m_slot = 0;
-		GLenum m_internalFormat;
-		GLenum m_dataFormat;
+		int m_width = 0;
+		int m_height = 0;
+		int m_channels = 0;
+		void* m_data = nullptr;
+
+		uint32_t m_framebufferRTVHeapIndex = 0;
+		uint32_t m_framebufferDSVHeapIndex = 0;
+		uint32_t m_rendererID;
+		uint32_t m_editorID;
 	};
 }

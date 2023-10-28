@@ -1,7 +1,7 @@
 #pragma once
 #include <cstdint>
 #include "buffer.h"
-#include "vulkan_graphics_context.h"
+#include "vma/vk_mem_alloc.h"
 namespace KNR
 {
 	class VulkanBuffer

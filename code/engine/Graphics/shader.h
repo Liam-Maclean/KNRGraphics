@@ -1,5 +1,14 @@
 #pragma once
-#include <filesystem>
+
+//Forward declare
+namespace std
+{
+	namespace filesystem
+	{
+		class path;
+	}
+}
+
 namespace KNR
 {
 	class Shader

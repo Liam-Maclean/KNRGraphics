@@ -32,7 +32,7 @@ public class KNRSln : Solution
 }
 
 [Generate]
-public class SandboxProject : Sharpmake.Project
+public class SandboxProject : KNRExeBase
 {
     public string[] GetDefinesByOptimization(Target target)
     {
@@ -49,19 +49,15 @@ public class SandboxProject : Sharpmake.Project
     }
 
     public SandboxProject()
+        :base("Sandbox")
     {
-        Name = "Sandbox";
-
-        AddTargets(new Target(
-                Platform.win32 | Platform.win64,
-                DevEnv.vs2019,
-                Optimization.Debug | Optimization.Release
-        ));
         SourceRootPath = Globals.CoreDir;
     }
     [Configure]
     public void ConfigureAll(Configuration conf, Target target)
     {
+        SetUpVisualStudioOptions(conf, target);
+
         conf.ProjectFileName = "[project.Name]";
         conf.ProjectPath = Globals.BuildDir;
 

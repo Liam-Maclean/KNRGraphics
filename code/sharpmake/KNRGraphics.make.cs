@@ -12,7 +12,32 @@ public class KNRGraphics : KNRLibBase
         OPENGL,
     }
 
-    public GraphicsPlatform m_GraphicsAPI = GraphicsPlatform.VULKAN;
+    public GraphicsPlatform m_GraphicsAPI = GraphicsPlatform.DIRECTX12;
+
+    public string[] GetLibraryPathsByGraphicsAPI(GraphicsPlatform platform)
+    {
+        switch (platform)
+        {
+            case GraphicsPlatform.DIRECTX12:
+                return new[] {
+                    Globals.GraphicsDir,
+                };
+            case GraphicsPlatform.DIRECTX11:
+                return new[] {
+                    Globals.GraphicsDir,
+                };
+            case GraphicsPlatform.VULKAN:
+                return new[] { 
+                    Path.Combine(Globals.ExternalDir, "vulkan", "lib"), 
+                };
+            case GraphicsPlatform.OPENGL:
+                return new[] {
+                    Globals.GraphicsDir,
+                };         
+        }
+
+        return null;
+    }
 
     public string[] GetIncludeDirectoriesByGraphicsAPI(GraphicsPlatform platform)
     {
@@ -29,7 +54,9 @@ public class KNRGraphics : KNRLibBase
             case GraphicsPlatform.VULKAN:
                 return new[] { 
                     Path.Combine(Globals.ExternalDir,"vulkan", "include"),
+                    Path.Combine(Globals.ExternalDir, "vulkan", "lib"),
                     Globals.GraphicsDir,
+                  
                 };
             case GraphicsPlatform.OPENGL:
                 return new[] {
@@ -118,11 +145,11 @@ public class KNRGraphics : KNRLibBase
                 };
             case GraphicsPlatform.VULKAN:
                 return new[] {
-                    "PLATFORM_VULKAN",
+                    "vulkan-1.lib",
                 };
             case GraphicsPlatform.OPENGL:
                 return new[] {
-                    "PLATFORM_OPENGL",
+                    "opengl32.lib",
                 };       
         }
         return null;
@@ -142,10 +169,15 @@ public class KNRGraphics : KNRLibBase
 
         //Platform specific set-up
         conf.Defines.AddRange(GetDefinesByGraphicsAPI(m_GraphicsAPI));
-        conf.LibraryFiles.AddRange(GetLibrariesByGraphicsAPI(m_GraphicsAPI));
-        conf.IncludePaths.Add(Globals.GraphicsDir);
-        conf.IncludePaths.AddRange(GetIncludeDirectoriesByGraphicsAPI(m_GraphicsAPI));
 
+        //Libs
+        conf.LibraryFiles.AddRange(GetLibrariesByGraphicsAPI(m_GraphicsAPI));
+        conf.LibraryPaths.AddRange(GetLibraryPathsByGraphicsAPI(m_GraphicsAPI));
+
+        //Include files
+        conf.IncludePaths.Add(Globals.GraphicsDir);
+        conf.IncludePaths.AddRange(GetIncludeDirectoriesByGraphicsAPI(m_GraphicsAPI));  
+        
         //Spdlog (we should make this a library at some point)
         conf.IncludePaths.Add(Path.Combine(Globals.ExternalDir, "spdlog", "include"));
 

@@ -21,7 +21,9 @@
 #endif
 
 #ifdef PLATFORM_DX11
-#include <d3d11>			//dx11 raw API
+#include <d3d11.h>			//dx11 raw API
+#include <dxgi1_5.h>		//DXGI library
+#include <d3dcompiler.h>	//DirectX hlsl compiler (shaders) 
 #endif
 
 #ifdef PLATFORM_VULKAN

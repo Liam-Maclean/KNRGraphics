@@ -1,3 +1,4 @@
+#define VMA_IMPLEMENTATION
 #include "vulkan_swapchain.h"
 #include "vulkan_graphics_context.h"
 #include "vulkan_util.h"

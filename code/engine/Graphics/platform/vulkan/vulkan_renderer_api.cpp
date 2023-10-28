@@ -3,6 +3,7 @@
 #include "vulkan_renderer_api.h"
 #include "vulkan_texture.h"
 #include "vulkan_technique.h"
+#include "logger/logger.h"
 #include <basetsd.h>
 
 namespace KNR
@@ -12,10 +13,13 @@ namespace KNR
 
 	}
 
-	void VulkanRendererAPI::Initialize()
+	void VulkanRendererAPI::Initialize(const WindowDesc& windowDesc)
 	{
+		//Initialize the in-build KNR logger
+		KNR::Logger::Init();
+
 		//Initializes Vulkan Context
-		VulkanContext;
+		VulkanContext.Init(windowDesc);
 
 		m_width = 1920;
 		m_height = 1080;

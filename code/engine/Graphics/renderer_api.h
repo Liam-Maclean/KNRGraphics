@@ -1,11 +1,12 @@
 #pragma once
 #include <basetsd.h>
 #include <minwindef.h>
+#include "window.h"
 namespace KNR
 {
 	class VertexArray;
 	class Texture2D;
-	class IndirectSignature;
+	class DirectX12IndirectSignature;
 	class Buffer;
 	class Technique;
 	class UniformBuffer;
@@ -28,7 +29,7 @@ namespace KNR
 
 		//Constructor
 		virtual ~RendererAPI() = 0 {};
-		virtual void Initialize() = 0;
+		virtual void Initialize(const WindowDesc& windowDesc) = 0;
 
 		//Swapchain
 		virtual void Present() = 0;
@@ -55,7 +56,7 @@ namespace KNR
 		//Render Calls
 		virtual void DispatchCompute(CommandBuffer* commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ) = 0;
 		virtual void DrawIndexedInstanced(CommandBuffer* commandList, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t baseVertexLocation, uint32_t startInstanceLocation) = 0;
-		virtual void DrawIndirect(CommandBuffer* commandList, IndirectSignature* indirectSignature, UINT pcommandCount, Buffer* commandBuffer, UINT64 ArgumentBufferOffset, Buffer* pCountBuffer, UINT64 CountBufferOffset) = 0;
+		virtual void DrawIndirect(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, UINT pcommandCount, Buffer* commandBuffer, UINT64 ArgumentBufferOffset, Buffer* pCountBuffer, UINT64 CountBufferOffset) = 0;
 		virtual void BlitToTexture(Texture2D* srcTx, Texture2D* dstTx) = 0;
 		virtual void BlitToSwapchain(Texture2D* srcTx) = 0;
 

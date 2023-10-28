@@ -7,5 +7,6 @@ namespace KNR
 		uint32_t width;
 		uint32_t height;
 		void* hwnd;
+		void* instance;
 	};
 }

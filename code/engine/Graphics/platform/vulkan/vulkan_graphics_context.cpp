@@ -42,8 +42,8 @@ namespace KNR
 		m_device = 0;
 		m_swapChain = 0;
 	}
-	CVulkanContext::CVulkanContext(WindowDesc* windowHandle)
-		: m_window(windowHandle)
+	CVulkanContext::CVulkanContext(const WindowDesc& windowDesc)
+		: m_window(windowDesc)
 	{
 		m_device = 0;
 		m_swapChain = 0;
@@ -66,9 +66,9 @@ namespace KNR
 
 	}
 
-	void CVulkanContext::Init(WindowDesc* windowHandle)
+	void CVulkanContext::Init(const WindowDesc& windowDesc)
 	{
-		m_window = windowHandle;
+		m_window = windowDesc;
 
 		CreateInstance();
 		CreateDevice();
@@ -220,6 +220,17 @@ namespace KNR
 		vkGetPhysicalDeviceProperties(m_physicalDevice, &m_deviceProperties);
 		vkGetPhysicalDeviceMemoryProperties(m_physicalDevice, &m_deviceMemoryProperties);
 
+		KNT_INFO("");
+		KNT_INFO("Graphics Device: {0}", (std::string)m_deviceProperties.deviceName);
+		KNT_INFO("Device driver version: {0}", m_deviceProperties.driverVersion);
+		KNT_INFO("Device API version: {0}", m_deviceProperties.apiVersion);
+		KNT_INFO("Vendor ID: {0}", m_deviceProperties.vendorID);
+		KNT_INFO("");
+		KNT_INFO("Memory Properties");
+		KNT_INFO("Device Local Memory (VRAM): {0}", (m_deviceMemoryProperties.memoryHeaps[0].size / 1024 / 1024));
+		KNT_INFO("Host Coherant memory (RAM): {0}", (m_deviceMemoryProperties.memoryHeaps[1].size / 1024 / 1024));
+		KNT_INFO("");
+
 		//get the number of layers from the instance
 		uint32_t layerCount = 0;
 
@@ -236,7 +247,7 @@ namespace KNR
 		KNT_INFO("Instance Layers: ");
 		for (auto& i : layerPropertyList)
 		{
-			KNT_INFO("%s       %s", i.layerName, i.description);
+			KNT_INFO((std::string)i.layerName + ": " + (std::string)i.description);
 		}
 
 		QueryFamilyQueueIndices(m_physicalDevice);
@@ -278,7 +289,7 @@ namespace KNR
 		//output the available instance extentions to the console window
 		for (auto i = 0; i < extentions.size(); i++)
 		{
-			KNT_INFO("Available Extentions: %s", extentions[i].extensionName);
+			KNT_INFO("Available Extentions: " +  (std::string)extentions[i].extensionName);
 		}
 
 		//add glfw extentions to extention list
@@ -310,6 +321,8 @@ namespace KNR
 
 		//Create the instance using vkCreateInstance function, and error check
 		Util::ErrorCheck(vkCreateInstance(&instance_create_info, nullptr, &m_instance));
+
+		KNT_INFO("Vulkan Instance Created");
 	}
 
 	void CVulkanContext::CreateQueues()
@@ -323,8 +336,8 @@ namespace KNR
 	void CVulkanContext::CreateSwapchain()
 	{
 		//Liam fix - need IWindow size here (width and height)
-		int width = m_window->width;
-		int height = m_window->height;
-		m_swapChain = new VulkanSwapchain(m_window->hwnd, m_window->width, m_window->height);
+		int width = m_window.width;
+		int height = m_window.height;
+		//m_swapChain = new VulkanSwapchain(m_window.hwnd, m_window.instance, m_window.width, m_window.height);
 	}
 }

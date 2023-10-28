@@ -17,7 +17,7 @@ namespace KNR
 		virtual ~VulkanRendererAPI();
 
 		//Constructor
-		virtual void Initialize() override;
+		virtual void Initialize(const WindowDesc& windowDesc) override;
 
 		//Swapchain
 		virtual void Present() override;

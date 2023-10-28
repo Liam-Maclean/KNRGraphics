@@ -1,5 +1,5 @@
 #pragma once
-
+#include "window.h"
 #include "renderer_api.h"
 
 namespace KNR
@@ -9,9 +9,9 @@ namespace KNR
 	class RenderCommand
 	{
 	public:
-		inline static void Initialize()
+		inline static void Initialize(const WindowDesc& windowDesc)
 		{
- 			sRendererAPI->Initialize();
+ 			sRendererAPI->Initialize(windowDesc);
 		}
 
 		inline static void SetClearColor(float r, float g, float b, float a)
@@ -24,9 +24,9 @@ namespace KNR
 			sRendererAPI->Clear();
 		}
 
-		inline static void IndirectDraw(CommandBuffer* commandList, IndirectSignature* indirectSignature, uint32_t commandCount, Buffer* commandArgBuffer, uint32_t argOffset, Buffer* countBuffer, uint32_t countBufferOffset)
+		inline static void IndirectDraw(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, uint32_t commandCount, Buffer* commandArgBuffer, uint32_t argOffset, Buffer* countBuffer, uint32_t countBufferOffset)
 		{
-			sRendererAPI->DrawIndirect(commandList, indirectSignature, commandCount, commandArgBuffer, argOffset, countBuffer, countBufferOffset);
+			sRendererAPI->DrawIndirect(commandList, DirectX12IndirectSignature, commandCount, commandArgBuffer, argOffset, countBuffer, countBufferOffset);
 		}
 
 		inline static void DispatchCompute(CommandBuffer* commandList, uint32_t dispatchThreadCountX, uint32_t dispatchThreadCountY, uint32_t dispatchThreadCountZ)

@@ -24,10 +24,10 @@ namespace KNR
         }
 
         CVulkanContext();
-        CVulkanContext(WindowDesc* windowHandle);
+        CVulkanContext(const WindowDesc& windowDesc);
         ~CVulkanContext();
 
-        virtual void Init(WindowDesc* windowHandle);
+        virtual void Init(const WindowDesc& windowDesc);
         virtual void Init() override;
         virtual void SwapBuffers() override;
 
@@ -66,7 +66,7 @@ namespace KNR
             VK_KHR_DYNAMIC_RENDERING_EXTENSION_NAME,
         };
 
-        WindowDesc* m_window;
+        WindowDesc m_window;
 
         //Vulkan Handles
         VkDevice m_device;

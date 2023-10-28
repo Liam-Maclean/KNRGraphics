@@ -1,6 +1,7 @@
 #include "vulkan_buffer.h"
+#include "vulkan_util.h"
 #include "vulkan_graphics_context.h"
-#include "vk_mem_alloc.h"
+#include "vma/vk_mem_alloc.h"
 
 namespace KNR
 {
@@ -71,7 +72,7 @@ namespace KNR
 		//	An unused region of the memory block is bound to this buffer
 		//
 		//vmaAllocation can be used to access the VkDeviceMemory handle and it's offset
-		vmaCreateBuffer(VulkanContext.GetVMAAllocator(), &bufferInfo, &allocInfo, &m_buffer, &m_allocation, nullptr);
+		Util::ErrorCheck(vmaCreateBuffer(VulkanContext.GetVMAAllocator(), &bufferInfo, &allocInfo, &m_buffer, &m_allocation, nullptr));
 
 		//TODO: Vulkan likes to be difficult and has way too much boilerplate for simple stuff like name tagging
 		if (desc.debugName)
