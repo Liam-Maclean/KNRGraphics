@@ -12,13 +12,13 @@ namespace KNR
 	class Buffer;
 	class Technique;
 	class DirectX12CommandBuffer;
-	class DirectX12RendererAPI
+	class DirectX12RendererAPI final
 		: public RendererAPI
 	{
 	public:
 		virtual ~DirectX12RendererAPI();
-		virtual void Init() override;
-		virtual void SetClearColor(const Vector4f& color) override;
+		virtual void Initialize(const WindowDesc& windowDesc) override;
+		virtual void SetClearColor(const float r, const float g, const float b, const float a) override;
 		virtual void Clear() const override;
 		virtual void SetViewport(const float x, const float y, const float width, const float height);
 		virtual void SetWireframeMode(int i);
@@ -28,24 +28,24 @@ namespace KNR
 		virtual void EndRender();
 
 		//Command List required functions
-		virtual void SetRootConstant(DirectX12CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues);
-		virtual void SetRootConstants(DirectX12CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* srcData, uint32_t destOffsetIn32BitValues);
-		virtual void SetConstantBufferView(DirectX12CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress) override;
-		virtual void SetShaderResourceView(DirectX12CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress) override;
-		virtual void SetUnorderedAccessView(DirectX12CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress) override;
-		virtual void SetRootDescriptorTable(DirectX12CommandBuffer* commandList, uint32_t bindSlot, UINT64 startGPUAddress) override;
-		virtual void DrawIndexedInstanced(DirectX12CommandBuffer* commandList, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t baseVertexLocation, uint32_t startInstanceLocation);
-		virtual void DrawIndirect(DirectX12CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, UINT pcommandCount, Buffer* pArgumentBuffer, UINT64 ArgumentBufferOffset, Buffer* pCountBuffer, UINT64 CountBufferOffset);
-		virtual void DispatchCompute(DirectX12CommandBuffer* commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ) override;
+		virtual void SetRootConstant(CommandBuffer* commandList, const uint32_t rootParameterIndex, const uint32_t srcData, const uint32_t destOffsetIn32BitValues);
+		virtual void SetRootConstants(CommandBuffer* commandList, const uint32_t rootParameterIndex, const uint32_t numValuesSet, void* srcData, const uint32_t destOffsetIn32BitValues);
+		virtual void SetConstantBufferView(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 gpuAddress) override;
+		virtual void SetShaderResourceView(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 gpuAddress) override;
+		virtual void SetUnorderedAccessView(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 gpuAddress) override;
+		virtual void SetRootDescriptorTable(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 startGPUAddress) override;
+		virtual void DrawIndexedInstanced(CommandBuffer* commandList, const uint32_t indexCount, const uint32_t instanceCount, const uint32_t firstIndex, const uint32_t baseVertexLocation, const uint32_t startInstanceLocation);
+		virtual void DrawIndirect(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, const UINT pcommandCount, Buffer* pArgumentBuffer, const UINT64 ArgumentBufferOffset, Buffer* pCountBuffer, UINT64 CountBufferOffset);
+		virtual void DispatchCompute(CommandBuffer* commandList, const uint32_t dispatchGroupCountX, const uint32_t dispatchGroupCountY, const uint32_t dispatchGroupCountZ) override;
 
-		virtual uint32_t AppendBufferRegion(DirectX12CommandBuffer* commandList, Buffer* dstBuffer, Buffer* srcBuffer) override;
+		virtual uint32_t AppendBufferRegion(CommandBuffer* commandList, Buffer* dstBuffer, Buffer* srcBuffer) override;
 
-		virtual void BindPipeline(DirectX12CommandBuffer* commandList, Technique* technique) override;
+		virtual void BindPipeline(CommandBuffer* commandList, Technique* technique) override;
 
-		virtual void BindVertexBuffer(DirectX12CommandBuffer* commandList, Buffer* buffer) override;
-		virtual void BindIndexBuffer(DirectX12CommandBuffer* commandList, Buffer* buffer)override;
-		virtual void BindUniformBuffer(DirectX12CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)override;
-		virtual void BindStructuredBuffer(DirectX12CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)override;
+		virtual void BindVertexBuffer(CommandBuffer* commandList, Buffer* buffer) override;
+		virtual void BindIndexBuffer(CommandBuffer* commandList, Buffer* buffer)override;
+		virtual void BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, const uint32_t bindslot)override;
+		virtual void BindStructuredBuffer(CommandBuffer* commandList, Buffer* buffer, const uint32_t bindslot)override;
 
 		virtual void SetSwapchainRenderTarget();
 		virtual void SetFinalRenderTextureId(void* textureId);

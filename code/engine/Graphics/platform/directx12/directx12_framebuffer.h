@@ -8,29 +8,29 @@
 namespace KNR
 {
 	class DirectX12CommandBuffer;
-	class DirectX12Framebuffer
+	class DirectX12Framebuffer final
 		: public Framebuffer
 	{
 	public:
 		DirectX12Framebuffer(const FramebufferSpecification& spec);
-		virtual ~DirectX12Framebuffer();
+		~DirectX12Framebuffer();
 
 		void Invalidate();
 
-		virtual void Bind(CommandBuffer* commandList) override;
-		virtual void Unbind(CommandBuffer* commandList) override;
+		void Bind(CommandBuffer* commandList) override;
+		void Unbind(CommandBuffer* commandList) override;
 
-		virtual void Resize(uint32_t width, uint32_t height) override;
-		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) override;
+		void Resize(const uint32_t width, const uint32_t height) override;
+		int ReadPixel(const uint32_t attachmentIndex, const int x, const int y) override;
 
-		virtual void ClearAttachment(uint32_t attachmentIndex, int value) override;
+		void ClearAttachment(const uint32_t attachmentIndex, const int value) override;
 
-		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const override { return m_RendererID; }
+		uint32_t GetColorAttachmentRendererID(const uint32_t index = 0) const override { return m_RendererID; }
 
-		virtual const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
+		const FramebufferSpecification& GetSpecification() const override { return m_Specification; }
 		
-		virtual Texture2D* GetFramebufferTexture(uint32_t slot) const override { return static_cast<Texture2D*>(m_framebufferTexture[slot]); }
-		virtual Texture2D* GetDepthTexture() const override { return static_cast<Texture2D*>(m_framebufferDepthTexture); }
+		inline Texture2D* GetFramebufferTexture(const uint32_t slot) const override { return static_cast<Texture2D*>(m_framebufferTexture[slot]); }
+		inline Texture2D* GetDepthTexture() const override { return static_cast<Texture2D*>(m_framebufferDepthTexture); }
 	private:
 		uint32_t m_RendererID = 0;
 		FramebufferSpecification m_Specification;

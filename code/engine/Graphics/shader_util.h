@@ -21,6 +21,6 @@ namespace KNR
 	class ShaderUtil
 	{
 	public:
-		static std::vector<uint32_t> CompileHLSL(ShaderInfo info);
+		static std::vector<uint32_t> CompileHLSL(const ShaderInfo& info);
 	};
 }

@@ -78,7 +78,7 @@ namespace KNR
 		//glfwPollEvents();
 	}
 
-	void CDirectX12Context::StartBlit(ID3D12Resource* srcResource, ID3D12Resource* dstResource, int width, int height)
+	void CDirectX12Context::StartBlit(ID3D12Resource* srcResource, ID3D12Resource* dstResource, const int width, const int height)
 	{
 		assert(width > 0);
 		assert(height > 0);
@@ -117,7 +117,7 @@ namespace KNR
 		m_blitFence->WaitForFenceEvent();
 	}
 
-	void CDirectX12Context::StartBlitToSwapchain(ID3D12Resource* srcResource, ID3D12Resource* dstResource, int width, int height)
+	void CDirectX12Context::StartBlitToSwapchain(ID3D12Resource* srcResource, ID3D12Resource* dstResource, const int width, const int height)
 	{
 		assert(width > 0);
 		assert(height > 0);

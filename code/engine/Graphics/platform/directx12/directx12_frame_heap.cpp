@@ -31,7 +31,7 @@ namespace KNR
 
 	}
 
-	int DirectX12FrameHeap::CopyAllocate(int numDescriptors, DirectX12Heap descriptorHeap, int offset)
+	int DirectX12FrameHeap::CopyAllocate(const int numDescriptors, DirectX12Heap descriptorHeap, const int offset)
 	{
 		assert(numDescriptors > 0);
 		auto futureIndex = currentHeapIndex + numDescriptors;
@@ -49,7 +49,7 @@ namespace KNR
 		return preIndex;
 	}
 
-	void DirectX12FrameHeap::CopyAllocate(DirectX12DescriptorHandleBlock& descriptorHeapBlock, int offset)
+	void DirectX12FrameHeap::CopyAllocate(DirectX12DescriptorHandleBlock& descriptorHeapBlock, const int offset)
 	{
 		auto futureIndex = currentHeapIndex + 1;
 		if (futureIndex >= descriptorHeapSize)
@@ -77,7 +77,7 @@ namespace KNR
 		return gpuHeap.handleGPU(currentHeapIndex);
 	}
 
-	D3D12_GPU_DESCRIPTOR_HANDLE DirectX12FrameHeap::GetGPUHandle(int baseIndex, int offset)
+	D3D12_GPU_DESCRIPTOR_HANDLE DirectX12FrameHeap::GetGPUHandle(const int baseIndex, const int offset)
 	{
 		return gpuHeap.handleGPU(baseIndex + offset);
 	}

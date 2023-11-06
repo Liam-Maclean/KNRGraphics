@@ -4,7 +4,7 @@
 
 namespace KNR
 {
-	std::vector<uint32_t> ShaderUtil::CompileHLSL(ShaderInfo info)
+	std::vector<uint32_t> ShaderUtil::CompileHLSL(const ShaderInfo& info)
 	{
 		std::vector<uint32_t> bytecode;
 		/*

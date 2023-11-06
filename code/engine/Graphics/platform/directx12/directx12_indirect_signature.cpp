@@ -14,7 +14,7 @@ namespace KNR
 
 	}
 
-    void DirectX12IndirectSignature::CreateSignature(Technique* technique, uint32_t byteStride)
+    void DirectX12IndirectSignature::CreateSignature(Technique* technique, const uint32_t byteStride)
     {
         ID3D12Device* device = DirectX12Context.GetDevice();
         HRESULT hr;
@@ -30,7 +30,7 @@ namespace KNR
         }
     }
 
-    void DirectX12IndirectSignature::AddIndirectConstantBufferViewArg(uint32_t rootParameterIndex)
+    void DirectX12IndirectSignature::AddIndirectConstantBufferViewArg(const uint32_t rootParameterIndex)
     {
         D3D12_INDIRECT_ARGUMENT_DESC argumentDesc = {};
         argumentDesc.Type = D3D12_INDIRECT_ARGUMENT_TYPE_CONSTANT_BUFFER_VIEW;
@@ -38,7 +38,7 @@ namespace KNR
         m_indirectArgs.push_back(argumentDesc);
     }
 
-    void DirectX12IndirectSignature::AddIndirectConstantArg(uint32_t rootParameterIndex, uint32_t destOffset, uint32_t numValuesToSet)
+    void DirectX12IndirectSignature::AddIndirectConstantArg(const uint32_t rootParameterIndex, const uint32_t destOffset, const uint32_t numValuesToSet)
     {
         D3D12_INDIRECT_ARGUMENT_DESC argumentDesc = {};
         argumentDesc.Type = D3D12_INDIRECT_ARGUMENT_TYPE_CONSTANT;
@@ -48,7 +48,7 @@ namespace KNR
         m_indirectArgs.push_back(argumentDesc);
     }
 
-    void DirectX12IndirectSignature::AddIndirectShaderResourceViewArg(uint32_t rootParameterIndex)
+    void DirectX12IndirectSignature::AddIndirectShaderResourceViewArg(const uint32_t rootParameterIndex)
     {
         D3D12_INDIRECT_ARGUMENT_DESC argumentDesc = {};
         argumentDesc.Type = D3D12_INDIRECT_ARGUMENT_TYPE_SHADER_RESOURCE_VIEW;

@@ -5,26 +5,24 @@
 #include <d3d12.h>
 namespace KNR
 {
-	class DirectX12Buffer
+	class DirectX12Buffer final
 		: public Buffer
 	{
 	public:
 		DirectX12Buffer(const BufferDescriptor& desc);
 		~DirectX12Buffer();
 
-		virtual void Bind(CommandBuffer* commandList) const override;
-		virtual void Unbind(CommandBuffer* commandList) const override;
+		void Bind(CommandBuffer* commandList) const override;
+		void Unbind(CommandBuffer* commandList) const override;
 
-		virtual void* Map() override;
-		virtual void UnMap() override;
+		void* Map() override final;
+		void UnMap() override final;
 
-		virtual size_t GetCapacitySize() override { return m_allocatedSize; }
-		virtual size_t GetUsedSize() override { return m_usedSize; }
-
-		virtual uint32_t AppendData(uint32_t size, void* data) override;
-		ID3D12Resource* GetD3D() { return m_resource; }
-		
-		DirectX12DescriptorHandleBlock GetDescriptorBlock() { return m_descriptorHandleBlock; }
+		inline size_t GetCapacitySize() const override { return m_allocatedSize; }
+		inline size_t GetUsedSize() const override { return m_usedSize; }
+		inline uint32_t AppendData(const uint32_t size, const void* data) override;
+		inline ID3D12Resource* GetD3D() const { return m_resource; }
+		inline DirectX12DescriptorHandleBlock GetDescriptorBlock() const { return m_descriptorHandleBlock; }
 
 		inline static void Destroy(ID3D12Resource* uploadBuffer) { uploadBuffer->Release(); uploadBuffer = 0; };
 

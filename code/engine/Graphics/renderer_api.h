@@ -40,10 +40,10 @@ namespace KNR
 
 		//Viewport calls
 		virtual void Clear() const = 0;
-		virtual void SetClearColor(float r, float g, float b, float a) = 0;
+		virtual void SetClearColor(const float r, const float g, const float b, const float a) = 0;
 		virtual void SetViewport(const float x, const float y, const float w, const float h) = 0;
 		virtual void SetScissor(const float left, const float top, const float right, const float bottom) = 0;
-		virtual void SetWireframeMode(int i) = 0;
+		virtual void SetWireframeMode(const int i) = 0;
 
 		//CommandBuffer calls
 		virtual void WaitForGPU() = 0;
@@ -54,9 +54,9 @@ namespace KNR
 
 
 		//Render Calls
-		virtual void DispatchCompute(CommandBuffer* commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ) = 0;
-		virtual void DrawIndexedInstanced(CommandBuffer* commandList, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t baseVertexLocation, uint32_t startInstanceLocation) = 0;
-		virtual void DrawIndirect(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, UINT pcommandCount, Buffer* commandBuffer, UINT64 ArgumentBufferOffset, Buffer* pCountBuffer, UINT64 CountBufferOffset) = 0;
+		virtual void DispatchCompute(CommandBuffer* commandList, const uint32_t dispatchGroupCountX, const uint32_t dispatchGroupCountY, const uint32_t dispatchGroupCountZ) = 0;
+		virtual void DrawIndexedInstanced(CommandBuffer* commandList, const uint32_t indexCount, const uint32_t instanceCount, const uint32_t firstIndex, const uint32_t baseVertexLocation, const uint32_t startInstanceLocation) = 0;
+		virtual void DrawIndirect(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, const UINT pcommandCount, Buffer* commandBuffer, const UINT64 ArgumentBufferOffset, Buffer* pCountBuffer, const UINT64 CountBufferOffset) = 0;
 		virtual void BlitToTexture(Texture2D* srcTx, Texture2D* dstTx) = 0;
 		virtual void BlitToSwapchain(Texture2D* srcTx) = 0;
 
@@ -64,15 +64,15 @@ namespace KNR
 		virtual void BindPipeline(CommandBuffer* commandList, Technique* technique) = 0;
 		virtual void BindVertexBuffer(CommandBuffer* commandList, Buffer* buffer) = 0;
 		virtual void BindIndexBuffer(CommandBuffer* commandList, Buffer* buffer) = 0;
-		virtual void BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot) = 0;
-		virtual void BindStructuredBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot) = 0;
+		virtual void BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, const uint32_t bindslot) = 0;
+		virtual void BindStructuredBuffer(CommandBuffer* commandList, Buffer* buffer, const uint32_t bindslot) = 0;
 		
-		virtual void SetRootConstant(CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues) = 0;
-		virtual void SetRootConstants(CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* srcData, uint32_t destOffsetIn32BitValues) = 0;
-		virtual void SetConstantBufferView(CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress) = 0;
-		virtual void SetShaderResourceView(CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress) = 0;
-		virtual void SetUnorderedAccessView(CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress) = 0;
-		virtual void SetRootDescriptorTable(CommandBuffer* commandList, uint32_t bindSlot, UINT64 startGPUAddress) = 0;
+		virtual void SetRootConstant(CommandBuffer* commandList, const uint32_t rootParameterIndex, const uint32_t srcData, const uint32_t destOffsetIn32BitValues) = 0;
+		virtual void SetRootConstants(CommandBuffer* commandList, const uint32_t rootParameterIndex, const uint32_t numValuesSet, void* srcData, const uint32_t destOffsetIn32BitValues) = 0;
+		virtual void SetConstantBufferView(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 gpuAddress) = 0;
+		virtual void SetShaderResourceView(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 gpuAddress) = 0;
+		virtual void SetUnorderedAccessView(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 gpuAddress) = 0;
+		virtual void SetRootDescriptorTable(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 startGPUAddress) = 0;
 
 		//Util
 		virtual uint32_t AppendBufferRegion(CommandBuffer* commandList, Buffer* dstBuffer, Buffer* srcBuffer) = 0;

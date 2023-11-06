@@ -7,16 +7,16 @@ namespace KNR
 {
 	struct ProfileData;
 	class DirectX12CommandBuffer;
-	class DirectX12GraphicsProfiler
+	class DirectX12GraphicsProfiler final
 		: public GraphicsProfiler
 	{
 	public:
 		DirectX12GraphicsProfiler();
 		~DirectX12GraphicsProfiler();
-		virtual uint64_t StartProfiler(DirectX12CommandBuffer* commandList, const char* name) override;
-		virtual void EndProfiler(DirectX12CommandBuffer* commandList, uint64_t idx)override;
+		virtual UINT64 StartProfiler(CommandBuffer* commandList, const char* name) override;
+		virtual void EndProfiler(CommandBuffer* commandList, const uint64_t idx) override;
 		virtual void DisplayFrameData() override;
-		virtual void Update(ProfileData& profile, uint64_t profileIdx, bool drawText, uint64_t gpuFrequency, uint64_t* frameQueryData);
+		virtual void Update(ProfileData& profile, const uint64_t profileIdx, const bool drawText, const uint64_t gpuFrequency, const uint64_t* frameQueryData);
 
 	private:
 		void CreateReadbackBuffer();

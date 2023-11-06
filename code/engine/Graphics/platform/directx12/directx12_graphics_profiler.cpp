@@ -46,7 +46,7 @@ namespace KNR
 		m_readbackBuffer = 0;
 	}
 
-	uint64_t DirectX12GraphicsProfiler::StartProfiler(DirectX12CommandBuffer* commandList, const char* name)
+	uint64_t DirectX12GraphicsProfiler::StartProfiler(CommandBuffer* commandList, const char* name)
 	{
 		PIXBeginEvent(commandList->Get(), 0, name);
 		uint64_t profileIdx = -1;
@@ -81,7 +81,7 @@ namespace KNR
 		return profileIdx;
 	}
 
-	void DirectX12GraphicsProfiler::EndProfiler(DirectX12CommandBuffer* commandList, uint64_t idx)
+	void DirectX12GraphicsProfiler::EndProfiler(CommandBuffer* commandList, uint64_t idx)
 	{
 
 		const uint32_t startQueryIdx = (uint32_t)(idx * 2);
@@ -134,7 +134,7 @@ namespace KNR
 
 	}
 
-	void DirectX12GraphicsProfiler::Update(ProfileData& profile, uint64_t profileIdx, bool drawText, uint64_t gpuFrequency, uint64_t* frameQueryData)
+	void DirectX12GraphicsProfiler::Update(ProfileData& profile, const uint64_t profileIdx, const bool drawText, const uint64_t gpuFrequency, const uint64_t* frameQueryData)
 	{
 		m_frameCount++;
 		profile.queryEnded = false;
@@ -195,7 +195,7 @@ namespace KNR
 		resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 		resourceDesc.Alignment = 0;
 		
-		D3D12_HEAP_PROPERTIES heapProps =
+		constexpr D3D12_HEAP_PROPERTIES heapProps =
 		{
 			D3D12_HEAP_TYPE_READBACK,
 			D3D12_CPU_PAGE_PROPERTY_UNKNOWN,

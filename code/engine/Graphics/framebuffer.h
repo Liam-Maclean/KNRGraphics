@@ -8,9 +8,9 @@ namespace KNR
 	struct FramebufferTextureSpecification
 	{
 		FramebufferTextureSpecification() = default;
-		FramebufferTextureSpecification(TextureFormat format)
+		FramebufferTextureSpecification(const TextureFormat format)
 			: textureFormat(format) {}
-		FramebufferTextureSpecification(TextureFormat format, uint32_t samples)
+		FramebufferTextureSpecification(const TextureFormat format, const uint32_t samples)
 			: textureFormat(format), samples(samples) {}
 		TextureFormat textureFormat = TextureFormat::TEXTURE_FORMAT_R8G8B8A8_UNORM;
 		uint32_t samples = 1;
@@ -44,18 +44,18 @@ namespace KNR
 		virtual void Bind(CommandBuffer* commandList) = 0;
 		virtual void Unbind(CommandBuffer* commandList) = 0;
 
-		virtual void Resize(uint32_t width, uint32_t height) = 0;
-		virtual int ReadPixel(uint32_t attachmentIndex, int x, int y) = 0;
+		virtual void Resize(const uint32_t width, const uint32_t height) = 0;
+		virtual int ReadPixel(const uint32_t attachmentIndex, const int x, const int y) = 0;
 
-		virtual void ClearAttachment(uint32_t attachmentIndex, int value) = 0;
+		virtual void ClearAttachment(const uint32_t attachmentIndex, const int value) = 0;
 
-		virtual uint32_t GetColorAttachmentRendererID(uint32_t index = 0) const = 0;
+		virtual uint32_t GetColorAttachmentRendererID(const uint32_t index = 0) const = 0;
 
 		virtual const FramebufferSpecification& GetSpecification() const = 0;
-		virtual Texture2D* GetFramebufferTexture(uint32_t slot) const = 0;
-		virtual Texture2D* GetDepthTexture() const = 0;
+
+		inline virtual Texture2D* GetFramebufferTexture(const uint32_t slot) const = 0;
+		inline virtual Texture2D* GetDepthTexture() const = 0;
+
 		static Framebuffer* Create(const FramebufferSpecification& spec);
 	};
-
-
 }

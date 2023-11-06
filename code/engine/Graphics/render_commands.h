@@ -14,7 +14,7 @@ namespace KNR
  			sRendererAPI->Initialize(windowDesc);
 		}
 
-		inline static void SetClearColor(float r, float g, float b, float a)
+		inline static void SetClearColor(const float r, const float g, const float b, const float a)
 		{
 			sRendererAPI->SetClearColor(r,g,b,a);
 		}
@@ -24,12 +24,12 @@ namespace KNR
 			sRendererAPI->Clear();
 		}
 
-		inline static void IndirectDraw(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, uint32_t commandCount, Buffer* commandArgBuffer, uint32_t argOffset, Buffer* countBuffer, uint32_t countBufferOffset)
+		inline static void IndirectDraw(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, const uint32_t commandCount, Buffer* commandArgBuffer, const uint32_t argOffset, Buffer* countBuffer, const uint32_t countBufferOffset)
 		{
 			sRendererAPI->DrawIndirect(commandList, DirectX12IndirectSignature, commandCount, commandArgBuffer, argOffset, countBuffer, countBufferOffset);
 		}
 
-		inline static void DispatchCompute(CommandBuffer* commandList, uint32_t dispatchThreadCountX, uint32_t dispatchThreadCountY, uint32_t dispatchThreadCountZ)
+		inline static void DispatchCompute(CommandBuffer* commandList, const uint32_t dispatchThreadCountX, const uint32_t dispatchThreadCountY, const uint32_t dispatchThreadCountZ)
 		{
 			sRendererAPI->DispatchCompute(commandList, dispatchThreadCountX, dispatchThreadCountY, dispatchThreadCountZ);
 		}
@@ -44,7 +44,7 @@ namespace KNR
 			sRendererAPI->SetScissor(left, top, right, bottom);
 		}
 
-		inline static void SetWireframeMode(int i)
+		inline static void SetWireframeMode(const int i)
 		{
 			sRendererAPI->SetWireframeMode(i);
 		}
@@ -94,42 +94,42 @@ namespace KNR
 			sRendererAPI->BindIndexBuffer(commandList,buffer);
 		}
 
-		inline static void BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
+		inline static void BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, const uint32_t bindslot)
 		{
 			sRendererAPI->BindUniformBuffer(commandList, buffer, bindslot);
 		}
 
-		inline static void BindStructuredBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
+		inline static void BindStructuredBuffer(CommandBuffer* commandList, Buffer* buffer, const uint32_t bindslot)
 		{
 			sRendererAPI->BindStructuredBuffer(commandList, buffer, bindslot);
 		}
 
-		inline static void SetRootConstant(CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues)
+		inline static void SetRootConstant(CommandBuffer* commandList, const uint32_t rootParameterIndex, const uint32_t srcData, const uint32_t destOffsetIn32BitValues)
 		{
 			sRendererAPI->SetRootConstant(commandList, rootParameterIndex, srcData, destOffsetIn32BitValues);
 		}
 
-		inline static void SetRootConstants(CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* data, uint32_t destOffsetIn32BitValues)
+		inline static void SetRootConstants(CommandBuffer* commandList, const uint32_t rootParameterIndex, const uint32_t numValuesSet, void* data, const uint32_t destOffsetIn32BitValues)
 		{
 			sRendererAPI->SetRootConstants(commandList, rootParameterIndex, numValuesSet, data, destOffsetIn32BitValues);
 		}
 
-		inline static void SetConstantBufferView(CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
+		inline static void SetConstantBufferView(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 gpuAddress)
 		{
 			sRendererAPI->SetConstantBufferView(commandList, bindSlot, gpuAddress);
 		}
 
-		inline static void SetShaderResourceView(CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
+		inline static void SetShaderResourceView(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 gpuAddress)
 		{
 			sRendererAPI->SetShaderResourceView(commandList, bindSlot, gpuAddress);
 		}
 
-		inline static void SetUnorderedAccessView(CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
+		inline static void SetUnorderedAccessView(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 gpuAddress)
 		{
 			sRendererAPI->SetUnorderedAccessView(commandList, bindSlot, gpuAddress);
 		}
 
-		inline static void SetRootDescriptorTable(CommandBuffer* commandList, uint32_t bindSlot, UINT64 startGPUAddress)
+		inline static void SetRootDescriptorTable(CommandBuffer* commandList, const uint32_t bindSlot, const UINT64 startGPUAddress)
 		{
 			sRendererAPI->SetRootDescriptorTable(commandList, bindSlot, startGPUAddress);
 		}

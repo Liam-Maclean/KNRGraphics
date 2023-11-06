@@ -1,6 +1,7 @@
 
 #include <cassert>
 #include "d3dx12.h"
+#include "directx12_util.h"
 #include "directx12_framebuffer.h"
 #include "directx12_frame_heap.h"
 
@@ -14,35 +15,12 @@ namespace KNR
 
 	static const uint32_t s_MaxFramebufferSize = 8192;
 
-	namespace Utils {
-		static void CreateTextures(bool multisampled, uint32_t* outID, uint32_t count)
-		{
-
-		}
-
-		static void BindTexture(bool multisampled, uint32_t id)
-		{
-
-		}
-
-		static bool IsDepthFormat(FramebufferTextureFormat format)
-		{
-			switch (format)
-			{
-			case FramebufferTextureFormat::DEPTH24STENCIL8:  return true;
-			}
-
-			return false;
-		}
-
-	}
-
 	DirectX12Framebuffer::DirectX12Framebuffer(const FramebufferSpecification& spec)
 		: m_Specification(spec)
 	{
 		for (auto spec : m_Specification.Attachments.Attachments)
 		{
-			if (!Utils::IsDepthFormat(spec.TextureFormat))
+			if (!Util::IsDepthFormat(spec.textureFormat))
 				m_ColorAttachmentSpecifications.emplace_back(spec);
 			else
 				m_DepthAttachmentSpecification = spec;
@@ -244,7 +222,7 @@ namespace KNR
 		m_srvLastFrame = true;
 	}
 
-	void DirectX12Framebuffer::Resize(uint32_t width, uint32_t height)
+	void DirectX12Framebuffer::Resize(const uint32_t width, const uint32_t height)
 	{
 		if (width == 0 || height == 0 || width > s_MaxFramebufferSize || height > s_MaxFramebufferSize)
 		{
@@ -256,13 +234,13 @@ namespace KNR
 		Invalidate();
 	}
 
-	int DirectX12Framebuffer::ReadPixel(uint32_t attachmentIndex, int x, int y)
+	int DirectX12Framebuffer::ReadPixel(const uint32_t attachmentIndex, const int x, const int y)
 	{
 		int pixelData = 0;
 		return pixelData;
 	}
 
-	void DirectX12Framebuffer::ClearAttachment(uint32_t attachmentIndex, int value)
+	void DirectX12Framebuffer::ClearAttachment(const uint32_t attachmentIndex, const int value)
 	{
 
 	}

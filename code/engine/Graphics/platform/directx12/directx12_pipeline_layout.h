@@ -67,20 +67,20 @@ namespace KNR
 		anisotropic,
 	};
 
-	class DirectX12PipelineLayout
+	class DirectX12PipelineLayout final
 	{
 	public:
 		DirectX12PipelineLayout();
 		~DirectX12PipelineLayout();
 
-		void AddDescriptorTable(const std::string& name, uint32_t registerSlot, int32_t numDescriptors, uint32_t registerSpace, DescriptorTableType tableType, ShaderVisibility visibility);
-		void AddRootConstant(const std::string& name, uint32_t numOfValues, uint32_t registerSlot, uint32_t registerSpace, ShaderVisibility visibility);
-		void AddShaderResourceView(const std::string& name, uint32_t registerSlot, ShaderVisibility visibility);
-		void AddConstantResourceView(const std::string& name, uint32_t registerSlot, ShaderVisibility visibility);
-		void AddUnorderedAccessView(const std::string& name, uint32_t registerSlot, ShaderVisibility visibility);
-		void AddSampler(const std::string& name, uint32_t registerSlot, SamplerType samplerType);
+		void AddDescriptorTable(const std::string& name, const uint32_t registerSlot, const int32_t numDescriptors, const uint32_t registerSpace, const DescriptorTableType tableType, const ShaderVisibility visibility);
+		void AddRootConstant(const std::string& name, const uint32_t numOfValues, const uint32_t registerSlot, const uint32_t registerSpace, const ShaderVisibility visibility);
+		void AddShaderResourceView(const std::string& name, const uint32_t registerSlot, const ShaderVisibility visibility);
+		void AddConstantResourceView(const std::string& name, const uint32_t registerSlot, const ShaderVisibility visibility);
+		void AddUnorderedAccessView(const std::string& name, const uint32_t registerSlot, const ShaderVisibility visibility);
+		void AddSampler(const std::string& name, const uint32_t registerSlot, const SamplerType samplerType);
 		void CreateRootSignature();
-		ID3D12RootSignature* GetRootSignature() { return m_rootSignature; }
+		inline ID3D12RootSignature* GetRootSignature() const { return m_rootSignature; }
 
 	private:
 		//Register + root parameter so we can check if a root parameter already exists at that register slot

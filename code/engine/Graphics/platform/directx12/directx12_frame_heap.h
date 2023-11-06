@@ -18,18 +18,18 @@ namespace KNR
 		BINDLESSCOUNT = CUBEMAPS + 1,
 	};
 
-	class DirectX12FrameHeap
+	class DirectX12FrameHeap final
 	{
 	public:
 		DirectX12FrameHeap();
 		~DirectX12FrameHeap();
 		void StartFrame(DirectX12CommandBuffer* commandList);
 		void EndFrame();
-		int CopyAllocate(int numDescriptors, DirectX12Heap descriptorHeap, int offset = 0); //We still need this for unbound resources where we bind the entire heap
-		void CopyAllocate(DirectX12DescriptorHandleBlock& descriptorHeapBlock, int offset = 0); //For binding individual resources
+		int CopyAllocate(const int numDescriptors, DirectX12Heap descriptorHeap, const int offset = 0); //We still need this for unbound resources where we bind the entire heap
+		void CopyAllocate(DirectX12DescriptorHandleBlock& descriptorHeapBlock, const int offset = 0); //For binding individual resources
 		D3D12_CPU_DESCRIPTOR_HANDLE GetCurrentCPUHandle();
 		D3D12_GPU_DESCRIPTOR_HANDLE GetCurrentGPUHandle();
-		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUHandle(int baseIndex, int offset = 0);
+		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUHandle(const int baseIndex, const int offset = 0);
 		void CreateSRV(ID3D12Resource* resource, D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc, DirectX12DescriptorHandleBlock& descriptorHeapBlock);
 		void CreateCBV(D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc, DirectX12DescriptorHandleBlock& descriptorHeapBlock);
 		ID3D12DescriptorHeap* GetDescriptorHeap();

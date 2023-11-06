@@ -11,9 +11,9 @@ namespace KNR
 		GraphicsProfiler() {};
 		~GraphicsProfiler() {};
 		virtual UINT64 StartProfiler(CommandBuffer* commandList, const char* name) = 0;
-		virtual void EndProfiler(CommandBuffer* commandList, UINT64 idx) = 0;
+		virtual void EndProfiler(CommandBuffer* commandList, const UINT64 idx) = 0;
 		virtual void DisplayFrameData() = 0;
-		virtual void Update(ProfileData& profile, UINT64 profileIdx, bool drawText, UINT64 gpuFrequency, UINT64* frameQueryData) = 0;
+		virtual void Update(ProfileData& profile, const UINT64 profileIdx, const bool drawText, const UINT64 gpuFrequency, const UINT64* frameQueryData) = 0;
 		static GraphicsProfiler* Create();
 	};
 }

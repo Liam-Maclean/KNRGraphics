@@ -30,7 +30,7 @@ namespace KNR
         return code;
 	}
 
-	bool ShaderCache::ShaderNeedsCompiled()
+	const bool ShaderCache::ShaderNeedsCompiled()
 	{
 		return !std::filesystem::exists(m_tempFilePath);
 	}

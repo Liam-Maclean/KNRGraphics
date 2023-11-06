@@ -2,7 +2,7 @@
 #include "directx12_graphics_context.h"
 namespace KNR
 {
-	DirectX12Fence::DirectX12Fence(bool copy)
+	DirectX12Fence::DirectX12Fence(const bool copy)
 	{
 		ID3D12Device* device = DirectX12Context.GetDevice();
 		HRESULT hr;

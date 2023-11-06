@@ -75,7 +75,7 @@ namespace KNR
 		//m_rootSignature = 0;
 	}
 
-	void DirectX12PipelineLayout::AddDescriptorTable(const std::string& name, uint32_t registerSlot, int32_t numDescriptors, uint32_t registerSpace, DescriptorTableType tableType, ShaderVisibility visibility)
+	void DirectX12PipelineLayout::AddDescriptorTable(const std::string& name, const uint32_t registerSlot, const int32_t numDescriptors, const uint32_t registerSpace, const DescriptorTableType tableType, const ShaderVisibility visibility)
 	{
 		CD3DX12_DESCRIPTOR_RANGE range = {};
 		range.Init(_ConvertDescriptorRangeType(tableType), numDescriptors, registerSlot, registerSpace);
@@ -90,7 +90,7 @@ namespace KNR
 		m_paramMap.emplace(std::pair(name, m_paramMap.size()));
 	}
 
-	void DirectX12PipelineLayout::AddRootConstant(const std::string& name, uint32_t numOfValues, uint32_t registerSlot, uint32_t registerSpace, ShaderVisibility visibility)
+	void DirectX12PipelineLayout::AddRootConstant(const std::string& name, const uint32_t numOfValues, const uint32_t registerSlot, const uint32_t registerSpace, const ShaderVisibility visibility)
 	{
 		CD3DX12_ROOT_PARAMETER rootParameter = {};
 		rootParameter.InitAsConstants(numOfValues, registerSlot, registerSpace, _ConvertShaderVisibility(visibility));
@@ -100,7 +100,7 @@ namespace KNR
 		m_paramMap.emplace(std::pair(name, m_paramMap.size()));
 	}
 
-	void DirectX12PipelineLayout::AddShaderResourceView(const std::string& name, uint32_t registerSlot, ShaderVisibility visibility)
+	void DirectX12PipelineLayout::AddShaderResourceView(const std::string& name, const uint32_t registerSlot, const ShaderVisibility visibility)
 	{
 		CD3DX12_ROOT_PARAMETER rootParameter = {};
 		rootParameter.InitAsShaderResourceView(registerSlot, 0, _ConvertShaderVisibility(visibility));
@@ -110,7 +110,7 @@ namespace KNR
 		m_paramMap.emplace(std::pair(name, m_paramMap.size()));
 	}
 
-	void DirectX12PipelineLayout::AddConstantResourceView(const std::string& name, uint32_t registerSlot, ShaderVisibility visibility)
+	void DirectX12PipelineLayout::AddConstantResourceView(const std::string& name, const uint32_t registerSlot, const ShaderVisibility visibility)
 	{
 		CD3DX12_ROOT_PARAMETER rootParameter = {};
 		rootParameter.InitAsConstantBufferView(registerSlot, 0, _ConvertShaderVisibility(visibility));
@@ -120,7 +120,7 @@ namespace KNR
 		m_paramMap.emplace(std::pair(name, m_paramMap.size()));
 	}
 
-	void DirectX12PipelineLayout::AddUnorderedAccessView(const std::string& name, uint32_t registerSlot, ShaderVisibility visibility)
+	void DirectX12PipelineLayout::AddUnorderedAccessView(const std::string& name, const uint32_t registerSlot, const ShaderVisibility visibility)
 	{
 		CD3DX12_ROOT_PARAMETER rootParameter = {};
 		rootParameter.InitAsUnorderedAccessView(registerSlot, 0, _ConvertShaderVisibility(visibility));
@@ -130,7 +130,7 @@ namespace KNR
 		m_paramMap.emplace(std::pair(name, m_paramMap.size()));
 	}
 
-	void DirectX12PipelineLayout::AddSampler(const std::string& name, uint32_t registerSlot, SamplerType samplerType)
+	void DirectX12PipelineLayout::AddSampler(const std::string& name, const uint32_t registerSlot, const SamplerType samplerType)
 	{
 		//We only handle simple linear point samplers for now 
 		CD3DX12_STATIC_SAMPLER_DESC staticSampler = {};

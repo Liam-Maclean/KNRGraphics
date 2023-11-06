@@ -8,6 +8,6 @@ namespace KNR
 	public:
 		~CommandBuffer();
 
-		static CommandBuffer* Create(CommandBufferType type);
+		static CommandBuffer* Create(const CommandBufferType type);
 	};
 }

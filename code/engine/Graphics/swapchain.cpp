@@ -10,7 +10,7 @@ namespace KNR
 		m_videoCardDescription[127] = 'a';
 	}
 
-	Swapchain::Swapchain(void* windowPtr, void* instance, int screenWidth, int screenHeight)
+	Swapchain::Swapchain(void* windowPtr, void* instance, const int screenWidth, const int screenHeight)
 	{
 		height = screenHeight;
 		width = screenWidth;
@@ -18,7 +18,7 @@ namespace KNR
 		m_videoCardDescription[127] = 'a';
 	}
 
-	Swapchain::Swapchain(GLFWwindow* hwnd, int screenWidth, int screenHeight)
+	Swapchain::Swapchain(GLFWwindow* hwnd, const int screenWidth, const int screenHeight)
 	{
 		height = screenHeight;
 		width = screenWidth;

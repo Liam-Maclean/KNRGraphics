@@ -176,7 +176,7 @@ namespace KNR
 		m_resource->Unmap(0, nullptr);
 	}
 
-	uint32_t DirectX12Buffer::AppendData(uint32_t size, void* data)
+	uint32_t DirectX12Buffer::AppendData(const uint32_t size, const void* data)
 	{
 		uint32_t combinedSize = size + m_usedSize;
 		

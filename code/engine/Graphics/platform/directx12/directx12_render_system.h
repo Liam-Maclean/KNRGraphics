@@ -23,7 +23,7 @@ namespace KNR
 		virtual void Dispatch() = 0;
 		virtual void Bind() = 0; 
 		virtual void Unbind() = 0;
-		virtual void Resize(int width, int height) = 0;
+		virtual void Resize(const int width, const int height) = 0;
 		virtual void DebugDraw() = 0;
 		virtual void SetColorOutputAsFinalRenderTarget();
 		virtual void SetDepthOutputAsFinalRenderTarget();

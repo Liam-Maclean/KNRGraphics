@@ -24,7 +24,7 @@ namespace KNR
         D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle;
     };
 
-    class CDirectX12Context :
+    class CDirectX12Context final :
         public CGraphicsContext
     {
     public:
@@ -39,8 +39,8 @@ namespace KNR
         ~CDirectX12Context();
 
         void Init(WindowDesc* windowHandle);
-        virtual void Init() override;
-        virtual void SwapBuffers() override;
+        void Init() override;
+        void SwapBuffers() override;
 
         inline ID3D12Device* GetDevice() { return m_device; }
         inline ID3D12GraphicsCommandList* GetCommandList() { return m_commandList; }
@@ -55,10 +55,10 @@ namespace KNR
         inline DirectX12CommandBuffer* GetCopyCommandBuffer() { return m_copyCommandBuffer; }
 
 
-        void StartBlit(ID3D12Resource* srcResource, ID3D12Resource* dstResource, int width, int height);
+        void StartBlit(ID3D12Resource* srcResource, ID3D12Resource* dstResource, const int width, const int height);
         void EndBlit();
 
-        void StartBlitToSwapchain(ID3D12Resource* srcResource, ID3D12Resource* dstResource, int width, int height);
+        void StartBlitToSwapchain(ID3D12Resource* srcResource, ID3D12Resource* dstResource, const int width, const int height);
 
         DirectX12DescriptorHandleBlock ReserveDescriptorHandle(ID3D12Resource* resource, BindlessHeapRegion region, D3D12_SHADER_RESOURCE_VIEW_DESC srv, RENDERERID& renderId);
     private:

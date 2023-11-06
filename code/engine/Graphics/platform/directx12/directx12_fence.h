@@ -2,10 +2,10 @@
 #include <d3d12.h>
 namespace KNR
 {
-	class DirectX12Fence
+	class DirectX12Fence final
 	{
 	public:
-		DirectX12Fence(bool copy);
+		DirectX12Fence(const bool copy);
 		~DirectX12Fence();
 
 		void IncrementFenceValue();

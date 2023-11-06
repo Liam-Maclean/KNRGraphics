@@ -9,7 +9,7 @@ namespace KNR
 
 		std::string ParseFileAndIncludes(const std::string& sourcePath);
 
-		bool ShaderNeedsCompiled();
+		inline const bool ShaderNeedsCompiled();
 
 		inline const std::string& GetShaderCode() { return m_code; }
 

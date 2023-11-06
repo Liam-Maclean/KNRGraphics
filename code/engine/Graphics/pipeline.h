@@ -1,9 +1,13 @@
 #pragma once
 #include "render_types.h"
-
+#include "vertex_declaration.h"
 namespace KNR
 {
-	class VertexDeclaration;
+	struct ShaderBytecode
+	{
+		void* bytecode;
+		size_t size;
+	};
 
 	struct RasterizerState
 	{
@@ -13,6 +17,7 @@ namespace KNR
 		float depthBiasClamp;
 		bool multisampleEnable;
 		int sampleCount;
+		bool conservativeRasterizer;
 	};
 
 	struct DepthStencilState
@@ -46,9 +51,13 @@ namespace KNR
 		RenderTargetBlendState renderTargetBlendStates[8];
 	};
 
-
 	struct PipelineStateDesc
 	{
+		ShaderBytecode vertexBytecode;
+		ShaderBytecode pixelBytecode;
+		ShaderBytecode computeBytecode;
+		ShaderBytecode hullBytecode;
+		ShaderBytecode domainBytecode;
 		RasterizerState rasterizerState;
 		BlendState blendState;
 		DepthStencilState depthStencilState;
@@ -59,6 +68,9 @@ namespace KNR
 	{
 	public:
 		virtual ~Pipeline() = default;
+
+		virtual void Bind(CommandBuffer* commandList) = 0;
+		virtual void Unbind(CommandBuffer* commandList) = 0;
 
 		static Pipeline* Create(const PipelineStateDesc& desc);
 	protected:
