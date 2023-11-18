@@ -1,4 +1,5 @@
 #pragma once
+#include "render_types.h"
 
 namespace KNR
 {
@@ -18,8 +19,8 @@ namespace KNR
 		inline const std::string& GetAssembly() { return m_assembly; }
 
 
-		void WriteToFile(std::vector<uint32_t> shaderBytecode);
-		std::vector<uint32_t> ReadFromFile();
+		void WriteToFile(ShaderBytecode shaderBytecode);
+		ShaderBytecode ReadFromFile();
 	private:
 		std::string m_sourcePath;
 		std::string m_code;

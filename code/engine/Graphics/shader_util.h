@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-
+#include "render_types.h"
 namespace KNR
 {
 	enum class ShaderStage
@@ -21,6 +21,6 @@ namespace KNR
 	class ShaderUtil
 	{
 	public:
-		static std::vector<uint32_t> CompileHLSL(const ShaderInfo& info);
+		static ShaderBytecode CompileHLSL(const ShaderInfo& info);
 	};
 }

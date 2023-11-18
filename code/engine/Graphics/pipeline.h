@@ -3,12 +3,6 @@
 #include "vertex_declaration.h"
 namespace KNR
 {
-	struct ShaderBytecode
-	{
-		void* bytecode;
-		size_t size;
-	};
-
 	struct RasterizerState
 	{
 		CullingMode cullingMode;

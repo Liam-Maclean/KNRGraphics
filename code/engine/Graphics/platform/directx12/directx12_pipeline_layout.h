@@ -91,6 +91,6 @@ namespace KNR
 		std::vector<D3D12_INPUT_ELEMENT_DESC> m_inputElementDesc;
 		ID3D12RootSignature* m_rootSignature;
 		std::vector<CD3DX12_DESCRIPTOR_RANGE> m_descriptorRanges;
-		std::list< CD3DX12_DESCRIPTOR_RANGE> m_descriptorRangeList;
+		std::list<CD3DX12_DESCRIPTOR_RANGE> m_descriptorRangeList;
 	};
 }

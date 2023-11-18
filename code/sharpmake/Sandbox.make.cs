@@ -7,6 +7,7 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 [module: Sharpmake.Include("globals.cs")]
 [module: Sharpmake.Include("KNRGraphics.make.cs")]
 [module: Sharpmake.Include("KNRBaseProject.make.cs")]
+[module: Sharpmake.Include("KNRShaders.make.cs")]
 
 [Generate]
 public class KNRSln : Solution
@@ -28,6 +29,7 @@ public class KNRSln : Solution
         conf.SolutionPath = Globals.ProjectRoot;
         conf.AddProject<SandboxProject>(target);
         conf.AddProject<KNRGraphics>(target);
+        conf.AddProject<KNRShaders>(target);
     }
 }
 
@@ -62,6 +64,7 @@ public class SandboxProject : KNRExeBase
         conf.ProjectPath = Globals.BuildDir;
 
         conf.AddPrivateDependency<KNRGraphics>(target);
+        conf.AddPrivateDependency<KNRShaders>(target);
 
         conf.Defines.AddRange(GetDefinesByOptimization(target));
 

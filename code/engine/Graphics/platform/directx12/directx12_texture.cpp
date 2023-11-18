@@ -1,6 +1,7 @@
 #include "directx12_texture.h"
 #include "directx12_graphics_context.h"
 #include "directx12_framebuffer.h"
+#include "directx12_util.h"
 #include <d3d12.h>
 #include "d3dx12.h"
 
@@ -34,15 +35,15 @@ namespace KNR
 			ID3D12Device* device = static_cast<ID3D12Device*>(DirectX12Context.GetDevice());
 
 			//we need to handle depth texture buffers slightly differently
-			if (framebufferTextureSpec->TextureFormat == FramebufferTextureFormat::DEPTH24STENCIL8)
+			if (Util::IsDepthFormat(framebufferTextureSpec->textureFormat))
 			{
 				m_textureDSVDesc = {};
-				m_textureDSVDesc.Format = DXGI_FORMAT_D32_FLOAT;
+				m_textureDSVDesc.Format = Util::GetDXGIFormatType(framebufferTextureSpec->textureFormat);
 				m_textureDSVDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 				m_textureDSVDesc.Flags = D3D12_DSV_FLAG_NONE;
 
 				D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
-				depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+				depthOptimizedClearValue.Format = Util::GetDXGIFormatType(desc.textureFramebuffer.framebufferTextureSpec->textureFormat);
 				depthOptimizedClearValue.DepthStencil.Depth = 0.0f;
 				depthOptimizedClearValue.DepthStencil.Stencil = 0xff;
 
@@ -56,7 +57,7 @@ namespace KNR
 				m_textureResource->SetName(desc.debugName);
 				
 				m_textureSRVDesc = {};
-				m_textureSRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
+				m_textureSRVDesc.Format = Util::GetDXGIFormatType(framebufferTextureSpec->textureFormat);
 				m_textureSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 				m_textureSRVDesc.Texture2D.MipLevels = 1;
 				m_textureSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -73,26 +74,11 @@ namespace KNR
 				resourceDesc.Height = framebufferSpec->Height;
 				resourceDesc.DepthOrArraySize = 1;
 				resourceDesc.MipLevels = 1;
-				resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+				resourceDesc.Format = Util::GetDXGIFormatType(framebufferTextureSpec->textureFormat);
 				resourceDesc.SampleDesc.Count = framebufferSpec->Samples;
 				resourceDesc.SampleDesc.Quality = 0;
 				resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 				resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-
-				switch (framebufferTextureSpec->TextureFormat)
-				{
-				case  FramebufferTextureFormat::RGBA8:
-					resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-					break;
-				case FramebufferTextureFormat::RG16:
-					resourceDesc.Format = DXGI_FORMAT_R16G16_FLOAT;
-					break;
-				case  FramebufferTextureFormat::RED_INTEGER:
-					resourceDesc.Format = DXGI_FORMAT_R32_UINT;
-					break;
-				default:
-					break;
-				}
 
 				D3D12_CLEAR_VALUE clearValue = {};
 				clearValue.Color[0] = 0.0f;
@@ -323,7 +309,7 @@ namespace KNR
 		return textureHandle.ptr;
 	}
 
-	void DirectX12Texture2D::ResizeResource(FramebufferTextureSpecification framebufferTextureSpec, FramebufferSpecification framebufferSpec)
+	void DirectX12Texture2D::ResizeResource(const FramebufferTextureSpecification& framebufferTextureSpec, const FramebufferSpecification& framebufferSpec)
 	{
 		//Release the original resource
 		m_textureResource->Release();
@@ -340,15 +326,15 @@ namespace KNR
 		ID3D12Device* device = static_cast<ID3D12Device*>(DirectX12Context.GetDevice());
 
 		//we need to handle depth texture buffers slightly differently
-		if (framebufferTextureSpec.TextureFormat == FramebufferTextureFormat::DEPTH24STENCIL8)
+		if (Util::IsDepthFormat(framebufferTextureSpec.textureFormat))
 		{
 			m_textureDSVDesc = {};
-			m_textureDSVDesc.Format = DXGI_FORMAT_D32_FLOAT;
+			m_textureDSVDesc.Format = Util::GetDXGIFormatType(framebufferTextureSpec.textureFormat);
 			m_textureDSVDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 			m_textureDSVDesc.Flags = D3D12_DSV_FLAG_NONE;
 
 			D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
-			depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+			depthOptimizedClearValue.Format = Util::GetDXGIFormatType(framebufferTextureSpec.textureFormat);
 			depthOptimizedClearValue.DepthStencil.Depth = 0.0f;
 			depthOptimizedClearValue.DepthStencil.Stencil = 0xff;
 			auto heapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
@@ -361,7 +347,7 @@ namespace KNR
 			m_textureResource->SetName(L"Depth24Stencil8 Framebuffer");
 			//device->CreateDepthStencilView(m_textureResource, &resourceDesc, )
 			m_textureSRVDesc = {};
-			m_textureSRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
+			m_textureSRVDesc.Format = Util::GetDXGIFormatType(framebufferTextureSpec.textureFormat);
 			m_textureSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 			m_textureSRVDesc.Texture2D.MipLevels = 1;
 			m_textureSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -379,26 +365,11 @@ namespace KNR
 			resourceDesc.Height = framebufferSpec.Height;
 			resourceDesc.DepthOrArraySize = 1;
 			resourceDesc.MipLevels = 1;
-			resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			resourceDesc.Format = Util::GetDXGIFormatType(framebufferTextureSpec.textureFormat);
 			resourceDesc.SampleDesc.Count = framebufferSpec.Samples;
 			resourceDesc.SampleDesc.Quality = 0;
 			resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
 			resourceDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET | D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-
-			switch (framebufferTextureSpec.TextureFormat)
-			{
-			case FramebufferTextureFormat::RGBA8:
-				resourceDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-				break;
-			case FramebufferTextureFormat::RG16:
-				resourceDesc.Format = DXGI_FORMAT_R16G16_FLOAT;
-				break;
-			case  FramebufferTextureFormat::RED_INTEGER:
-				resourceDesc.Format = DXGI_FORMAT_R32_UINT;
-				break;
-			default:
-				break;
-			}
 
 			D3D12_CLEAR_VALUE clearValue = {};
 			clearValue.Color[0] = 0.0f;

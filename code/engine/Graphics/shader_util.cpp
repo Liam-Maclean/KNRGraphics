@@ -4,9 +4,9 @@
 
 namespace KNR
 {
-	std::vector<uint32_t> ShaderUtil::CompileHLSL(const ShaderInfo& info)
+	ShaderBytecode ShaderUtil::CompileHLSL(const ShaderInfo& info)
 	{
-		std::vector<uint32_t> bytecode;
+		ShaderBytecode bytecode;
 		/*
 		//cut off the "bin" suffix and append hlsl on the end
 		//All compiled shader files have 5 characters (QVert, QFrag, QMesh, QComp etc..)

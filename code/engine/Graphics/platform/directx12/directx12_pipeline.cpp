@@ -132,18 +132,19 @@ namespace KNR
 
 	void DirectX12Pipeline::Bind(CommandBuffer* commandList)
 	{
+		DirectX12CommandBuffer* directXCommandBuffer = static_cast<DirectX12CommandBuffer*>(commandList);
+
 		//bind compute
 		if (m_pipelineCreateInfo.computeBytecode.bytecode != nullptr)
 		{
-			commandList->Get()->SetPipelineState(m_pipelineState);
-			commandList->Get()->SetGraphicsRootSignature(m_pipelineLayout->GetRootSignature());
-
+			directXCommandBuffer->Get()->SetPipelineState(m_pipelineState);
+			directXCommandBuffer->Get()->SetGraphicsRootSignature(m_pipelineLayout->GetRootSignature());
 		}
 		else //bind rasterizer pipeline
 		{
-			commandList->Get()->SetPipelineState(m_pipelineState);
-			commandList->Get()->SetGraphicsRootSignature(m_pipelineLayout->GetRootSignature());
-			commandList->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // HACK LIAM - FIX We probably shouldn't be doing this here
+			directXCommandBuffer->Get()->SetPipelineState(m_pipelineState);
+			directXCommandBuffer->Get()->SetGraphicsRootSignature(m_pipelineLayout->GetRootSignature());
+			directXCommandBuffer->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // HACK LIAM - FIX We probably shouldn't be doing this here
 		}
 	}
 

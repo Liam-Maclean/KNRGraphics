@@ -2,7 +2,7 @@
 
 namespace KNR
 {
-	struct PipelineCreateInfo;
+	struct PipelineStateDesc;
 	class CommandBuffer;
 	class Technique
 	{
@@ -14,7 +14,7 @@ namespace KNR
 		virtual void Bind(CommandBuffer* commandList) const = 0;
 		virtual void Unbind(CommandBuffer* commandList) const = 0;
 
-		static Technique* Create(const PipelineCreateInfo& pipelineCreateInfo);
+		static Technique* Create(const PipelineStateDesc& pipelineCreateInfo);
 	protected:
 		std::string m_name;
 	};

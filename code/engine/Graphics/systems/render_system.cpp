@@ -1,8 +1,7 @@
 #include "render_commands.h"
-#include "directx12_system_manager.h"
-#include "directx12_render_system.h"
+#include "system_manager.h"
+#include "render_system.h"
 #include <limits>
-
 
 namespace KNR
 {
@@ -31,9 +30,9 @@ namespace KNR
 	//Override this if you're outputting depth instead of color 
 	void RenderSystem::SetColorOutputAsFinalRenderTarget()
 	{
-		uint64_t texId = m_framebuffer->GetColorAttachmentRendererID();
-		D3D12_GPU_DESCRIPTOR_HANDLE textureHandle = DirectX12Context.GetImGuiHeap()->handleGPU(texId);
-		KNR::RenderCommand::SetFinalRenderTextureId(reinterpret_cast<void*>(textureHandle.ptr));
+		//uint64_t texId = m_framebuffer->GetColorAttachmentRendererID();
+		//D3D12_GPU_DESCRIPTOR_HANDLE textureHandle = DirectX12Context.GetImGuiHeap()->handleGPU(texId);
+		//KNR::RenderCommand::SetFinalRenderTextureId(reinterpret_cast<void*>(textureHandle.ptr));
 	}
 
 	void RenderSystem::SetDepthOutputAsFinalRenderTarget()

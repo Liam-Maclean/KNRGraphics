@@ -3,7 +3,7 @@
 #include "directx12_graphics_context.h"
 #include "shader_util.h"
 #include "shader_cache.h"
-
+#include <filesystem>
 namespace KNR
 {
 	Shader* Shader::Create(const std::filesystem::path& shader)
@@ -52,9 +52,6 @@ namespace KNR
 			{
 				m_shaderBytecode = vertCache.ReadFromFile();
 			}
-
-			m_pipelineShaderBytecode.BytecodeLength = (m_shaderBytecode.size() * sizeof(uint32_t));
-			m_pipelineShaderBytecode.pShaderBytecode = m_shaderBytecode.data();
 		}
 	}
 
@@ -73,10 +70,5 @@ namespace KNR
 	void DirectX12Shader::Unbind() const
 	{
 		
-	}
-
-	void* DirectX12Shader::GetShaderBytecode()
-	{
-		return static_cast<void*>(&m_pipelineShaderBytecode);
 	}
 }

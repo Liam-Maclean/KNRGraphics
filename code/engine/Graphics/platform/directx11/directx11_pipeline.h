@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include "pipeline.h"
 #include "directx11_util.h"
 namespace KNR
 {

@@ -175,34 +175,4 @@ namespace KNR
 	{
 		m_resource->Unmap(0, nullptr);
 	}
-
-	uint32_t DirectX12Buffer::AppendData(const uint32_t size, const void* data)
-	{
-		uint32_t combinedSize = size + m_usedSize;
-		
-		if (combinedSize > m_allocatedSize)
-			assert(0); //Exceeded allocated buffer size when appending
-		
-		D3D12_RANGE newDataRange = { m_usedSize, m_usedSize + size};
-		void* memAddr;
-		m_resource->Map(0, &newDataRange, &memAddr);
-		memcpy(memAddr, data, size);
-		m_resource->Unmap(0, nullptr);
-
-		m_usedSize = combinedSize;
-
-
-		if (m_bufferType == BufferUsageType::VERTEX)
-		{
-			m_vertexBufferView.BufferLocation = m_resource->GetGPUVirtualAddress();
-			m_vertexBufferView.SizeInBytes = m_usedSize;
-		}
-		else if (m_bufferType == BufferUsageType::INDEX)
-		{
-			m_indexBufferView.BufferLocation = m_resource->GetGPUVirtualAddress();
-			m_indexBufferView.SizeInBytes = m_usedSize;
-		}
-
-		return combinedSize;
-	}
 }

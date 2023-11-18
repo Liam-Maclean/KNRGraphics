@@ -1,4 +1,4 @@
-#include "directx12_system_manager.h"
+#include "system_manager.h"
 #include "graphics_profiler.h"
 #include <limits>
 

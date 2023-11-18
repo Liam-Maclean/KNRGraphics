@@ -20,7 +20,6 @@ namespace KNR
 
 		inline size_t GetCapacitySize() const override { return m_allocatedSize; }
 		inline size_t GetUsedSize() const override { return m_usedSize; }
-		inline uint32_t AppendData(const uint32_t size, const void* data) override;
 		inline ID3D12Resource* GetD3D() const { return m_resource; }
 		inline DirectX12DescriptorHandleBlock GetDescriptorBlock() const { return m_descriptorHandleBlock; }
 

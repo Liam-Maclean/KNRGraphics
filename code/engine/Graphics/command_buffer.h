@@ -7,7 +7,10 @@ namespace KNR
 	{
 	public:
 		~CommandBuffer();
-
+		inline CommandBufferType GetType() { return m_type; }
 		static CommandBuffer* Create(const CommandBufferType type);
+
+	protected:
+		CommandBufferType m_type;
 	};
 }

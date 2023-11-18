@@ -45,9 +45,6 @@ namespace KNR
 		virtual void Unbind(CommandBuffer* commandList) = 0;
 
 		virtual void Resize(const uint32_t width, const uint32_t height) = 0;
-		virtual int ReadPixel(const uint32_t attachmentIndex, const int x, const int y) = 0;
-
-		virtual void ClearAttachment(const uint32_t attachmentIndex, const int value) = 0;
 
 		virtual uint32_t GetColorAttachmentRendererID(const uint32_t index = 0) const = 0;
 

@@ -1,4 +1,5 @@
 #pragma once
+#include "render_types.h"
 #include "shader.h"
 #include "shader_cache.h"
 
@@ -14,13 +15,5 @@ namespace KNR
 
 		virtual void Bind() const override;
 		virtual void Unbind() const override;
-		virtual void* GetShaderBytecode() override;
-
-
-	private:
-		uint32_t m_rendererId = 0;
-		D3D12_SHADER_BYTECODE m_pipelineShaderBytecode;
-
-		std::vector<uint32_t> m_shaderBytecode{};
 	};
 }

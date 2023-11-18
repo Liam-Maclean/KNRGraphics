@@ -3,12 +3,12 @@
 
 namespace KNR
 {
-	Technique* Technique::Create(PipelineCreateInfo pipelineCreateInfo)
+	Technique* Technique::Create(const PipelineStateDesc& pipelineCreateInfo)
 	{
 		return new DirectX12Technique(pipelineCreateInfo);
 	}
 
-	DirectX12Technique::DirectX12Technique(PipelineCreateInfo pipelineCreateInfo)
+	DirectX12Technique::DirectX12Technique(const PipelineStateDesc& pipelineCreateInfo)
 	{
 		//Create the pipeline
 		m_pipeline = new DirectX12Pipeline(pipelineCreateInfo);
@@ -19,12 +19,12 @@ namespace KNR
 
 	}
 
-	void DirectX12Technique::Bind(DirectX12CommandBuffer* commandList) const
+	void DirectX12Technique::Bind(CommandBuffer* commandList) const
 	{
 		m_pipeline->Bind(commandList);
 	}
 
-	void DirectX12Technique::Unbind(DirectX12CommandBuffer* commandList) const
+	void DirectX12Technique::Unbind(CommandBuffer* commandList) const
 	{
 
 	}

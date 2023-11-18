@@ -1,4 +1,5 @@
 #pragma once
+#include "render_types.h"
 
 //Forward declare
 namespace std
@@ -15,15 +16,15 @@ namespace KNR
 	{
 	public:
 		virtual ~Shader() = default;
-
-		inline const std::string GetName() { return m_name; }
-
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
-		virtual void* GetShaderBytecode() const = 0;
+
+		virtual ShaderBytecode GetShaderBytecode() { return m_shaderBytecode; };
+		inline const std::string GetName() { return m_name; }
 
 		static Shader* Create(const std::filesystem::path& shader);
 	protected:
+		ShaderBytecode m_shaderBytecode;
 		std::string m_name;
 	};
 }

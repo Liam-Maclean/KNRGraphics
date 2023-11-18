@@ -1,11 +1,11 @@
 #include "directx12_buffer.h"
 #include "directx12_graphics_context.h"
-#include "directx12_copy_context.h"
 #include "directx12_renderer_api.h"
 #include "directx12_heap.h"
 #include "directx12_texture.h"
 #include "directx12_technique.h"
 #include "directx12_indirect_signature.h"
+#include "logger/logger.h"
 #include "d3dx12.h"
 #include <d3dcompiler.h>
 #include <basetsd.h>
@@ -25,7 +25,7 @@ namespace KNR
 		}
 	}
 
-	void DirectX12RendererAPI::Init()
+	void DirectX12RendererAPI::Initialize(const WindowDesc& windowDesc)
 	{
 		m_rtvHeapIndex = 0;
 		for (int i = 0; i < 3; ++i)
@@ -39,7 +39,7 @@ namespace KNR
 		m_height = 1080;
 	}
 
-	void DirectX12RendererAPI::SetClearColor(const Vector4f& color)
+	void DirectX12RendererAPI::SetClearColor(const float r, const float g, const float b, const float a)
 	{
 
 	}
@@ -49,71 +49,51 @@ namespace KNR
 
 	}
 
-	uint32_t DirectX12RendererAPI::AppendBufferRegion(DirectX12CommandBuffer* commandList, KNR::Buffer* dstBuffer, KNR::Buffer* srcBuffer)
-	{
-		uint32_t destUsedSize = dstBuffer->GetUsedSize();
-		uint32_t destMaxCapacity = dstBuffer->GetCapacitySize();
-		uint32_t srcCopySize = srcBuffer->GetUsedSize();
-		uint32_t combinedSize = destUsedSize + srcCopySize;
-
-		if (combinedSize > destMaxCapacity)
-		{
-			//Exceeded capacity
-			assert(0);
-			return 0;
-		}
-		else
-		{
-			commandList->Get()->CopyBufferRegion(reinterpret_cast<DirectX12Buffer*>(dstBuffer)->GetD3D(), destUsedSize, reinterpret_cast<DirectX12Buffer*>(dstBuffer)->GetD3D(), 0, srcCopySize);
-			return combinedSize;
-		}
-	}
-
-	void DirectX12RendererAPI::BindPipeline(DirectX12CommandBuffer* commandList, KNR::Technique* technique)
+	void DirectX12RendererAPI::BindPipeline(CommandBuffer* commandList, Technique* technique)
 	{
 		//Bind as normal
 		technique->Bind(commandList);
-
-		////We also need bind any bindless arrays. Best way to do this is access a global heap and it's GPU handle
-		for (int i = (int)BindlessHeapRegion::BINDLESSSTART; i < (int)BindlessHeapRegion::BINDLESSEND; i++)
-		{
-			//We need to source the handle from the global heap object
-			//D3D12_GPU_DESCRIPTOR_HANDLE descriptorHandle;
-			//commandList->Get()->SetGraphicsRootDescriptorTable(i, descriptorHandle);
-		}
 	}
 
-	void DirectX12RendererAPI::BindVertexBuffer(DirectX12CommandBuffer* commandList, Buffer* buffer)
+	void DirectX12RendererAPI::BindVertexBuffer(CommandBuffer* commandList, Buffer* buffer)
 	{
-		commandList->Get()->IASetVertexBuffers(0, 1, reinterpret_cast<DirectX12Buffer*>(buffer)->GetD3DView<D3D12_VERTEX_BUFFER_VIEW*>());
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		directXCommandList->Get()->IASetVertexBuffers(0, 1, reinterpret_cast<DirectX12Buffer*>(buffer)->GetD3DView<D3D12_VERTEX_BUFFER_VIEW*>());
 	}
 
-	void DirectX12RendererAPI::BindIndexBuffer(DirectX12CommandBuffer* commandList, Buffer* buffer)
+	void DirectX12RendererAPI::BindIndexBuffer(CommandBuffer* commandList, Buffer* buffer)
 	{
-		commandList->Get()->IASetIndexBuffer(reinterpret_cast<DirectX12Buffer*>(buffer)->GetD3DView<D3D12_INDEX_BUFFER_VIEW*>());
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		directXCommandList->Get()->IASetIndexBuffer(reinterpret_cast<DirectX12Buffer*>(buffer)->GetD3DView<D3D12_INDEX_BUFFER_VIEW*>());
 	}
 
-	void DirectX12RendererAPI::BindUniformBuffer(DirectX12CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
+	void DirectX12RendererAPI::BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 	{
 		SetConstantBufferView(commandList, bindslot, reinterpret_cast<DirectX12Buffer*>(buffer)->GetD3D()->GetGPUVirtualAddress());
 	}
 
-	void DirectX12RendererAPI::BindStructuredBuffer(DirectX12CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
+	void DirectX12RendererAPI::BindStructuredBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 	{
 		SetShaderResourceView(commandList, bindslot, reinterpret_cast<DirectX12Buffer*>(buffer)->GetD3D()->GetGPUVirtualAddress());
 	}
 
-	void DirectX12RendererAPI::DrawIndexedInstanced(DirectX12CommandBuffer* commandList, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t baseVertexLocation, uint32_t startInstanceLocation)
+	void DirectX12RendererAPI::DrawIndexedInstanced(CommandBuffer* commandList, uint32_t indexCount, uint32_t instanceCount, uint32_t firstIndex, uint32_t baseVertexLocation, uint32_t startInstanceLocation)
 	{
-		commandList->Get()->DrawIndexedInstanced(indexCount, instanceCount, firstIndex, baseVertexLocation, startInstanceLocation);
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		directXCommandList->Get()->DrawIndexedInstanced(indexCount, instanceCount, firstIndex, baseVertexLocation, startInstanceLocation);
 	}
 
-	void DirectX12RendererAPI::DrawIndirect(DirectX12CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, UINT commandCount, Buffer* argumentBuffer, UINT64 argumentBufferOffset, KNR::Buffer* countBuffer, UINT64 countBufferOffset)
+	void DirectX12RendererAPI::DrawIndirect(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, UINT commandCount, Buffer* argumentBuffer, UINT64 argumentBufferOffset, KNR::Buffer* countBuffer, UINT64 countBufferOffset)
 	{
-		commandList->Get()->ExecuteIndirect(DirectX12IndirectSignature->GetCommandSignature(), commandCount, reinterpret_cast<DirectX12Buffer*>(argumentBuffer)->GetD3D(), argumentBufferOffset, nullptr, countBufferOffset);
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		directXCommandList->Get()->ExecuteIndirect(DirectX12IndirectSignature->GetCommandSignature(), commandCount, reinterpret_cast<DirectX12Buffer*>(argumentBuffer)->GetD3D(), argumentBufferOffset, nullptr, countBufferOffset);
 	}
 
-	void DirectX12RendererAPI::DispatchCompute(DirectX12CommandBuffer* commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ)
+	void DirectX12RendererAPI::DispatchCompute(CommandBuffer* commandList, uint32_t dispatchGroupCountX, uint32_t dispatchGroupCountY, uint32_t dispatchGroupCountZ)
 	{
 
 	}
@@ -163,16 +143,6 @@ namespace KNR
 		CreateRenderTargets();
 	}
 
-	void DirectX12RendererAPI::SetWireframeMode(int i)
-	{
-
-	}
-
-	void DirectX12RendererAPI::PopState()
-	{
-
-	}
-
 	void DirectX12RendererAPI::RecordCommandBuffers()
 	{
 		WaitForPreviousFrame();
@@ -192,12 +162,6 @@ namespace KNR
 		{
 			assert(0);
 		}
-	}
-
-
-	void DirectX12RendererAPI::BeginRenderSilent()
-	{
-
 	}
 
 	//Geometry render begin
@@ -241,7 +205,6 @@ namespace KNR
 			auto transition = CD3DX12_RESOURCE_BARRIER::Transition(m_backBufferRenderTarget[m_bufferIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
 			m_commandList->ResourceBarrier(1, &transition);
 
-
 			HRESULT hr = m_commandList->Close();
 			if (FAILED(hr))
 			{
@@ -283,11 +246,11 @@ namespace KNR
 
 		if (m_viewport.Width <= 0)
 		{
-			//Error
+			KNT_ERROR("ERROR: WIDTH CANNOT BE 0 OR NEGATIVE")
 		}
 		if (m_scissorRect.right <= 0)
 		{
-			//Error
+			KNT_ERROR("ERROR: SCISSOR CANNOT BE 0 OR NEGATIVE")
 		}
 
 		const float clearColor[] = { 1.0f, 0.0f, 0.0f, 1.0f };
@@ -326,87 +289,87 @@ namespace KNR
 		}
 	}
 
-	void DirectX12RendererAPI::BlitToTexture(Texture2D* srcTx, Texture2D* dstTx)
+	void DirectX12RendererAPI::SetRootConstant(CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues)
 	{
-		DirectX12Context.StartBlit(reinterpret_cast<DirectX12Texture2D*>(srcTx)->GetTextureHandle(), reinterpret_cast<DirectX12Texture2D*>(dstTx)->GetTextureHandle(), srcTx->GetWidth(), srcTx->GetHeight());
-		DirectX12Context.EndBlit();
-	}
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
 
-	void DirectX12RendererAPI::BlitToSwapchain(Texture2D* srcTx)
-	{
-		DirectX12Context.StartBlitToSwapchain(reinterpret_cast<DirectX12Texture2D*>(srcTx)->GetTextureHandle(), m_backBufferRenderTarget[m_bufferIndex].Get(), srcTx->GetWidth(), srcTx->GetHeight());
-		DirectX12Context.EndBlit();
-	}
-
-	void DirectX12RendererAPI::SetRootConstant(DirectX12CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t srcData, uint32_t destOffsetIn32BitValues)
-	{
-		if (commandList->GetType() == CommandBufferType::graphics)
+		if (directXCommandList->GetType() == CommandBufferType::graphics)
 		{
-			commandList->Get()->SetGraphicsRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
+			directXCommandList->Get()->SetGraphicsRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
+		}
+		else if (directXCommandList->GetType() == CommandBufferType::compute)
+		{
+			directXCommandList->Get()->SetComputeRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
+		}
+	}
+
+	void DirectX12RendererAPI::SetRootConstants(CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* srcData, uint32_t destOffsetIn32BitValues)
+	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		if (directXCommandList->GetType() == CommandBufferType::graphics)
+		{
+			directXCommandList->Get()->SetGraphicsRoot32BitConstants(rootParameterIndex, numValuesSet, srcData, destOffsetIn32BitValues);
+		}
+		else if (directXCommandList->GetType() == CommandBufferType::compute)
+		{
+			directXCommandList->Get()->SetComputeRoot32BitConstants(rootParameterIndex, numValuesSet, srcData, destOffsetIn32BitValues);
+		}
+	}
+
+	void DirectX12RendererAPI::SetConstantBufferView(CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
+	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		if (directXCommandList->GetType() == CommandBufferType::graphics)
+		{
+			directXCommandList->Get()->SetGraphicsRootConstantBufferView(bindSlot, gpuAddress);
 		}
 		else if (commandList->GetType() == CommandBufferType::compute)
 		{
-			commandList->Get()->SetComputeRoot32BitConstant(rootParameterIndex, srcData, destOffsetIn32BitValues);
+			directXCommandList->Get()->SetComputeRootConstantBufferView(bindSlot, gpuAddress);
 		}
 	}
 
-	void DirectX12RendererAPI::SetRootConstants(DirectX12CommandBuffer* commandList, uint32_t rootParameterIndex, uint32_t numValuesSet, void* srcData, uint32_t destOffsetIn32BitValues)
+	void DirectX12RendererAPI::SetShaderResourceView(CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 	{
-		if (commandList->GetType() == CommandBufferType::graphics)
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		if (directXCommandList->GetType() == CommandBufferType::graphics)
 		{
-			commandList->Get()->SetGraphicsRoot32BitConstants(rootParameterIndex, numValuesSet, srcData, destOffsetIn32BitValues);
+			directXCommandList->Get()->SetGraphicsRootShaderResourceView(bindSlot, gpuAddress);
 		}
 		else if (commandList->GetType() == CommandBufferType::compute)
 		{
-			commandList->Get()->SetComputeRoot32BitConstants(rootParameterIndex, numValuesSet, srcData, destOffsetIn32BitValues);
+			directXCommandList->Get()->SetComputeRootShaderResourceView(bindSlot, gpuAddress);
 		}
 	}
 
-	void DirectX12RendererAPI::SetConstantBufferView(DirectX12CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
+	void DirectX12RendererAPI::SetUnorderedAccessView(CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
 	{
-		if (commandList->GetType() == CommandBufferType::graphics)
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		if (directXCommandList->GetType() == CommandBufferType::graphics)
 		{
-			commandList->Get()->SetGraphicsRootConstantBufferView(bindSlot, gpuAddress);
+			directXCommandList->Get()->SetGraphicsRootUnorderedAccessView(bindSlot, gpuAddress);
 		}
-		else if (commandList->GetType() == CommandBufferType::compute)
+		else if (directXCommandList->GetType() == CommandBufferType::compute)
 		{
-			commandList->Get()->SetComputeRootConstantBufferView(bindSlot, gpuAddress);
+			directXCommandList->Get()->SetComputeRootUnorderedAccessView(bindSlot, gpuAddress);
 		}
 	}
 
-	void DirectX12RendererAPI::SetShaderResourceView(DirectX12CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
+	void DirectX12RendererAPI::SetRootDescriptorTable(CommandBuffer* commandList, uint32_t bindSlot, UINT64 startGPUAddress)
 	{
-		if (commandList->GetType() == CommandBufferType::graphics)
-		{
-			commandList->Get()->SetGraphicsRootShaderResourceView(bindSlot, gpuAddress);
-		}
-		else if (commandList->GetType() == CommandBufferType::compute)
-		{
-			commandList->Get()->SetComputeRootShaderResourceView(bindSlot, gpuAddress);
-		}
-	}
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
 
-	void DirectX12RendererAPI::SetUnorderedAccessView(DirectX12CommandBuffer* commandList, uint32_t bindSlot, UINT64 gpuAddress)
-	{
-		if (commandList->GetType() == CommandBufferType::graphics)
+		if (directXCommandList->GetType() == CommandBufferType::graphics)
 		{
-			commandList->Get()->SetGraphicsRootUnorderedAccessView(bindSlot, gpuAddress);
+			directXCommandList->Get()->SetGraphicsRootDescriptorTable(bindSlot, static_cast<D3D12_GPU_DESCRIPTOR_HANDLE>(startGPUAddress));
 		}
-		else if (commandList->GetType() == CommandBufferType::compute)
+		else if (directXCommandList->GetType() == CommandBufferType::compute)
 		{
-			commandList->Get()->SetComputeRootUnorderedAccessView(bindSlot, gpuAddress);
-		}
-	}
-
-	void DirectX12RendererAPI::SetRootDescriptorTable(DirectX12CommandBuffer* commandList, uint32_t bindSlot, UINT64 startGPUAddress)
-	{
-		if (commandList->GetType() == CommandBufferType::graphics)
-		{
-			commandList->Get()->SetGraphicsRootDescriptorTable(bindSlot, static_cast<D3D12_GPU_DESCRIPTOR_HANDLE>(startGPUAddress));
-		}
-		else if (commandList->GetType() == CommandBufferType::compute)
-		{
-			commandList->Get()->SetComputeRootDescriptorTable(bindSlot, static_cast<D3D12_GPU_DESCRIPTOR_HANDLE>(startGPUAddress));
+			directXCommandList->Get()->SetComputeRootDescriptorTable(bindSlot, static_cast<D3D12_GPU_DESCRIPTOR_HANDLE>(startGPUAddress));
 		}
 	}
 

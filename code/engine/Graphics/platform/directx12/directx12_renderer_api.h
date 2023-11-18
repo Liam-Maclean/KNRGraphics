@@ -21,9 +21,6 @@ namespace KNR
 		virtual void SetClearColor(const float r, const float g, const float b, const float a) override;
 		virtual void Clear() const override;
 		virtual void SetViewport(const float x, const float y, const float width, const float height);
-		virtual void SetWireframeMode(int i);
-		virtual void PopState();
-		virtual void BeginRenderSilent();
 		virtual void BeginRender();
 		virtual void EndRender();
 
@@ -38,8 +35,6 @@ namespace KNR
 		virtual void DrawIndirect(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, const UINT pcommandCount, Buffer* pArgumentBuffer, const UINT64 ArgumentBufferOffset, Buffer* pCountBuffer, UINT64 CountBufferOffset);
 		virtual void DispatchCompute(CommandBuffer* commandList, const uint32_t dispatchGroupCountX, const uint32_t dispatchGroupCountY, const uint32_t dispatchGroupCountZ) override;
 
-		virtual uint32_t AppendBufferRegion(CommandBuffer* commandList, Buffer* dstBuffer, Buffer* srcBuffer) override;
-
 		virtual void BindPipeline(CommandBuffer* commandList, Technique* technique) override;
 
 		virtual void BindVertexBuffer(CommandBuffer* commandList, Buffer* buffer) override;
@@ -51,8 +46,6 @@ namespace KNR
 		virtual void SetFinalRenderTextureId(void* textureId);
 		virtual void* GetFinalRenderTextureId();
 		virtual void WaitForGPU();
-		virtual void BlitToTexture(Texture2D* srcTx, Texture2D* dstTx);
-		virtual void BlitToSwapchain(Texture2D* srcTx);
 		virtual void Present();
 	private:
 		void WaitForPreviousFrame();

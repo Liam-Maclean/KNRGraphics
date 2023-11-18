@@ -56,11 +56,11 @@ namespace KNR
 
 		virtual ~Texture() = default;
 
-		inline const virtual uint32_t GetWidth() const = 0;
-		inline const virtual uint32_t GetHeight() const = 0;
-		inline const virtual uint32_t GetRenderId() const = 0;
-		inline const virtual uint32_t GetEditorRenderId() const = 0;
-		inline const virtual uint64_t GetHandle() const = 0;
+		inline virtual uint32_t GetWidth() const = 0;
+		inline virtual uint32_t GetHeight() const = 0;
+		inline virtual uint32_t GetRenderId() const = 0;
+		inline virtual uint32_t GetEditorRenderId() const = 0;
+		inline virtual uint64_t GetHandle() const = 0;
 
 		virtual void Bind(const uint32_t slot = 0) const = 0;
 		virtual void Unbind(const uint32_t slot = 0) const = 0;

@@ -7,7 +7,7 @@
 namespace KNR
 {
 	class DirectX12Heap;
-	class DirectX12Texture2D : public Texture2D
+	class DirectX12Texture2D final : public Texture2D
 	{
 	public:
 		DirectX12Texture2D(const TextureDescriptor& desc);
@@ -20,7 +20,7 @@ namespace KNR
 		virtual uint32_t GetEditorRenderId() const override { return m_editorID; }
 		virtual uint64_t GetHandle() const override;
 		
-		virtual void ResizeResource(FramebufferTextureSpecification framebufferTextureSpec, FramebufferSpecification framebufferSpec);
+		virtual void ResizeResource(const FramebufferTextureSpecification& framebufferTextureSpec, const FramebufferSpecification& framebufferSpec) override;
 		inline void Destroy(ID3D12Resource* uploadBuffer, void* data) 
 		{
 			uploadBuffer->Release(); 
@@ -60,9 +60,9 @@ namespace KNR
 		std::vector<std::string> m_cubemapFilenames;
 
 		std::string m_path = "";
-		int m_width = 0;
-		int m_height = 0;
-		int m_channels = 0;
+		uint32_t m_width = 0;
+		uint32_t m_height = 0;
+		uint32_t m_channels = 0;
 		void* m_data = nullptr;
 		RENDERERID m_rendererID = -1;	//Shader
 		RENDERERID m_editorID = -1;		//ImGui

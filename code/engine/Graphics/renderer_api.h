@@ -35,7 +35,6 @@ namespace KNR
 		virtual void Present() = 0;
 		virtual void BeginRender() = 0;
 		virtual void EndRender() = 0;
-		virtual void BeginRenderSilent() = 0;
 		virtual void SetSwapchainRenderTarget() = 0;
 
 		//Viewport calls
@@ -52,13 +51,17 @@ namespace KNR
 		virtual void SubmitCommandBuffer(CommandBuffer* commandList) = 0;
 		virtual void WaitOnCommandList(CommandBuffer* commandList) = 0;
 
+		//Immediate rendering calls 
+		virtual void BeginDrawImmediate(TopologyIndexMethod indexMethod) = 0;
+		virtual void DrawImmedateVertex(float x, float y, float z, float w) = 0;
+		virtual void EndDrawImmediate() = 0;
 
 		//Render Calls
+		virtual void Draw(CommandBuffer* commandList) = 0;
+		virtual void DrawIndexed(CommandBuffer* commandList) = 0;
 		virtual void DispatchCompute(CommandBuffer* commandList, const uint32_t dispatchGroupCountX, const uint32_t dispatchGroupCountY, const uint32_t dispatchGroupCountZ) = 0;
 		virtual void DrawIndexedInstanced(CommandBuffer* commandList, const uint32_t indexCount, const uint32_t instanceCount, const uint32_t firstIndex, const uint32_t baseVertexLocation, const uint32_t startInstanceLocation) = 0;
 		virtual void DrawIndirect(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, const UINT pcommandCount, Buffer* commandBuffer, const UINT64 ArgumentBufferOffset, Buffer* pCountBuffer, const UINT64 CountBufferOffset) = 0;
-		virtual void BlitToTexture(Texture2D* srcTx, Texture2D* dstTx) = 0;
-		virtual void BlitToSwapchain(Texture2D* srcTx) = 0;
 
 		//Binds
 		virtual void BindPipeline(CommandBuffer* commandList, Technique* technique) = 0;

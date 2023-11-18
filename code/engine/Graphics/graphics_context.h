@@ -1,4 +1,7 @@
 #pragma once
+
+
+
 namespace KNR
 {
 	class CGraphicsContext

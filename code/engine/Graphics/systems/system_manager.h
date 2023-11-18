@@ -1,5 +1,5 @@
 #pragma once
-#include "directx12_render_system.h"
+#include "render_system.h"
 #include "framebuffer.h"
 #include "shader.h"
 #include "texture.h"
@@ -8,7 +8,7 @@
 namespace KNR
 {
 	class GraphicsProfiler;
-	class RenderSystemManager 
+	class RenderSystemManager final
 	{
 	public:
 		RenderSystemManager();

@@ -4,6 +4,7 @@
 #include "shader.h"
 #include "texture.h"
 #include "screen_quad.h"
+#include <functional>
 
 #define ScreenQuadObject (*KNR::RenderQuadSystem::GetScreenQuad())
 
@@ -27,7 +28,7 @@ namespace KNR
 		virtual void DebugDraw() = 0;
 		virtual void SetColorOutputAsFinalRenderTarget();
 		virtual void SetDepthOutputAsFinalRenderTarget();
-		inline Framebuffer* GetFramebuffer() { return m_framebuffer; }
+		inline Framebuffer* GetFramebuffer() const { return m_framebuffer; }
 	protected:
 		
 		RenderSystemManager& m_manager;

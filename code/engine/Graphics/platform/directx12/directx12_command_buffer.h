@@ -24,7 +24,6 @@ namespace KNR
 		void CopyResource(ID3D12Resource* dstResource, ID3D12Resource* srcResource);
 		void AddToCommandCallbackList(Delegate<>::Func_type&& func);
 
-		inline CommandBufferType GetType() { return m_type; }
 		inline bool GetWorkToBeSubmitted() { return m_workToBeSubmitted; }
 		inline ID3D12GraphicsCommandList* Get() { return m_commandList; }; //Liam - We shouldn't really be using this but it's a LOT of work to 
 																		   //handle all the cases where we want to replace the old command buffer all
@@ -34,7 +33,6 @@ namespace KNR
 		ID3D12CommandAllocator* m_commandAllocator;
 		DirectX12Fence* m_fence;
 		bool m_workToBeSubmitted;
-		CommandBufferType m_type;
 		Delegate<> m_commandBufferCallbackList;
 	};
 }

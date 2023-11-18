@@ -6,7 +6,7 @@ namespace KNR
 	{
 	public:
 		//static void ErrorCheck(VkResult result);
-		//static VkFormat GetVulkanFormatType(TextureFormat textureFormat);
+		static DXGI_FORMAT GetDXGIFormatType(TextureFormat textureFormat);
 		inline static D3D12_FILL_MODE ConvertFillMode(FillMode fillMode);
 		inline static D3D12_CULL_MODE ConvertCullMode(CullingMode cullMode);
 		inline static bool IsDepthFormat(TextureFormat format);

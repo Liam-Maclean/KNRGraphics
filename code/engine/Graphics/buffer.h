@@ -73,8 +73,6 @@ namespace KNR
 		virtual void* Map() = 0;
 		virtual void UnMap() = 0;
 
-		virtual uint32_t AppendData(const uint32_t size, const void* data) = 0;
-
 		virtual size_t GetCapacitySize() const = 0;
 		virtual size_t GetUsedSize() const = 0;
 

@@ -91,7 +91,7 @@ namespace KNR
 		
 		if (m_framebufferDepthTexture)
 		{
-			if (m_DepthAttachmentSpecification.TextureFormat != FramebufferTextureFormat::None)
+			if (m_DepthAttachmentSpecification.textureFormat != TextureFormat::TEXTURE_FORMAT_INVALID)
 			{
 				m_framebufferDepthTexture->ResizeResource(m_DepthAttachmentSpecification, m_Specification);
 				m_framebufferDepthTexture->RecreateDSV(&m_DSVHeap);
@@ -100,7 +100,7 @@ namespace KNR
 		}
 		else
 		{
-			if (m_DepthAttachmentSpecification.TextureFormat != FramebufferTextureFormat::None)
+			if (m_DepthAttachmentSpecification.textureFormat != TextureFormat::TEXTURE_FORMAT_INVALID)
 			{
 				KNR::TextureDescriptor textureDesc = {};
 				textureDesc.textureType = TextureType::FRAMEBUFFER;
@@ -125,9 +125,10 @@ namespace KNR
 
 	void DirectX12Framebuffer::Bind(CommandBuffer* commandList)
 	{
+		DirectX12CommandBuffer* directXCommandBuffer = static_cast<DirectX12CommandBuffer*>(commandList);
 		DirectX12FrameHeap* frameHeap = DirectX12Context.GetFrameHeap();
 		//Starts the frame, initializing the descriptor table index to 0
-		frameHeap->StartFrame(commandList);
+		frameHeap->StartFrame(directXCommandBuffer);
 
 		//if we transitioned to a shader resource view, we need to get the texture back into a render target for the next frame
 		if (m_srvLastFrame || m_resize)
@@ -149,7 +150,7 @@ namespace KNR
 
 			if (resourceToRTVBarriers.size() != 0)
 			{
-				commandList->Get()->ResourceBarrier(resourceToRTVBarriers.size(), resourceToRTVBarriers.data());
+				directXCommandBuffer->Get()->ResourceBarrier(resourceToRTVBarriers.size(), resourceToRTVBarriers.data());
 			}
 		}
 
@@ -157,15 +158,15 @@ namespace KNR
 
 		if (m_DepthAttachment && m_framebufferTexture.size() < 1)
 		{
-			commandList->Get()->OMSetRenderTargets(0, nullptr, true, &m_DSVHeap.hCPUHeapStart);
+			directXCommandBuffer->Get()->OMSetRenderTargets(0, nullptr, true, &m_DSVHeap.hCPUHeapStart);
 		}
 		else if (m_DepthAttachment)
 		{
-			commandList->Get()->OMSetRenderTargets(m_framebufferTexture.size(), &m_RTVHeap.hCPUHeapStart, true, &m_DSVHeap.hCPUHeapStart);
+			directXCommandBuffer->Get()->OMSetRenderTargets(m_framebufferTexture.size(), &m_RTVHeap.hCPUHeapStart, true, &m_DSVHeap.hCPUHeapStart);
 		}
 		else
 		{
-			commandList->Get()->OMSetRenderTargets(m_framebufferTexture.size(), &m_RTVHeap.hCPUHeapStart, true, NULL);
+			directXCommandBuffer->Get()->OMSetRenderTargets(m_framebufferTexture.size(), &m_RTVHeap.hCPUHeapStart, true, NULL);
 		}
 		
 
@@ -182,26 +183,27 @@ namespace KNR
 		scissorRect.right = m_Specification.Width;
 		scissorRect.bottom = m_Specification.Height;
 
-		commandList->Get()->RSSetViewports(1, &viewport);				//RS = Rasterizer
-		commandList->Get()->RSSetScissorRects(1, &scissorRect);
+		directXCommandBuffer->Get()->RSSetViewports(1, &viewport);				//RS = Rasterizer
+		directXCommandBuffer->Get()->RSSetScissorRects(1, &scissorRect);
 
 		const float clearColor[] = { 0.0f, 0.0f, 0.0f, 1.0f };
 
 		//Clear the color attachment list
 		for (int i = 0; i < m_framebufferTexture.size(); ++i)
 		{
-			commandList->Get()->ClearRenderTargetView(m_RTVHeap.handleCPU(i), clearColor, 0, nullptr);
+			directXCommandBuffer->Get()->ClearRenderTargetView(m_RTVHeap.handleCPU(i), clearColor, 0, nullptr);
 		}
 
 		//Clear depth, we need to do this to see something
 		if (m_DepthAttachment)
 		{
-			commandList->Get()->ClearDepthStencilView(m_DSVHeap.handleCPU(0), D3D12_CLEAR_FLAG_DEPTH, 0.0f, 0xff, 0, nullptr);
+			directXCommandBuffer->Get()->ClearDepthStencilView(m_DSVHeap.handleCPU(0), D3D12_CLEAR_FLAG_DEPTH, 0.0f, 0xff, 0, nullptr);
 		}
 	}
 
 	void DirectX12Framebuffer::Unbind(CommandBuffer* commandList)
 	{
+		DirectX12CommandBuffer* directXCommandBuffer = static_cast<DirectX12CommandBuffer*>(commandList);
 		std::vector<D3D12_RESOURCE_BARRIER> rtvToResourceBarriers;
 		if (m_framebufferTexture.size() != 0)
 		{
@@ -217,7 +219,7 @@ namespace KNR
 
 		if (rtvToResourceBarriers.size() != 0)
 		{
-			commandList->Get()->ResourceBarrier(rtvToResourceBarriers.size(), rtvToResourceBarriers.data());
+			directXCommandBuffer->Get()->ResourceBarrier(rtvToResourceBarriers.size(), rtvToResourceBarriers.data());
 		}
 		m_srvLastFrame = true;
 	}
@@ -232,16 +234,5 @@ namespace KNR
 		m_Specification.Width = width;
 		m_Specification.Height = height;
 		Invalidate();
-	}
-
-	int DirectX12Framebuffer::ReadPixel(const uint32_t attachmentIndex, const int x, const int y)
-	{
-		int pixelData = 0;
-		return pixelData;
-	}
-
-	void DirectX12Framebuffer::ClearAttachment(const uint32_t attachmentIndex, const int value)
-	{
-
 	}
 }

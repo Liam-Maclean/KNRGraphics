@@ -21,9 +21,6 @@ namespace KNR
 		void Unbind(CommandBuffer* commandList) override;
 
 		void Resize(const uint32_t width, const uint32_t height) override;
-		int ReadPixel(const uint32_t attachmentIndex, const int x, const int y) override;
-
-		void ClearAttachment(const uint32_t attachmentIndex, const int value) override;
 
 		uint32_t GetColorAttachmentRendererID(const uint32_t index = 0) const override { return m_RendererID; }
 
@@ -36,7 +33,7 @@ namespace KNR
 		FramebufferSpecification m_Specification;
 
 		std::vector<FramebufferTextureSpecification> m_ColorAttachmentSpecifications;
-		FramebufferTextureSpecification m_DepthAttachmentSpecification = FramebufferTextureFormat::None;
+		FramebufferTextureSpecification m_DepthAttachmentSpecification = TextureFormat::TEXTURE_FORMAT_INVALID;
 		std::vector<uint32_t> m_ColorAttachments;
 		uint32_t m_DepthAttachment = 0;
 		DirectX12Heap m_RTVHeap;

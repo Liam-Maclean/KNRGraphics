@@ -35,7 +35,7 @@ namespace KNR
 		return !std::filesystem::exists(m_tempFilePath);
 	}
 
-	std::vector<uint32_t> ShaderCache::ReadFromFile()
+	ShaderBytecode ShaderCache::ReadFromFile()
 	{
 		std::ifstream file;
 		file.open(m_tempFilePath, std::ios::in | std::ios::binary);
@@ -50,14 +50,15 @@ namespace KNR
 		stringStreamBuffer.seekg(0, std::ios::end);
 		int size = stringStreamBuffer.tellg();
 
-		std::vector<uint32_t> shaderBytecode;
-		shaderBytecode.resize(size / sizeof(uint32_t));
-		memcpy(shaderBytecode.data(), buffer.data(), size);
+		ShaderBytecode shaderBytecode;
+		shaderBytecode.size = size;
+		shaderBytecode.bytecode = operator new(size);
+		memcpy(shaderBytecode.bytecode, buffer.data(), size);
 		
 		return shaderBytecode;
 	}
 
-	void ShaderCache::WriteToFile(std::vector<uint32_t> shaderBytecode)
+	void ShaderCache::WriteToFile(ShaderBytecode shaderBytecode)
 	{
 		std::filesystem::path path(m_tempFilePath);
 		if (!std::filesystem::exists(path.parent_path()))
@@ -66,7 +67,7 @@ namespace KNR
 		std::ofstream file;
 		file.open(path.string(), std::ios::out | std::ios::trunc | std::ios::binary);
 
-		file.write(reinterpret_cast<char*>(shaderBytecode.data()), shaderBytecode.size() * sizeof(uint32_t));
+		file.write(reinterpret_cast<char*>(shaderBytecode.bytecode), shaderBytecode.size * sizeof(uint32_t));
 		file.close();
 	}
 }

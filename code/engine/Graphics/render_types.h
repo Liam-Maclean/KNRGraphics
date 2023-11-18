@@ -16,6 +16,12 @@ namespace KNR
 		std::vector<GPUInfoCache> hardwareInfo;
 	};
 
+	struct ShaderBytecode
+	{
+		void* bytecode;
+		size_t size;
+	};
+
 	enum class BlendValue
 	{
 		Zero,
@@ -173,5 +179,6 @@ namespace KNR
 		TEXTURE_FORMAT_R8_UINT = 43,
 		TEXTURE_FORMAT_R8_SNORM = 44,
 		TEXTURE_FORMAT_R8_SINT = 45,
+		TEXTURE_FORMAT_INVALID = 46,
 	};
 }
