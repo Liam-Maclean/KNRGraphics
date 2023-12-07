@@ -17,7 +17,8 @@ namespace KNR
 		if (m_pipelineCreateInfo.computeBytecode.bytecode != nullptr)
 		{
 			D3D12_COMPUTE_PIPELINE_STATE_DESC computeDesc = {};
-			computeDesc.CS = m_pipelineCreateInfo.computeShader;
+			computeDesc.CS.pShaderBytecode = m_pipelineCreateInfo.computeBytecode.bytecode;
+			computeDesc.CS.BytecodeLength = m_pipelineCreateInfo.computeBytecode.size;
 
 			hr = device->CreateComputePipelineState(&computeDesc, __uuidof(ID3D12PipelineState), (void**)&m_pipelineState);
 			if (FAILED(hr))
@@ -74,6 +75,7 @@ namespace KNR
 				depthStencilState.StencilEnable = m_pipelineCreateInfo.depthStencilState.stencilEnable;
 				depthStencilState.StencilWriteMask = m_pipelineCreateInfo.depthStencilState.stencilWriteMask;
 				depthStencilState.StencilReadMask = m_pipelineCreateInfo.depthStencilState.stencilReadMask;
+				depthStencilState.FrontFace.
 			}
 
 			//Blend states
@@ -83,7 +85,6 @@ namespace KNR
 				if (m_pipelineCreateInfo.blendState.renderTargetBlendStates[i].blendEnable)
 				{
 					blendState.RenderTarget[i].BlendEnable = m_pipelineCreateInfo.blendState.renderTargetBlendStates[i].blendEnable;
-
 					blendState.RenderTarget[i].SrcBlend = Util::ConvertBlendMode(m_pipelineCreateInfo.blendState.renderTargetBlendStates[i].blendSrc);
 					blendState.RenderTarget[i].DestBlend = Util::ConvertBlendMode(m_pipelineCreateInfo.blendState.renderTargetBlendStates[i].blendDest);
 					blendState.RenderTarget[i].BlendOp = Util::ConvertBlendOp(m_pipelineCreateInfo.blendState.renderTargetBlendStates[i].blendOp);
@@ -100,9 +101,6 @@ namespace KNR
 			}
 			blendState.AlphaToCoverageEnable = m_pipelineCreateInfo.blendState.alphaToCoverageEnable;
 			blendState.IndependentBlendEnable = m_pipelineCreateInfo.blendState.independentBlendEnable;
-			
-			DXGI_SAMPLE_DESC sampleState = {};
-			sampleState.
 
 			psoDesc.SampleDesc.Count = 1;
 			psoDesc.SampleMask = 0xffffffff;
@@ -128,28 +126,5 @@ namespace KNR
 	{
 		m_pipelineState->Release();
 		m_pipelineState = 0;
-	}
-
-	void DirectX12Pipeline::Bind(CommandBuffer* commandList)
-	{
-		DirectX12CommandBuffer* directXCommandBuffer = static_cast<DirectX12CommandBuffer*>(commandList);
-
-		//bind compute
-		if (m_pipelineCreateInfo.computeBytecode.bytecode != nullptr)
-		{
-			directXCommandBuffer->Get()->SetPipelineState(m_pipelineState);
-			directXCommandBuffer->Get()->SetGraphicsRootSignature(m_pipelineLayout->GetRootSignature());
-		}
-		else //bind rasterizer pipeline
-		{
-			directXCommandBuffer->Get()->SetPipelineState(m_pipelineState);
-			directXCommandBuffer->Get()->SetGraphicsRootSignature(m_pipelineLayout->GetRootSignature());
-			directXCommandBuffer->Get()->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST); // HACK LIAM - FIX We probably shouldn't be doing this here
-		}
-	}
-
-	void DirectX12Pipeline::Unbind(CommandBuffer* commandList)
-	{
-
 	}
 }

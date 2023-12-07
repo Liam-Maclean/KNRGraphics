@@ -148,16 +148,6 @@ namespace KNR
 		m_resource = nullptr;
 	}
 
-	void DirectX12Buffer::Bind(CommandBuffer* commandList) const
-	{
-
-	}
-
-	void DirectX12Buffer::Unbind(CommandBuffer* commandList) const
-	{
-
-	}
-
 	void* DirectX12Buffer::Map()
 	{
 		D3D12_RANGE range = {0, m_allocatedSize};

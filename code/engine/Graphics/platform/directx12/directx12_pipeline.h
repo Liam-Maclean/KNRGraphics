@@ -12,9 +12,6 @@ namespace KNR
 		DirectX12Pipeline();
 		~DirectX12Pipeline() override final;
 
-		void Bind(CommandBuffer* commandList) override final;
-		void Unbind(CommandBuffer* commandList) override final;
-
 		inline DirectX12PipelineLayout* GetPipelineLayout() const { return m_pipelineLayout; }
 		inline ID3D12PipelineState* GetPipeline() const {return m_pipelineState; }
 	private:

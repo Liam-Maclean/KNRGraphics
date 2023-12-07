@@ -12,8 +12,5 @@ namespace KNR
 	public:
 		DirectX12Shader(const std::filesystem::path& shader);
 		virtual ~DirectX12Shader();
-
-		virtual void Bind() const override;
-		virtual void Unbind() const override;
 	};
 }

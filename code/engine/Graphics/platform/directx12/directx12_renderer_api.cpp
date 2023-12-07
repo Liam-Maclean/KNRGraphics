@@ -49,12 +49,6 @@ namespace KNR
 
 	}
 
-	void DirectX12RendererAPI::BindPipeline(CommandBuffer* commandList, Technique* technique)
-	{
-		//Bind as normal
-		technique->Bind(commandList);
-	}
-
 	void DirectX12RendererAPI::BindVertexBuffer(CommandBuffer* commandList, Buffer* buffer)
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
@@ -321,11 +315,11 @@ namespace KNR
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
 
-		if (directXCommandList->GetType() == CommandBufferType::graphics)
+		if (directXCommandList->GetType() == CommandBufferType::Graphics)
 		{
 			directXCommandList->Get()->SetGraphicsRootConstantBufferView(bindSlot, gpuAddress);
 		}
-		else if (commandList->GetType() == CommandBufferType::compute)
+		else if (commandList->GetType() == CommandBufferType::Compute)
 		{
 			directXCommandList->Get()->SetComputeRootConstantBufferView(bindSlot, gpuAddress);
 		}
@@ -335,11 +329,11 @@ namespace KNR
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
 
-		if (directXCommandList->GetType() == CommandBufferType::graphics)
+		if (directXCommandList->GetType() == CommandBufferType::Graphics)
 		{
 			directXCommandList->Get()->SetGraphicsRootShaderResourceView(bindSlot, gpuAddress);
 		}
-		else if (commandList->GetType() == CommandBufferType::compute)
+		else if (commandList->GetType() == CommandBufferType::Compute)
 		{
 			directXCommandList->Get()->SetComputeRootShaderResourceView(bindSlot, gpuAddress);
 		}
@@ -349,11 +343,11 @@ namespace KNR
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
 
-		if (directXCommandList->GetType() == CommandBufferType::graphics)
+		if (directXCommandList->GetType() == CommandBufferType::Graphics)
 		{
 			directXCommandList->Get()->SetGraphicsRootUnorderedAccessView(bindSlot, gpuAddress);
 		}
-		else if (directXCommandList->GetType() == CommandBufferType::compute)
+		else if (directXCommandList->GetType() == CommandBufferType::Compute)
 		{
 			directXCommandList->Get()->SetComputeRootUnorderedAccessView(bindSlot, gpuAddress);
 		}
@@ -363,11 +357,11 @@ namespace KNR
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
 
-		if (directXCommandList->GetType() == CommandBufferType::graphics)
+		if (directXCommandList->GetType() == CommandBufferType::Graphics)
 		{
 			directXCommandList->Get()->SetGraphicsRootDescriptorTable(bindSlot, static_cast<D3D12_GPU_DESCRIPTOR_HANDLE>(startGPUAddress));
 		}
-		else if (directXCommandList->GetType() == CommandBufferType::compute)
+		else if (directXCommandList->GetType() == CommandBufferType::Compute)
 		{
 			directXCommandList->Get()->SetComputeRootDescriptorTable(bindSlot, static_cast<D3D12_GPU_DESCRIPTOR_HANDLE>(startGPUAddress));
 		}

@@ -12,9 +12,6 @@ namespace KNR
 		DirectX12Buffer(const BufferDescriptor& desc);
 		~DirectX12Buffer();
 
-		void Bind(CommandBuffer* commandList) const override;
-		void Unbind(CommandBuffer* commandList) const override;
-
 		void* Map() override final;
 		void UnMap() override final;
 

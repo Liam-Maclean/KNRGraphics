@@ -67,9 +67,6 @@ namespace KNR
 		Buffer() {}
 		virtual ~Buffer() {}
 
-		virtual void Bind(CommandBuffer* commandList) const = 0;
-		virtual void Unbind(CommandBuffer* commandList) const = 0;
-
 		virtual void* Map() = 0;
 		virtual void UnMap() = 0;
 

@@ -4,7 +4,7 @@ using System.Collections;
 using System.Linq;
 
 [Generate]
-public class KNRShaders : Sharpmake.Project
+public class KNRShaders : KNRLibBase
 {
     public enum GraphicsPlatform 
     {
@@ -33,16 +33,23 @@ public class KNRShaders : Sharpmake.Project
         return "";
     }
 
-    public KNRShaders()
+    public string[] GetIncludesFromFile(string file)
     {
-        Name = "KNRShaders";
+         return new[] {
+               "",
+        }; 
+    }
 
-        AddTargets(new Target(
-                Platform.win32 | Platform.win64,
-                DevEnv.vs2019,
-                Optimization.Debug | Optimization.Release, OutputType.Lib
-        ));
+    public string[] GetDefines()
+    {
+        return new[] {
+               "SM5",
+        }; 
+    }
 
+    public KNRShaders()
+        : base("KNRGraphics")
+    {
         SourceRootPath = Globals.ShadersDir;
     }
 
@@ -76,12 +83,12 @@ public class KNRShaders : Sharpmake.Project
 
     public void CreateShaderCustomBuildSteps(Project project, string filenameEnding, string shaderModelFlag)
     {
-        string[] shaderFiles = new string[](project.ResolvedSourceFiles.Where(file => file.EndsWith(filenameEnding, System.StringComparison.InvariantCultureIgnoreCase)));
+        Strings shaderFiles = new Strings(project.ResolvedSourceFiles.Where(file => file.EndsWith(filenameEnding, System.StringComparison.InvariantCultureIgnoreCase)));
         foreach(Configuration conf in project.Configurations)
         {
             foreach (string shader in shaderFiles)
             {
-                ShaderCompiler shaderCompiler = new ShaderCompiler(conf.Target, shader, shaderModelFlag, "", "", m_GraphicsAPI);
+                ShaderCompiler shaderCompiler = new ShaderCompiler(conf.Target, shader, shaderModelFlag, GetIncludesFromFile(shader), GetDefines(), m_GraphicsAPI);
                 conf.CustomFileBuildSteps.Add(shaderCompiler);
             }
         }
@@ -155,7 +162,7 @@ public class KNRShaders : Sharpmake.Project
         }
 
 
-        public ShaderCompiler(Target target, string file, string shaderModelFlag, Strings includes, Strings defines, GraphicsPlatform graphicsPlatform)
+        public ShaderCompiler(Target target, string file, string shaderModelFlag, string[] includes, string[] defines, GraphicsPlatform graphicsPlatform)
         {
             string fileWithoutExt = Path.GetFileNameWithoutExtension(file);
             string outputExtension = GetOutputExtensionByGraphicsPlatform(graphicsPlatform);
@@ -184,8 +191,8 @@ public class KNRShaders : Sharpmake.Project
                 +   $" -Fd {outputPDB}"                                 //PDB output file
 
                     //Defines and includes
-                +   $" -D {string.Join(" ", defines.ToArray())}"        //Shader defines
-                +   $" -I {string.Join(" ", includes.ToArray())}"       //Shader includes
+                +   $" -D {string.Join(" ", defines)}"        //Shader defines
+                +   $" -I {string.Join(" ", includes)}"       //Shader includes
                 +   $" -T {shaderModelFlag}"                            //Shader model flag
                 +   (spirv ? $"-spirv " : $"")                          //Output spirv
 

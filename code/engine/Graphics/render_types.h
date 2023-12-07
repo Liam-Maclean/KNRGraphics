@@ -22,6 +22,28 @@ namespace KNR
 		size_t size;
 	};
 
+	enum WriteFlags
+	{
+		ColorR =	1 << 0,
+		ColorG =	1 << 1,
+		ColorB =	1 << 2,
+		ColorA =	1 << 3,
+		ColorRGB = ColorR | ColorG | ColorB,
+		ColorRGBA = ColorRGB | ColorA,
+	};
+
+	enum class StencilOp
+	{
+		Keep,
+		Zero,
+		Replace,
+		IncrSat,
+		DcrSat,
+		Invert,
+		Incr,
+		Dcr
+	};
+
 	enum class BlendValue
 	{
 		Zero,
@@ -44,7 +66,7 @@ namespace KNR
 		Max
 	};
 
-	enum class DepthComparisonOp
+	enum class ComparisonOp
 	{
 		Never,
 		Less,
@@ -56,31 +78,30 @@ namespace KNR
 		Always
 	};
 
-
 	enum class CommandBufferType
 	{
-		copy,
-		compute,
-		graphics,
+		Copy,
+		Compute,
+		Graphics,
 	};
 
 	enum class TopologyType
 	{
-		undefined = 0,
-		point = 1,
-		line = 2,
-		triangle = 3,
-		patch = 4
+		Undefined = 0,
+		Point = 1,
+		Line = 2,
+		Triangle = 3,
+		Patch = 4
 	};
 
 	enum class TopologyIndexMethod
 	{
-		undefined = 0,
-		pointlist = 1,
-		linelist = 2,
-		linestrip = 3,
-		trianglelist = 4,
-		trianglestrip = 5,
+		Undefined = 0,
+		Pointlist = 1,
+		Linelist = 2,
+		Linestrip = 3,
+		Trianglelist = 4,
+		Trianglestrip = 5,
 	};
 
 	enum class VertexWinding
@@ -91,23 +112,23 @@ namespace KNR
 
 	enum class FillMode
 	{
-		solid,
-		wireframe
+		Solid,
+		Wireframe
 	};
 
 	enum class CullingMode
 	{
-		backface = 0,
-		frontface = 0,
-		none
+		Backface = 0,
+		Frontface = 0,
+		None
 	};
 
 	enum class Topology
 	{
-		point = 0,
-		line = 1,
-		triangle = 2,
-		patch = 3
+		Point = 0,
+		Line = 1,
+		Triangle = 2,
+		Patch = 3
 	};
 
 	enum class VertexElementFormat
@@ -129,6 +150,90 @@ namespace KNR
 		Normal,
 		Tangent,
 		Binormal,
+	};
+
+	struct StencilFace
+	{
+		StencilOp m_DepthPassOp;
+		StencilOp m_StencilPassOp;
+		StencilOp m_StencilFailOp;
+		ComparisonOp m_StencilComparison;
+	};
+
+	struct RasterizerState
+	{
+		RasterizerState()
+		{
+			m_CullingMode = CullingMode::Backface;
+			m_FillMode = FillMode::Solid;
+			m_DepthBias = 0.05f;
+			m_DepthBiasClamp = 0.0f;
+			m_SampleCount = 1;
+			m_ConservativeRasterizer = false;
+		}
+
+		CullingMode m_CullingMode;
+		FillMode m_FillMode;
+		float m_DepthBias;
+		float m_DepthBiasClamp;
+		bool m_MultisampleEnable;
+		int m_SampleCount;
+		bool m_ConservativeRasterizer;
+	};
+
+	struct DepthStencilState
+	{
+		DepthStencilState()
+		{
+			m_DepthEnable = true;
+			m_StencilEnable = true;
+			m_DepthOp = ComparisonOp::LessEqual;
+			m_StencilReadMask = ColorRGBA;
+			m_StencilWriteMask = ColorRGBA;
+			m_StencilFrontFace = {};
+			m_StencilBackFace = {};
+		}
+
+		bool m_DepthEnable;
+		ComparisonOp m_DepthOp;
+		bool m_StencilEnable;
+		uint32_t m_StencilReadMask;
+		uint32_t m_StencilWriteMask;
+		StencilFace m_StencilFrontFace;
+		StencilFace m_StencilBackFace;
+	};
+
+	struct RenderTargetBlendState
+	{
+		RenderTargetBlendState()
+		{
+			m_BlendEnable = true;
+			m_ColorSrc = BlendValue::One;
+			m_ColorDest = BlendValue::Zero;
+			m_ColorOp = BlendOp::Add;
+			m_AlphaSrc = BlendValue::One;
+			m_AlphaDest = BlendValue::Zero;
+			m_AlphaOp = BlendOp::Add;
+			m_LogicOpEnable = false;
+			m_WriteMask = ColorRGBA;
+		}
+
+		bool m_BlendEnable;
+		bool m_LogicOpEnable;
+		BlendValue m_ColorSrc;
+		BlendValue m_ColorDest;
+		BlendOp m_ColorOp;
+		BlendValue m_AlphaSrc;
+		BlendValue m_AlphaDest;
+		BlendOp m_AlphaOp;
+		uint32_t m_WriteMask;
+	};
+
+	struct BlendState
+	{
+		RenderTargetBlendState renderTargetBlendStates[8];
+		bool alphaToCoverageEnable;
+		bool independentBlendEnable;
 	};
 
 	enum class TextureFormat

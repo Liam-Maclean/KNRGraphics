@@ -54,16 +54,6 @@ namespace KNR
 			sRendererAPI->SetSwapchainRenderTarget();
 		}
 
-		inline static void BlitToTexture(Texture2D* srcTx, Texture2D* dstTx)
-		{
-			sRendererAPI->BlitToTexture(srcTx, dstTx);
-		}
-
-		inline static void BlitToSwapchain(Texture2D* srcTx)
-		{
-			sRendererAPI->BlitToSwapchain(srcTx);
-		}
-		
 		inline static void SetFinalRenderTextureId(void* textureId)
 		{
 			sRendererAPI->SetFinalRenderTextureId(textureId);
@@ -77,11 +67,6 @@ namespace KNR
 		inline static uint32_t AppendBufferRegion(CommandBuffer* commandList, Buffer* dstBuffer, Buffer* srcBuffer)
 		{
 			return sRendererAPI->AppendBufferRegion(commandList, dstBuffer, srcBuffer);
-		}
-
-		inline static void BindPipeline(CommandBuffer* commandList, Technique* technique)
-		{
-			sRendererAPI->BindPipeline(commandList, technique);
 		}
 
 		inline static void BindVertexBuffer(CommandBuffer* commandList, Buffer* buffer)

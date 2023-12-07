@@ -61,14 +61,4 @@ namespace KNR
 	{
 
 	}
-
-	void DirectX12Shader::Bind() const
-	{
-
-	}
-
-	void DirectX12Shader::Unbind() const
-	{
-		
-	}
 }

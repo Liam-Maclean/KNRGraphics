@@ -3,59 +3,34 @@
 
 namespace KNR
 {
-	enum class TextureUsage
+	enum TextureUsage
 	{
-		SHADERRESOURCE = 0x1, //Shader visible
-		RENDERTARGET = 0x2,	//Render target flag
-		UNORDEREDACCESS = 0x4,//Compute/write access
+		ShaderResource =	1 << 0, //Shader visible
+		RenderTarget =		1 << 1,	//Render target flag
+		UnorderedAccess =	1 << 2,	//Compute/write access
 	};
 
-	enum class TextureType
+	enum TextureType
 	{
-		ASSET,		//Comes from a file
-		FRAMEBUFFER,//Created as a framebuffer
-		CUBEMAP,	//Created as a cubemap
-	};
-
-	struct TextureCubemapDesc
-	{
-		const char* path;
-		uint32_t width;
-		uint32_t height;
-	};
-
-	struct TextureAssetDesc 
-	{
-		const char* path;
-		void* data;
-		int width, height, bitdepth;
-	};
-
-	struct TextureFramebufferDesc 
-	{
-		FramebufferSpecification* framebufferSpec;
-		FramebufferTextureSpecification* framebufferTextureSpec;
+		Asset =			1 << 0,	//Comes from a file
+		Framebuffer =	1 << 1,	//Created as a framebuffer
+		Cubemap =		1 << 2,	//Created as a cubemap
 	};
 
 	struct TextureDescriptor
 	{
 		TextureUsage textureUsage;
 		TextureType textureType;
-		union
-		{
-			TextureAssetDesc textureAsset;
-			TextureFramebufferDesc textureFramebuffer;
-			TextureCubemapDesc textureCubemap;
-		};
+		TextureFormat textureFormat;
+		uint32_t width, height, bitDepth, samples, mipCount;
+		void* initialData;
 		LPCWSTR debugName;
 	};
 
 	class Texture
 	{
 	public:
-
 		virtual ~Texture() = default;
-
 		inline virtual uint32_t GetWidth() const = 0;
 		inline virtual uint32_t GetHeight() const = 0;
 		inline virtual uint32_t GetRenderId() const = 0;
@@ -66,7 +41,6 @@ namespace KNR
 		virtual void Unbind(const uint32_t slot = 0) const = 0;
 		virtual bool operator==(const Texture& other) const = 0;
 		virtual void Upload() = 0;
-		virtual void ResizeResource(const FramebufferTextureSpecification& framebufferTextureSpec, const FramebufferSpecification& framebufferSpec) = 0;
 	protected:
 		virtual void Initialise() {}
 	};
@@ -77,5 +51,15 @@ namespace KNR
 	{
 	public:
 		static Texture2D* Create(const TextureDescriptor& desc);
+
+	protected:
+		TextureType m_TextureType;
+		TextureUsage m_TextureUsage;
+		TextureFormat m_TextureFormat;
+		uint32_t m_Width;
+		uint32_t m_Height;
+		uint32_t m_BitDepth;
+		uint32_t m_Samples;
+		uint32_t m_MipCount;
 	};
 }

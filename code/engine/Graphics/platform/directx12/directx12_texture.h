@@ -14,13 +14,12 @@ namespace KNR
 		virtual ~DirectX12Texture2D();
 
 		virtual void Upload() override;
-		virtual uint32_t GetWidth() const override { return m_width; }
-		virtual uint32_t GetHeight() const override { return m_height; }
+		virtual uint32_t GetWidth() const override { return m_Width; }
+		virtual uint32_t GetHeight() const override { return m_Height; }
 		virtual uint32_t GetRenderId() const override { return m_rendererID; }
 		virtual uint32_t GetEditorRenderId() const override { return m_editorID; }
 		virtual uint64_t GetHandle() const override;
 		
-		virtual void ResizeResource(const FramebufferTextureSpecification& framebufferTextureSpec, const FramebufferSpecification& framebufferSpec) override;
 		inline void Destroy(ID3D12Resource* uploadBuffer, void* data) 
 		{
 			uploadBuffer->Release(); 
@@ -31,20 +30,13 @@ namespace KNR
 		inline void Destroy(ID3D12Resource* uploadBuffer) 
 		{
 			uploadBuffer->Release(); 
-			uploadBuffer = 0; 
-			SAFE_DELETE(m_data);
+			uploadBuffer = 0;
+
+			//TODO
+			//SAFE_DELETE(m_data);
 		};
 
-		virtual void SetData(void* data, uint32_t size) override;
-		virtual void Bind(uint32_t slot = 0) const override;
-		virtual void Unbind(uint32_t slot = 0) const override;
-
 		ID3D12Resource* GetTextureHandle() { return m_textureResource; }
-		void CreateRTV(DirectX12Heap* inRTVHeap);
-		void RecreateRTV(DirectX12Heap* inRTVHeap);
-
-		void CreateDSV(DirectX12Heap* inDSVHeap);
-		void RecreateDSV(DirectX12Heap* inDSVHeap);
 
 		virtual bool operator ==(const Texture& other) const override
 		{
@@ -59,11 +51,6 @@ namespace KNR
 		DirectX12DescriptorHandleBlock m_descriptorHandleBlock;
 		std::vector<std::string> m_cubemapFilenames;
 
-		std::string m_path = "";
-		uint32_t m_width = 0;
-		uint32_t m_height = 0;
-		uint32_t m_channels = 0;
-		void* m_data = nullptr;
 		RENDERERID m_rendererID = -1;	//Shader
 		RENDERERID m_editorID = -1;		//ImGui
 

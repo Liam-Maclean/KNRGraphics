@@ -18,14 +18,4 @@ namespace KNR
 	{
 
 	}
-
-	void DirectX12Technique::Bind(CommandBuffer* commandList) const
-	{
-		m_pipeline->Bind(commandList);
-	}
-
-	void DirectX12Technique::Unbind(CommandBuffer* commandList) const
-	{
-
-	}
 }

@@ -35,8 +35,6 @@ namespace KNR
 		virtual void DrawIndirect(CommandBuffer* commandList, DirectX12IndirectSignature* DirectX12IndirectSignature, const UINT pcommandCount, Buffer* pArgumentBuffer, const UINT64 ArgumentBufferOffset, Buffer* pCountBuffer, UINT64 CountBufferOffset);
 		virtual void DispatchCompute(CommandBuffer* commandList, const uint32_t dispatchGroupCountX, const uint32_t dispatchGroupCountY, const uint32_t dispatchGroupCountZ) override;
 
-		virtual void BindPipeline(CommandBuffer* commandList, Technique* technique) override;
-
 		virtual void BindVertexBuffer(CommandBuffer* commandList, Buffer* buffer) override;
 		virtual void BindIndexBuffer(CommandBuffer* commandList, Buffer* buffer)override;
 		virtual void BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, const uint32_t bindslot)override;
