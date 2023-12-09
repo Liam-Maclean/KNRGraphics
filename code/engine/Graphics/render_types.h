@@ -133,12 +133,12 @@ namespace KNR
 
 	enum class VertexElementFormat
 	{
-		Byte4,
 		Color,
 		Half,
 		Unorm,
 		Short,
 		Float,
+		UInt,
 	};
 
 	enum class VertexElementUsage

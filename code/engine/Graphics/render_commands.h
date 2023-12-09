@@ -19,7 +19,7 @@ namespace KNR
 			sRendererAPI->SetClearColor(r,g,b,a);
 		}
 
-		inline static void Clear()
+		inline static void ClearRenderTarget(CommandBuffer* commandList)
 		{
 			sRendererAPI->Clear();
 		}
@@ -34,12 +34,12 @@ namespace KNR
 			sRendererAPI->DispatchCompute(commandList, dispatchThreadCountX, dispatchThreadCountY, dispatchThreadCountZ);
 		}
 
-		inline static void SetViewport(const float x, const float y, const float width, const float height)
+		inline static void SetViewport(CommandBuffer* commandList, const float x, const float y, const float width, const float height)
 		{
 			sRendererAPI->SetViewport(x, y, width, height);
 		}
 
-		inline static void SetScissor(const float left, const float top, const float right, const float bottom)
+		inline static void SetScissor(CommandBuffer* commandList, const float left, const float top, const float right, const float bottom)
 		{
 			sRendererAPI->SetScissor(left, top, right, bottom);
 		}
@@ -52,21 +52,6 @@ namespace KNR
 		inline static void SetSwapchainRenderTarget()
 		{
 			sRendererAPI->SetSwapchainRenderTarget();
-		}
-
-		inline static void SetFinalRenderTextureId(void* textureId)
-		{
-			sRendererAPI->SetFinalRenderTextureId(textureId);
-		}
-
-		inline static void* GetFinalRenderTextureId()
-		{
-			return sRendererAPI->GetFinalRenderTextureId();
-		}
-
-		inline static uint32_t AppendBufferRegion(CommandBuffer* commandList, Buffer* dstBuffer, Buffer* srcBuffer)
-		{
-			return sRendererAPI->AppendBufferRegion(commandList, dstBuffer, srcBuffer);
 		}
 
 		inline static void BindVertexBuffer(CommandBuffer* commandList, Buffer* buffer)
@@ -82,6 +67,11 @@ namespace KNR
 		inline static void BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, const uint32_t bindslot)
 		{
 			sRendererAPI->BindUniformBuffer(commandList, buffer, bindslot);
+		}
+
+		inline static void BindPipeline(CommandBuffer* commandList, Pipeline* pipeline)
+		{
+			sRendererAPI->BindPipeline(commandList, pipeline);
 		}
 
 		inline static void BindStructuredBuffer(CommandBuffer* commandList, Buffer* buffer, const uint32_t bindslot)
