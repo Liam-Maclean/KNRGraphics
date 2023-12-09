@@ -2,6 +2,7 @@ using System.IO; // For Path.Combine
 using Sharpmake; // Contains the entire Sharpmake object library.
 using System.Collections;
 using System.Linq;
+using ProjConfig = Sharpmake.Project.Configuration;
 
 [Generate]
 public class KNRShaders : KNRLibBase
@@ -14,41 +15,10 @@ public class KNRShaders : KNRLibBase
         OPENGL,
     }
 
-    public GraphicsPlatform m_GraphicsAPI = GraphicsPlatform.DIRECTX12;
-
-    public string GetShaderModelByShaderType(string filenameEnding)
-    {
-        if (filenameEnding == "VS.hlsl")
-        {
-            return "vs_6_0";
-        }
-        else if (filenameEnding == "PS.hlsl")
-        {
-            return "ps_6_0";
-        }
-        else if(filenameEnding == "CS.hlsl")
-        {
-            return "cs_6_0";
-        }
-        return "";
-    }
-
-    public string[] GetIncludesFromFile(string file)
-    {
-         return new[] {
-               "",
-        }; 
-    }
-
-    public string[] GetDefines()
-    {
-        return new[] {
-               "SM5",
-        }; 
-    }
+    public static GraphicsPlatform m_GraphicsAPI = GraphicsPlatform.DIRECTX12;
 
     public KNRShaders()
-        : base("KNRGraphics")
+        : base("KNRShaders")
     {
         SourceRootPath = Globals.ShadersDir;
     }
@@ -56,11 +26,11 @@ public class KNRShaders : KNRLibBase
     protected override void ExcludeOutputFiles()
     {
         base.ExcludeOutputFiles();
-        CreateShaderBuildSteps(this);
+        ShaderCompiler.CreateShaderBuildSteps((Project)this, m_GraphicsAPI);
     }
 
     [Configure]
-    public void ConfigureAll(Configuration conf, Target target)
+    public void ConfigureAll(ProjConfig conf, Target target)
     {
         //Platform specific set-up
         conf.IncludePaths.Add(Globals.ShadersDir);
@@ -74,29 +44,9 @@ public class KNRShaders : KNRLibBase
         conf.Output = Configuration.OutputType.Lib;
     }
 
-    public void CreateShaderBuildSteps(Project project)
+    public class ShaderCompiler : ProjConfig.CustomFileBuildStep
     {
-        CreateShaderCustomBuildSteps(project, "VS.hlsl", GetShaderModelByShaderType("VS.hlsl"));
-        CreateShaderCustomBuildSteps(project, "PS.hlsl", GetShaderModelByShaderType("PS.hlsl"));
-        CreateShaderCustomBuildSteps(project, "CS.hlsl", GetShaderModelByShaderType("CS.hlsl"));
-    }
-
-    public void CreateShaderCustomBuildSteps(Project project, string filenameEnding, string shaderModelFlag)
-    {
-        Strings shaderFiles = new Strings(project.ResolvedSourceFiles.Where(file => file.EndsWith(filenameEnding, System.StringComparison.InvariantCultureIgnoreCase)));
-        foreach(Configuration conf in project.Configurations)
-        {
-            foreach (string shader in shaderFiles)
-            {
-                ShaderCompiler shaderCompiler = new ShaderCompiler(conf.Target, shader, shaderModelFlag, GetIncludesFromFile(shader), GetDefines(), m_GraphicsAPI);
-                conf.CustomFileBuildSteps.Add(shaderCompiler);
-            }
-        }
-    }
-
-    public class ShaderCompiler : Configuration.CustomFileBuildStep
-    {
-        private string[] GetShaderDefinesByGraphicsPlatform(GraphicsPlatform platform)
+        private static string[] GetShaderDefinesByGraphicsPlatform(GraphicsPlatform platform)
         {
             switch (platform)
             {
@@ -120,7 +70,22 @@ public class KNRShaders : KNRLibBase
             return null;
         }
 
-        private string GetShaderExecutableByGraphicsPlatform(GraphicsPlatform platform)
+
+        public static string[] GetIncludesFromFile(string file)
+        {
+             return new[] {
+                   "",
+            }; 
+        }
+
+        public static string[] GetDefines()
+        {
+            return new[] {
+                   "SM5",
+            }; 
+        }
+
+        private static string GetShaderExecutableByGraphicsPlatform(GraphicsPlatform platform)
         {
             switch (platform)
             {
@@ -133,7 +98,7 @@ public class KNRShaders : KNRLibBase
             return null;
         }
 
-        private string GetOutputExtensionByGraphicsPlatform(GraphicsPlatform platform)
+        private static string GetOutputExtensionByGraphicsPlatform(GraphicsPlatform platform)
         {
             switch (platform)
             {
@@ -147,7 +112,7 @@ public class KNRShaders : KNRLibBase
             return "";
         }
 
-        private bool IsSpirvPlatform(GraphicsPlatform platform)
+        private static bool IsSpirvPlatform(GraphicsPlatform platform)
         {
             switch (platform)
             {
@@ -161,15 +126,51 @@ public class KNRShaders : KNRLibBase
             return false;
         }
 
+        public static string GetShaderModelByShaderType(string filenameEnding)
+        {
+            if (filenameEnding == "VS.hlsl")
+            {
+                return "vs_6_0";
+            }
+            else if (filenameEnding == "PS.hlsl")
+            {
+                return "ps_6_0";
+            }
+            else if(filenameEnding == "CS.hlsl")
+            {
+                return "cs_6_0";
+            }
+            return "";
+        }
 
-        public ShaderCompiler(Target target, string file, string shaderModelFlag, string[] includes, string[] defines, GraphicsPlatform graphicsPlatform)
+        public static void CreateShaderBuildSteps(Project project, GraphicsPlatform graphicsPlatform)
+        {
+            CreateShaderCustomBuildSteps(project, "VS.hlsl", GetShaderModelByShaderType("VS.hlsl"), graphicsPlatform);
+            CreateShaderCustomBuildSteps(project, "PS.hlsl", GetShaderModelByShaderType("PS.hlsl"), graphicsPlatform);
+            CreateShaderCustomBuildSteps(project, "CS.hlsl", GetShaderModelByShaderType("CS.hlsl"), graphicsPlatform);
+        }
+
+        public static void CreateShaderCustomBuildSteps(Project project, string filenameEnding, string shaderModelFlag, GraphicsPlatform graphicsPlatform)
+        {
+            Strings shaderFiles = new Strings(project.ResolvedSourceFiles.Where(file => file.EndsWith(filenameEnding, System.StringComparison.InvariantCultureIgnoreCase)));
+            foreach(ProjConfig conf in project.Configurations)
+            {
+                foreach (string shader in shaderFiles)
+                {
+                    ShaderCompiler shaderCompiler = new ShaderCompiler(conf, shader, shaderModelFlag, GetIncludesFromFile(shader), GetDefines(), graphicsPlatform);
+                    conf.CustomFileBuildSteps.Add(shaderCompiler);
+                }
+            }
+        }
+
+        public ShaderCompiler(ProjConfig conf, string file, string shaderModelFlag, string[] includes, string[] defines, GraphicsPlatform graphicsPlatform)
         {
             string fileWithoutExt = Path.GetFileNameWithoutExtension(file);
             string outputExtension = GetOutputExtensionByGraphicsPlatform(graphicsPlatform);
             string shaderCompiler = GetShaderExecutableByGraphicsPlatform(graphicsPlatform);
             
             string outputFile = $"{fileWithoutExt}{outputExtension}";
-            string outputDir = Path.Combine(Globals.ShadersDir, $"Shaders_{target.Platform.ToString()}_{target.Optimization.ToString()}");
+            string outputDir = Path.Combine(Globals.ShadersDir, $"Shaders_built");
             string outputFileAbsolutePath = Path.Combine(outputDir, outputFile);
             string outputLog = Path.Combine(outputDir,  $"{fileWithoutExt}.log");
             string outputReflection = Path.Combine(outputDir, $"{fileWithoutExt}.refl");
@@ -177,8 +178,8 @@ public class KNRShaders : KNRLibBase
 
             //Debug
             bool disableWarnings = false;
-            bool treatWarningsAsErrors = (target.Optimization == Optimization.Release);
-            bool debugInfo = (target.Optimization == Optimization.Debug);
+            bool treatWarningsAsErrors = false; // (conf.Target.Optimization == Optimization.Release);
+            bool debugInfo = false; // (conf.Target.Optimization == Optimization.Debug);
             bool spirv = IsSpirvPlatform(graphicsPlatform);
 
             KeyInput = file;
@@ -204,3 +205,4 @@ public class KNRShaders : KNRLibBase
         }
     }
 }
+

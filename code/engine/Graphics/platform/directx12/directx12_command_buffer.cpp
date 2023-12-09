@@ -14,15 +14,15 @@ namespace KNR
 		HRESULT hr;
 		switch (m_type)
 		{
-		case CommandBufferType::compute:
+		case CommandBufferType::Compute:
 			m_fence = new DirectX12Fence(false);
 			commandListType = D3D12_COMMAND_LIST_TYPE_COMPUTE;
 			break;
-		case CommandBufferType::copy:
+		case CommandBufferType::Copy:
 			m_fence = new DirectX12Fence(true);
 			commandListType = D3D12_COMMAND_LIST_TYPE_COPY;
 			break;
-		case CommandBufferType::graphics:
+		case CommandBufferType::Graphics:
 			m_fence = new DirectX12Fence(false);
 			commandListType = D3D12_COMMAND_LIST_TYPE_DIRECT;
 			break;
@@ -94,13 +94,13 @@ namespace KNR
 		ID3D12CommandQueue* queue;
 		switch (m_type)
 		{
-		case CommandBufferType::copy:
+		case CommandBufferType::Copy:
 			queue = static_cast<ID3D12CommandQueue*>(DirectX12Context.GetCommandQueue());
 			break;
-		case CommandBufferType::compute:
+		case CommandBufferType::Compute:
 			queue = static_cast<ID3D12CommandQueue*>(DirectX12Context.GetComputeQueue());
 			break;
-		case CommandBufferType::graphics:
+		case CommandBufferType::Graphics:
 			queue = static_cast<ID3D12CommandQueue*>(DirectX12Context.GetCommandQueue());
 			break;
 		default:

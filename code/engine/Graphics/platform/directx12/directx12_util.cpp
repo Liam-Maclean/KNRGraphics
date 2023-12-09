@@ -5,7 +5,7 @@ namespace KNR
 {
 	inline D3D12_FILL_MODE Util::ConvertFillMode(FillMode fillMode)
 	{
-		if (fillMode == FillMode::wireframe)
+		if (fillMode == FillMode::Wireframe)
 		{
 			return D3D12_FILL_MODE_WIREFRAME;
 		}
@@ -18,11 +18,11 @@ namespace KNR
 
 	inline D3D12_CULL_MODE Util::ConvertCullMode(CullingMode cullMode)
 	{
-		if (cullMode == CullingMode::backface)
+		if (cullMode == CullingMode::Backface)
 		{
 			return D3D12_CULL_MODE::D3D12_CULL_MODE_BACK;
 		}
-		else if (cullMode == CullingMode::frontface)
+		else if (cullMode == CullingMode::Frontface)
 		{
 			return D3D12_CULL_MODE::D3D12_CULL_MODE_FRONT;
 		}

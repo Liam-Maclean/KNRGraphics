@@ -37,8 +37,6 @@ namespace KNR
 		inline virtual uint32_t GetEditorRenderId() const = 0;
 		inline virtual uint64_t GetHandle() const = 0;
 
-		virtual void Bind(const uint32_t slot = 0) const = 0;
-		virtual void Unbind(const uint32_t slot = 0) const = 0;
 		virtual bool operator==(const Texture& other) const = 0;
 		virtual void Upload() = 0;
 	protected:
