@@ -34,6 +34,7 @@ public class KNRShaders : KNRLibBase
     {
         //Platform specific set-up
         conf.IncludePaths.Add(Globals.ShadersDir);
+        conf.IncludePaths.Add(Globals.ShaderAssetsDir);
 
         //Project include and output
         conf.ProjectFileName = "[project.Name]";
@@ -170,7 +171,7 @@ public class KNRShaders : KNRLibBase
             string shaderCompiler = GetShaderExecutableByGraphicsPlatform(graphicsPlatform);
             
             string outputFile = $"{fileWithoutExt}{outputExtension}";
-            string outputDir = Path.Combine(Globals.ShadersDir, $"Shaders_built");
+            string outputDir = Path.Combine(Globals.ShaderAssetsDir, $"Shaders_built");
             string outputFileAbsolutePath = Path.Combine(outputDir, outputFile);
             string outputLog = Path.Combine(outputDir,  $"{fileWithoutExt}.log");
             string outputReflection = Path.Combine(outputDir, $"{fileWithoutExt}.refl");
