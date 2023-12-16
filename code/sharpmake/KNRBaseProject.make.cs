@@ -58,7 +58,6 @@ public class KNRExeBase : Sharpmake.Project
         ));
     }
 
-    
     public virtual void SetUpVisualStudioOptions(Configuration conf, Target target)
     {
         
