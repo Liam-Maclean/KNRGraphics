@@ -7,7 +7,7 @@ public class KNRLibBase : Sharpmake.Project
     public KNRLibBase(string projectName)
     {
         Name = projectName;
-
+        SourceFilesFiltersRegex.Add(Globals.SourceIncludeRegex);
         AddTargets(new Target(
                 Platform.win32 | Platform.win64,
                 DevEnv.vs2019,
@@ -50,7 +50,7 @@ public class KNRExeBase : Sharpmake.Project
     public KNRExeBase(string projectName)
     {
         Name = projectName;
-
+        SourceFilesFiltersRegex.Add(Globals.SourceIncludeRegex);
         AddTargets(new Target(
                 Platform.win32 | Platform.win64,
                 DevEnv.vs2019,

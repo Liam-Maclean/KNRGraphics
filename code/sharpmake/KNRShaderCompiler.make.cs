@@ -11,6 +11,7 @@ public class KNRShaderCompiler : KNRExeBase
         : base("KNRShaderCompiler")
     {
         SourceRootPath = Globals.ShaderCompilerDir;
+        SourceFilesFiltersRegex.AddRange(Globals.SourceIncludeFileExtensions);
     }
 
     [Configure]
@@ -18,6 +19,9 @@ public class KNRShaderCompiler : KNRExeBase
     {
         //Platform specific set-up
         conf.IncludePaths.Add(Globals.ShaderCompilerDir);
+
+        //Include Bison and Flex
+        conf.IncludePaths.Add(Path.Combine(Globals.ExternalDir, "winflexbison"));
 
         //Project include and output
         conf.ProjectFileName = "[project.Name]";
