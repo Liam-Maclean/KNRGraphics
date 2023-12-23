@@ -3,7 +3,7 @@
 #include <d3d12.h>
 namespace KNR
 {
-	class DirectX12Heap
+	class DirectX12Heap final
 	{
 	public:
 		DirectX12Heap() 
@@ -29,8 +29,9 @@ namespace KNR
 		UINT HandleIncrementSize;
 
 	public:
-		UINT GetCurrentHeapIndex() { return CurrentHeapSize; }
-		void IncrementHeapIndex() { CurrentHeapSize++; }
+		inline UINT GetCurrentHeapIndex() { return CurrentHeapSize; }
+		inline UINT GetCurrentHeapIndexAndIncrement() { int retVal = CurrentHeapSize; IncrementHeapIndex(); return CurrentHeapSize; }
+		inline void IncrementHeapIndex() { CurrentHeapSize++; }
 		ID3D12DescriptorHeap* pDescriptorHeap;
 	};
 }

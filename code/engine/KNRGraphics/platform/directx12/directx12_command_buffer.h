@@ -20,6 +20,8 @@ namespace KNR
 
 		void Close();
 
+		void Submit();
+
 		void Submit(ID3D12CommandQueue* queue);
 
 		void SubmitWorkImmediate();

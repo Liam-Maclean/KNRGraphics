@@ -1,5 +1,6 @@
 #include "directx12_graphics_context.h"
 #include "directx12_texture.h"
+#include "logger/logger.h"
 #include "window.h"
 #include "d3dx12.h"
 #pragma comment(lib, "dxgi")
@@ -61,14 +62,12 @@ namespace KNR
 
 		CreateDevice();
 		CreateQueues();
-		CreateSwapchain();
 		CreateCommandList();
-		CreateReservedHeapAllocations();
+		CreateBindlessHeapReservations();
 
 		m_swapChain = new DirectX12Swapchain(m_window->hwnd, m_window->instance, m_window->width, m_window->height);
 		m_frameHeap = new DirectX12FrameHeap();
 		m_copyCommandBuffer = new DirectX12CommandBuffer(KNR::CommandBufferType::Graphics);
-
 	}
 
 	void CDirectX12Context::SwapBuffers()
@@ -207,45 +206,84 @@ namespace KNR
 		}
 	}
 
-	void CDirectX12Context::CreateReservedHeapAllocations()
+	void CDirectX12Context::CreateBindlessHeapReservations()
 	{
-		m_heapReservationMaxSizes[(int)BindlessHeapRegion::TEXTURE1D] = 20;
-		m_heapReservationMaxSizes[(int)BindlessHeapRegion::TEXTURE2D] = 1000;
-		m_heapReservationMaxSizes[(int)BindlessHeapRegion::TEXTURE3D] = 20;
-		m_heapReservationMaxSizes[(int)BindlessHeapRegion::CUBEMAPS]  = 30;
+		m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::BindlessTexture1D] = 20;
+		m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::BindlessTexture2D] = 1000;
+		m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::BindlessTexture2DArray] = 10;
+		m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::BindlessTexture3D] = 20;
+		m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::BindlessCubemap]  = 30;
+		m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::BindlessCubemapArray] = 30;
+		m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::BindlessConstant] = 30;
+		m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::RenderTarget] = 30;
+		m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::DepthStencil] = 30;
 
-		for (int i = (int)BindlessHeapRegion::BINDLESSSTART; i < (int)BindlessHeapRegion::BINDLESSEND; ++i)
+		//Bindless heaps
+		for (int i = (int)ReservedHeapRegion::BindlessStart; i < (int)ReservedHeapRegion::BindlessEnd; ++i)
 		{
-			m_heapReservationUsed[i] = 0;
-			m_heapReservationSlots[i].Create(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, m_heapReservationMaxSizes[i], true);
+			m_bindlessReservationHeapUsed[i] = 0;
+			m_bindlessReservationHeaps[i].Create(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, m_bindlessReservationHeapSizes[i], true);
 		}
+
+		//Other heaps
+		m_bindlessReservationHeapUsed[(int)ReservedHeapRegion::RenderTarget] = 0;
+		m_bindlessReservationHeapUsed[(int)ReservedHeapRegion::DepthStencil] = 0;
+		m_bindlessReservationHeaps[(int)ReservedHeapRegion::RenderTarget].Create(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::RenderTarget]);
+		m_bindlessReservationHeaps[(int)ReservedHeapRegion::DepthStencil].Create(m_device, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::DepthStencil]);
 	}
 
 
-	DirectX12DescriptorHandleBlock CDirectX12Context::ReserveDescriptorHandle(ID3D12Resource* resource, BindlessHeapRegion region, D3D12_SHADER_RESOURCE_VIEW_DESC srv, RENDERERID& renderId)
+	DirectX12DescriptorHandleBlock CDirectX12Context::ReserveDescriptorHandle(ReservedHeapRegion region)
 	{
-		uint32_t regionLimit = m_heapReservationMaxSizes[(int)region];
+		uint32_t regionLimit = m_bindlessReservationHeapSizes[(int)region];
 
-		if (m_heapReservationUsed[(int)region] == regionLimit)
+		if (m_bindlessReservationHeapUsed[(int)region] == regionLimit)
 		{
-			//We've exceeded our heap limit, increase the sizes of the heap limits to get this to work l m a o 
+			KNT_ERROR("HEAP LIMIT EXCEEDED, INCREASE THE SIZE OF THE HEAP RESERVATIONS")
 			assert(0);
 		}
 
-		DirectX12Heap& regionHeap = m_heapReservationSlots[(int)region];
+		DirectX12Heap& regionHeap = m_bindlessReservationHeaps[(int)region];
 
-		renderId = regionHeap.GetCurrentHeapIndex();
-
+		//Create a descriptor block
 		DirectX12DescriptorHandleBlock descriptorBlock = {};
-		descriptorBlock.cpuHandle = regionHeap.handleCPU(renderId);
-		descriptorBlock.gpuHandle = regionHeap.handleGPU(renderId);
+		descriptorBlock.bindlessIndexID = regionHeap.GetCurrentHeapIndexAndIncrement();
+		descriptorBlock.cpuHandle = regionHeap.handleCPU(descriptorBlock.bindlessIndexID);
+		descriptorBlock.gpuHandle = regionHeap.handleGPU(descriptorBlock.bindlessIndexID);
 
-		m_device->CreateShaderResourceView(resource, &srv, descriptorBlock.cpuHandle);
-		regionHeap.IncrementHeapIndex();
-
-		m_heapReservationUsed[(int)region] = renderId + 1;
+		//Increase the usage counter
+		m_bindlessReservationHeapUsed[(int)region] = descriptorBlock.bindlessIndexID + 1;
 
 		return descriptorBlock;
 	}
 
+	void CDirectX12Context::CreateSRV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_SHADER_RESOURCE_VIEW_DESC srv)
+	{
+		m_device->CreateShaderResourceView(resource, &srv, descriptorHandle.cpuHandle);
+	}
+
+	void CDirectX12Context::CreateCBV(const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_CONSTANT_BUFFER_VIEW_DESC cbv)
+	{
+		m_device->CreateConstantBufferView(&cbv, descriptorHandle.cpuHandle);
+	}
+
+	void CDirectX12Context::CreateUAV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_UNORDERED_ACCESS_VIEW_DESC uav)
+	{
+		m_device->CreateUnorderedAccessView(resource, nullptr, &uav, descriptorHandle.cpuHandle);
+	}
+
+	void CDirectX12Context::CreateRTV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_RENDER_TARGET_VIEW_DESC rtv)
+	{
+		m_device->CreateRenderTargetView(resource, &rtv, descriptorHandle.cpuHandle);
+	}
+
+	void CDirectX12Context::CreateBackbufferRTV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle)
+	{
+		m_device->CreateRenderTargetView(resource, NULL, descriptorHandle.cpuHandle);
+	}
+
+	void CDirectX12Context::CreateDSV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_DEPTH_STENCIL_VIEW_DESC dsv)
+	{
+		m_device->CreateDepthStencilView(resource, &dsv, descriptorHandle.cpuHandle);
+	}
 }

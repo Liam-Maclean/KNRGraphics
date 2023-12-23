@@ -86,6 +86,30 @@ namespace KNR
 		m_workToBeSubmitted = false;
 	}
 
+	void DirectX12CommandBuffer::Submit()
+	{
+		ID3D12CommandQueue* queue;
+		switch (m_type)
+		{
+		case CommandBufferType::Copy:
+			queue = static_cast<ID3D12CommandQueue*>(DirectX12Context.GetCommandQueue());
+			break;
+		case CommandBufferType::Compute:
+			queue = static_cast<ID3D12CommandQueue*>(DirectX12Context.GetComputeQueue());
+			break;
+		case CommandBufferType::Graphics:
+			queue = static_cast<ID3D12CommandQueue*>(DirectX12Context.GetCommandQueue());
+			break;
+		default:
+			break;
+		}
+
+		ID3D12CommandList* ppCommandLists[] = { m_commandList };
+		queue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+		m_fence->IncrementFenceValue();
+		Submit(queue);
+	}
+
 	void DirectX12CommandBuffer::Submit(ID3D12CommandQueue* queue)
 	{
 		ID3D12CommandList* ppCommandLists[] = { m_commandList };

@@ -84,8 +84,8 @@ namespace KNR
 			m_constantBufferView.BufferLocation = m_resource->GetGPUVirtualAddress();
 			m_constantBufferView.SizeInBytes = m_allocatedSize;
 
-			//Liam - Replace with new heap reserved CBV placement
-			//frameHeap->CreateCBV(m_constantBufferView, m_descriptorHandleBlock);
+			m_descriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::Constant);
+			DirectX12Context.CreateCBV()
 		}
 		else if (desc.bufferType == BufferUsageType::Storage)
 		{
@@ -98,8 +98,7 @@ namespace KNR
 			m_structuredBufferView.Buffer.StructureByteStride = desc.structuredBuffer.structuredByteStride;
 			m_structuredBufferView.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
-			//Liam - Replace with new heap reserved SRV placement
-			//frameHeap->CreateSRV(m_resource, m_structuredBufferView, m_descriptorHandleBlock);
+			m_descriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(m_resource, ReservedHeapRegion::Constant, m_structuredBufferView);
 		}
 
 		//If we have initial data, we need to stage

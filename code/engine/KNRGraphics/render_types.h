@@ -28,6 +28,27 @@ namespace KNR
 		size_t size;
 	};
 
+	enum class ReservedHeapRegion : int
+	{
+		//Bindless heaps (SRV/CBV/UAV)
+		BindlessTexture1D = 0,
+		BindlessTexture2D = 1,
+		BindlessTexture2DArray = 2,
+		BindlessTexture3D = 3,
+		BindlessCubemap = 4,
+		BindlessCubemapArray = 5,
+		BindlessConstant = 6,
+		
+		//Other heaps (RTV, DSV)
+		RenderTarget = 7,
+		DepthStencil = 8,
+
+
+		BindlessStart = BindlessTexture1D,		//This will eventually be TEXTURE1D
+		BindlessEnd = BindlessConstant + 1,	//This will eventually be CUBEMAPS
+		HeapRegionCount = DepthStencil + 1,
+	};
+
 	enum WriteFlags
 	{
 		ColorR =	1 << 0,

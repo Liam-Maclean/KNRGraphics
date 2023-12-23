@@ -58,20 +58,18 @@ namespace KNR
 
 	private:
 		void WaitForPreviousFrame();
-		void CreateCPUHeaps();
 		void CreateRenderTargets();
 		void RecordCommandBuffers();
 
 		//For creating the backbuffer for the swapchain
 		Microsoft::WRL::ComPtr<ID3D12Resource> m_backBufferRenderTarget[3];
 		DirectX12Fence* m_fences[3];
+		DirectX12DescriptorHandleBlock m_backbufferHandleBlocks[3];
 
 		D3D12_VIEWPORT m_viewport;							//What we see in the output of the rasterizer
 		D3D12_RECT m_scissorRect;							//Area to draw into
 
 		//Frame heap stuff
-		DirectX12Heap m_rtvHeap;
-		int m_rtvHeapIndex;
 		int m_bufferIndex;
 		int m_width, m_height;
 	};

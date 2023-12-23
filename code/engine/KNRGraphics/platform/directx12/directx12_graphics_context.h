@@ -19,9 +19,10 @@ using RENDERERID = uint32_t;
 namespace KNR
 {
     struct DirectX12DescriptorHandleBlock {
-        DirectX12DescriptorHandleBlock() { cpuHandle.ptr = 0; gpuHandle.ptr = 0; };
+        DirectX12DescriptorHandleBlock() { cpuHandle.ptr = 0; gpuHandle.ptr = 0; bindlessIndexID = 0; };
         D3D12_CPU_DESCRIPTOR_HANDLE cpuHandle;
         D3D12_GPU_DESCRIPTOR_HANDLE gpuHandle;
+        uint32_t bindlessIndexID;
     };
 
     class DirectX12Buffer;
@@ -47,8 +48,20 @@ namespace KNR
 
         void SwapBuffers() override;
 
-        DirectX12DescriptorHandleBlock ReserveDescriptorHandle(ID3D12Resource* resource, BindlessHeapRegion region, D3D12_SHADER_RESOURCE_VIEW_DESC srv, RENDERERID& renderId);
+        DirectX12DescriptorHandleBlock ReserveDescriptorHandle(ReservedHeapRegion region);
     
+        void CreateSRV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_SHADER_RESOURCE_VIEW_DESC srv);
+
+        void CreateCBV(const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_CONSTANT_BUFFER_VIEW_DESC cbv);
+
+        void CreateUAV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_UNORDERED_ACCESS_VIEW_DESC uav);
+        
+        void CreateRTV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_RENDER_TARGET_VIEW_DESC rtv);
+
+        void CreateBackbufferRTV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle);
+
+        void CreateDSV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_DEPTH_STENCIL_VIEW_DESC dsv);
+
         //Getters
         inline ID3D12Device* GetDevice() { return m_device; }
 
@@ -65,6 +78,8 @@ namespace KNR
         inline DirectX12CommandBuffer* GetCopyCommandBuffer() { return m_copyCommandBuffer; }
 
         inline DirectX12FrameHeap* GetFrameHeap() { return m_frameHeap; }
+        
+        inline DirectX12Heap* GetReservedHeap(ReservedHeapRegion region) { return &m_bindlessReservationHeaps[(int)region]; }
 
     private:
         
@@ -74,7 +89,7 @@ namespace KNR
 
         void CreateCommandList();
 
-        void CreateReservedHeapAllocations();
+        void CreateBindlessHeapReservations();
 
         ID3D12Device* m_device;
         ID3D12CommandQueue* m_commandQueue;
@@ -92,9 +107,9 @@ namespace KNR
         unsigned int m_systemMemory;
         char m_videoCardDescription[128];
 
-        uint32_t m_heapReservationMaxSizes[(int)BindlessHeapRegion::BINDLESSCOUNT];
-        uint32_t m_heapReservationUsed[(int)BindlessHeapRegion::BINDLESSCOUNT];
-        DirectX12Heap m_heapReservationSlots[(int)BindlessHeapRegion::BINDLESSCOUNT];
+        uint32_t m_bindlessReservationHeapSizes[(int)ReservedHeapRegion::HeapRegionCount];
+        uint32_t m_bindlessReservationHeapUsed[(int)ReservedHeapRegion::HeapRegionCount];
+        DirectX12Heap m_bindlessReservationHeaps[(int)ReservedHeapRegion::HeapRegionCount];
     };
 }
 

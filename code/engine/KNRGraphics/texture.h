@@ -41,8 +41,7 @@ namespace KNR
 		virtual ~Texture() = default;
 		inline virtual uint32_t GetWidth() const = 0;
 		inline virtual uint32_t GetHeight() const = 0;
-		inline virtual uint32_t GetRenderId() const = 0;
-		inline virtual uint32_t GetEditorRenderId() const = 0;
+		inline virtual uint32_t GetBindlessIndex() const = 0;
 		inline virtual uint64_t GetHandle() const = 0;
 
 		virtual bool operator==(const Texture& other) const = 0;

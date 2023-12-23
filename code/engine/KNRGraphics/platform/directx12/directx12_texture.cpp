@@ -72,7 +72,10 @@ namespace KNR
 				m_textureSRVDesc.Texture2D.MipLevels = 1;
 				m_textureSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 
-				DirectX12Context.ReserveDescriptorHandle(m_textureResource, BindlessHeapRegion::TEXTURE2D, m_textureSRVDesc, m_rendererID);
+				m_srvDescriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::BindlessTexture2D);
+				m_dsvDescriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::DepthStencil);
+				DirectX12Context.CreateSRV(m_textureResource, m_srvDescriptorHandleBlock, m_textureSRVDesc);
+				DirectX12Context.CreateDSV(m_textureResource, m_dsvDescriptorHandleBlock, m_textureDSVDesc);
 			}
 			//Standard RTVC 
 			else
@@ -122,7 +125,8 @@ namespace KNR
 				m_textureRTVDesc.Texture2D.MipSlice = 0;
 				m_textureRTVDesc.Texture2D.PlaneSlice = 0;
 				
-				DirectX12Context.ReserveDescriptorHandle(m_textureResource, BindlessHeapRegion::TEXTURE2D, m_textureSRVDesc, m_rendererID);
+				m_srvDescriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::BindlessTexture2D);
+				DirectX12Context.CreateSRV(m_textureResource, m_srvDescriptorHandleBlock, m_textureSRVDesc);
 			}
 		}
 	}
@@ -202,19 +206,15 @@ namespace KNR
 
 		copyCommandBuffer->AddToCommandCallbackList([bufferUploadHeap, this]() { DirectX12Texture2D::Destroy(bufferUploadHeap); });
 
-		DirectX12Context.ReserveDescriptorHandle(m_textureResource, BindlessHeapRegion::TEXTURE2D, m_textureSRVDesc, m_rendererID);
+		m_srvDescriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::BindlessTexture2D);
+		m_rtvDescriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::RenderTarget);
+		DirectX12Context.CreateSRV(m_textureResource, m_srvDescriptorHandleBlock, m_textureSRVDesc);
+		DirectX12Context.CreateRTV(m_textureResource, m_rtvDescriptorHandleBlock, m_textureRTVDesc);
 	}
 
 	DirectX12Texture2D::~DirectX12Texture2D()
 	{
 		m_textureResource->Release();
 		m_textureResource = 0;
-	}
-
-	uint64_t DirectX12Texture2D::GetHandle() const
-	{
-		//TODO
-		D3D12_GPU_DESCRIPTOR_HANDLE textureHandle;// = DirectX12Context.GetImGuiHeap()->handleGPU(GetRenderId());
-		return textureHandle.ptr;
 	}
 }

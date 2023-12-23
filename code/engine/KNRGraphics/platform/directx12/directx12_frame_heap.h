@@ -1,22 +1,11 @@
 #pragma once
 #include "directx12_heap.h"
+#include "render_types.h"
 
 namespace KNR
 {
 	class DirectX12CommandBuffer;
 	struct DirectX12DescriptorHandleBlock;
-	enum class BindlessHeapRegion : int
-	{
-		TEXTURE1D = 0,
-		TEXTURE2D = 1,
-		TEXTURE3D = 2,
-		CUBEMAPS = 3,
-
-		BINDLESSSTART = TEXTURE2D,		//This will eventually be TEXTURE1D
-		BINDLESSEND = TEXTURE2D + 1,	//This will eventually be CUBEMAPS
-
-		BINDLESSCOUNT = CUBEMAPS + 1,
-	};
 
 	class DirectX12FrameHeap final
 	{

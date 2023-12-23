@@ -4,6 +4,7 @@
 #include "directx12_heap.h"
 #include "directx12_texture.h"
 #include "directx12_indirect_signature.h"
+#include "directx12_util.h"
 #include "logger/logger.h"
 #include "d3dx12.h"
 #include <d3dcompiler.h>
@@ -29,12 +30,10 @@ namespace KNR
 		m_width = windowDesc.width;
 		m_height = windowDesc.height;
 
-		m_rtvHeapIndex = 0;
 		for (int i = 0; i < 3; ++i)
 		{
 			m_fences[i] = new DirectX12Fence(false);
 		}
-		CreateCPUHeaps();
 		CreateRenderTargets();
 	}
 
@@ -61,7 +60,6 @@ namespace KNR
 	void DirectX12RendererAPI::BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
-
 	}
 
 	void DirectX12RendererAPI::BindStructuredBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
@@ -238,18 +236,38 @@ namespace KNR
 
 	void DirectX12RendererAPI::SubmitCommandBufferImmediate(CommandBuffer* commandList)
 	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+		directXCommandList->SubmitWorkImmediate();
 	}
 
 	void DirectX12RendererAPI::SubmitCommandBuffer(CommandBuffer* commandList)
 	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+		directXCommandList->Close();
+		directXCommandList->Submit(DirectX12Context.GetCommandQueue());
 	}
 
 	void DirectX12RendererAPI::WaitOnCommandList(CommandBuffer* commandList)
 	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+		directXCommandList->Wait();
 	}
 
 	void DirectX12RendererAPI::BindPipeline(CommandBuffer* commandList, Pipeline* pipeline)
 	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+		DirectX12Pipeline* directXPipeline = static_cast<DirectX12Pipeline*>(pipeline);
+
+		//Binds the pipeline, binds the data
+		directXCommandList->Get()->SetPipelineState(directXPipeline->GetPipeline());
+		directXCommandList->Get()->SetGraphicsRootSignature(directXPipeline->GetRootSignature());
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::Texture1DSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture1D)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::Texture2DSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture2D)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::Texture2DArraySlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture2DArray)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::Texture3DSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture3D)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::TextureCubemapSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessCubemap)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::TextureCubemapArraySlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessCubemapArray)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::ConstantSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessConstant)->hGPUHeapStart);
 	}
 
 	void DirectX12RendererAPI::WaitForPreviousFrame()
@@ -262,30 +280,24 @@ namespace KNR
 		m_fences[m_bufferIndex]->IncrementFenceValue();
 	}
 
-	void DirectX12RendererAPI::CreateCPUHeaps()
-	{
-		//Liam Fix - Load the frameheap (Only do this one, we can deal with safely doing this later)
-		m_rtvHeap.Create(DirectX12Context.GetDevice(), D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 3); //unbound texture heap
-	}
-
 	void DirectX12RendererAPI::CreateRenderTargets()
 	{
 		IDXGISwapChain3* swapchain = DirectX12Context.GetSwapchain();
-		m_rtvHeapIndex = 0;
 		
 		//Loop for each frame in flight
-		for (int i = 0; i < 3; ++i)
+		for (size_t i = 0; i < 3; ++i)
 		{
 			HRESULT result;
 			//Get a pointer to the first back buffer from the swapchain
 			result = swapchain->GetBuffer(i, IID_PPV_ARGS(&m_backBufferRenderTarget[i]));
 			if (FAILED(result))
 			{
+				KNT_ERROR("Failed to get backbuffer from swapchain")
 				assert(0);
 			}
 			m_backBufferRenderTarget[i]->SetName(L"Swapchain Back Buffer");
-			DirectX12Context.GetDevice()->CreateRenderTargetView(m_backBufferRenderTarget[i].Get(), NULL, m_rtvHeap.handleCPU(m_rtvHeapIndex));
-			m_rtvHeapIndex++;
+			m_backbufferHandleBlocks[i] = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::RenderTarget);
+			DirectX12Context.CreateBackbufferRTV(m_backBufferRenderTarget[i].Get(), m_backbufferHandleBlocks[i]);
 		}
 	}
 }
