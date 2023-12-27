@@ -1,4 +1,5 @@
 #include "directx12_graphics_context.h"
+#include "../KNRShaders/KNR_RootSignature.h"
 #include "directx12_texture.h"
 #include "logger/logger.h"
 #include "window.h"
@@ -16,8 +17,8 @@ namespace KNR
 		m_commandList = 0;
 		m_swapChain = 0;
 	}
-	CDirectX12Context::CDirectX12Context(WindowDesc* windowHandle)
-		: m_window(windowHandle)
+	CDirectX12Context::CDirectX12Context(const WindowDesc& windowHandle)
+		:m_window(windowHandle)
 	{
 		m_device = 0;
 		m_commandList = 0;
@@ -56,16 +57,58 @@ namespace KNR
 
 	}
 
-	void CDirectX12Context::Init(WindowDesc* windowHandle)
+	void CDirectX12Context::Init(const WindowDesc& windowHandle)
 	{
 		m_window = windowHandle;
+		
+		Logger::Init();
+
 
 		CreateDevice();
 		CreateQueues();
 		CreateCommandList();
 		CreateBindlessHeapReservations();
 
-		m_swapChain = new DirectX12Swapchain(m_window->hwnd, m_window->instance, m_window->width, m_window->height);
+		CD3DX12_DESCRIPTOR_RANGE1 DescRange[7];
+		DescRange[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, -1, 0, 0); // Unbound, space 0
+		DescRange[1].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, -1, 0, 1); // Unbound, space 1
+		DescRange[2].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, -1, 0, 2); // Unbound, space 2
+		DescRange[3].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, -1, 0, 3); // Unbound, space 3
+		DescRange[4].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, -1, 0, 4); // Unbound, space 4
+		DescRange[5].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, -1, 0, 5); // Unbound, space 5
+		DescRange[6].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, -1, 0, 6); // Unbound, space 6
+
+		CD3DX12_ROOT_PARAMETER1 RP[9];
+		RP[0].InitAsDescriptorTable(1, &DescRange[0]); // Texture1D
+		RP[1].InitAsDescriptorTable(1, &DescRange[1]); // Texture2D
+		RP[2].InitAsDescriptorTable(1, &DescRange[2]); // Texture2DArray
+		RP[3].InitAsDescriptorTable(1, &DescRange[3]); // Texture3D
+		RP[4].InitAsDescriptorTable(1, &DescRange[4]); // TextureCubemap
+		RP[5].InitAsDescriptorTable(1, &DescRange[5]); // TextureCubemapArray
+		RP[6].InitAsDescriptorTable(1, &DescRange[6]); // RawByteData (CBV)
+		RP[7].InitAsConstantBufferView(0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_VOLATILE, D3D12_SHADER_VISIBILITY_ALL);
+		RP[8].InitAsConstantBufferView(1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_VOLATILE, D3D12_SHADER_VISIBILITY_ALL);
+
+		CD3DX12_STATIC_SAMPLER_DESC StaticSamplers[1];
+		StaticSamplers[0].Init(0, D3D12_FILTER::D3D12_FILTER_COMPARISON_MIN_MAG_MIP_POINT); // s3
+		CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC RootSig(9,RP, 1, StaticSamplers);
+		ID3DBlob* pSerializedRootSig;
+
+		HRESULT hr = D3D12SerializeVersionedRootSignature(&RootSig, &pSerializedRootSig, nullptr);
+		if (FAILED(hr))
+		{
+			KNT_ERROR("Failed to create root signature");
+			assert(0);
+		}
+
+		hr = m_device->CreateRootSignature(0, pSerializedRootSig->GetBufferPointer(), pSerializedRootSig->GetBufferSize(), IID_PPV_ARGS(&m_coreRootSignature));
+		if (FAILED(hr))
+		{
+			KNT_ERROR("Failed t ocreate root signature");
+			assert(0);
+		}
+
+		m_swapChain = new DirectX12Swapchain(m_window.hwnd, m_window.instance, m_window.width, m_window.height);
 		m_frameHeap = new DirectX12FrameHeap();
 		m_copyCommandBuffer = new DirectX12CommandBuffer(KNR::CommandBufferType::Graphics);
 	}

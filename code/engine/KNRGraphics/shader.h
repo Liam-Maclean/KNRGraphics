@@ -1,15 +1,6 @@
 #pragma once
 #include "render_types.h"
 
-//Forward declare
-namespace std
-{
-	namespace filesystem
-	{
-		class path;
-	}
-}
-
 /// <summary>
 /// Shader
 /// 
@@ -27,7 +18,7 @@ namespace KNR
 		virtual ShaderBytecode GetShaderBytecode() { return m_shaderBytecode; };
 		inline const std::string GetName() { return m_name; }
 
-		static Shader* Create(const std::filesystem::path& shader);
+		static Shader* Create(const char* shader);
 	protected:
 		ShaderBytecode m_shaderBytecode;
 		std::string m_name;

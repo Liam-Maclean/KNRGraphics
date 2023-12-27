@@ -1,5 +1,6 @@
 #include "directx12_pipeline.h"
 #include "directx12_util.h"
+#include "directx12_vertex_declaration.h"
 #include "directx12_graphics_context.h"
 #include "logger/logger.h"
 #include "render_types.h"
@@ -7,6 +8,11 @@
 
 namespace KNR
 {
+	Pipeline* Pipeline::Create(const PipelineStateDesc& desc)
+	{
+		return new DirectX12Pipeline(desc);
+	}
+
 	DirectX12Pipeline::DirectX12Pipeline(const PipelineStateDesc& desc)
 	{
 		ID3D12Device* device = static_cast<ID3D12Device*>(DirectX12Context.GetDevice());
@@ -29,7 +35,12 @@ namespace KNR
 			}
 		}
 		else
-		{
+		{	
+			//Start creating the pipeline state
+			D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+			psoDesc.InputLayout = static_cast<DirectX12VertexDeclaration*>(m_pipelineCreateInfo.vertexDeclaration)->GetVertexInputLayout();
+			//psoDesc.pRootSignature = m_pipelineLayout->GetRootSignature();
+
 			//Rasterizer state
 			CD3DX12_RASTERIZER_DESC rasterizer(D3D12_DEFAULT);
 			rasterizer.CullMode = Util::ConvertCullMode(m_pipelineCreateInfo.rasterizerState.m_CullingMode);
@@ -40,11 +51,6 @@ namespace KNR
 			{
 				rasterizer.ConservativeRaster = D3D12_CONSERVATIVE_RASTERIZATION_MODE_ON;
 			}
-			
-
-			D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-			//psoDesc.InputLayout = m_pipelineCreateInfo.vertexInputLayout;
-			//psoDesc.pRootSignature = m_pipelineLayout->GetRootSignature();
 
 			if (m_pipelineCreateInfo.vertexBytecode.size)
 			{
@@ -64,7 +70,6 @@ namespace KNR
 			}
 
 			psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
 			for (int i = 0; i < m_pipelineCreateInfo.renderTargetState.m_ColorTargets.size(); ++i)
 			{
 				psoDesc.RTVFormats[i] = Util::GetDXGIFormatType(m_pipelineCreateInfo.renderTargetState.m_ColorTargets[i]);
@@ -74,6 +79,8 @@ namespace KNR
 			{
 				psoDesc.DSVFormat = Util::GetDXGIFormatType(m_pipelineCreateInfo.renderTargetState.m_DepthTarget);
 			}
+			psoDesc.NumRenderTargets = static_cast<UINT>(m_pipelineCreateInfo.renderTargetState.m_ColorTargets.size());
+
 
 			//Depth stencil state
 			CD3DX12_DEPTH_STENCIL_DESC depthStencilState(D3D12_DEFAULT);
@@ -114,8 +121,6 @@ namespace KNR
 			psoDesc.DepthStencilState = depthStencilState;
 			psoDesc.RasterizerState = rasterizer;
 			psoDesc.BlendState = blendState;
-			psoDesc.NumRenderTargets = static_cast<UINT>(m_pipelineCreateInfo.renderTargetState.m_ColorTargets.size());
-
 			hr = device->CreateGraphicsPipelineState(&psoDesc, __uuidof(ID3D12PipelineState), (void**)&m_pipelineState);
 			if (FAILED(hr))
 			{

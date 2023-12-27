@@ -39,6 +39,7 @@ namespace KNR
 		virtual void Present() = 0;
 		virtual void BeginFrame() = 0;
 		virtual void EndFrame() = 0;
+		virtual void ResizeWindow(const float width, const float height) = 0;
 
 		//Viewport calls
 		virtual void ClearRenderTarget(CommandBuffer* commandList, bool clearColor, Color color, bool clearDepth, float depthValue) const = 0;
@@ -50,9 +51,11 @@ namespace KNR
 		virtual void SubmitCommandBufferImmediate(CommandBuffer* commandList) = 0;
 		virtual void SubmitCommandBuffer(CommandBuffer* commandList) = 0;
 		virtual void WaitOnCommandList(CommandBuffer* commandList) = 0;
+		virtual void BeginRecordingCommands(CommandBuffer* commandList) = 0;
 
 		//Render pipeline
 		virtual void BindPipeline(CommandBuffer* commandList, Pipeline* pipeline) = 0;
+		virtual void BindRenderTargets(CommandBuffer* commandList, Texture2D* targets, uint32_t count, Texture2D* depthTarget) = 0;
 
 		//Render Calls
 		virtual void Draw(CommandBuffer* commandList) = 0;

@@ -1,20 +1,32 @@
 #pragma once
 
 #include "renderer_api.h"
+#include "directx12_graphics_context.h"
 #include "directx12_frame_heap.h"
 #include "directx12_heap.h"
 #include "directx12_pipeline.h"
 #include "directx12_fence.h"
 #include <combaseapi.h>
-
+#include <wrl/client.h>
+#include <DirectXMath.h>
+using namespace DirectX;
 namespace KNR
 {
+	struct ImVert
+	{
+		XMFLOAT4 position;
+		XMFLOAT2 uv;
+	};
+
+	struct DirectX12DescriptorHandleBlock;
 	class Buffer;
 	class DirectX12CommandBuffer;
 	class DirectX12RendererAPI final
 		: public RendererAPI
 	{
 	public:
+
+
 		//Constructor/destructor initialization
 		virtual ~DirectX12RendererAPI();
 		virtual void Initialize(const WindowDesc& windowDesc) override;
@@ -23,7 +35,8 @@ namespace KNR
 		virtual void Present();
 		virtual void BeginFrame();
 		virtual void EndFrame();
-	
+		virtual void ResizeWindow(const float width, const float height);
+
 		//Viewport
 		virtual void ClearRenderTarget(CommandBuffer* commandList, bool clearColor, Color color, bool clearDepth, float depthValue) const override;
 		virtual void SetViewport(CommandBuffer* commandList, const float x, const float y, const float width, const float height) override;
@@ -34,10 +47,12 @@ namespace KNR
 		virtual void SubmitCommandBufferImmediate(CommandBuffer* commandList) override;
 		virtual void SubmitCommandBuffer(CommandBuffer* commandList) override;
 		virtual void WaitOnCommandList(CommandBuffer* commandList) override;
+		virtual void BeginRecordingCommands(CommandBuffer* commandList) override;
 
 		//Render pipeline
 		virtual void BindPipeline(CommandBuffer* commandList, Pipeline* pipeline) override;
-
+		virtual void BindRenderTargets(CommandBuffer* commandList, Texture2D* targets, uint32_t count, Texture2D* depthTarget) override;
+	
 		//Render Calls
 		virtual void Draw(CommandBuffer* commandList) override;
 		virtual void DrawIndexed(CommandBuffer* commandList) override;
@@ -58,7 +73,7 @@ namespace KNR
 
 	private:
 		void WaitForPreviousFrame();
-		void CreateRenderTargets();
+		void CreateSwapchainBackbuffer();
 		void RecordCommandBuffers();
 
 		//For creating the backbuffer for the swapchain
@@ -68,7 +83,11 @@ namespace KNR
 
 		D3D12_VIEWPORT m_viewport;							//What we see in the output of the rasterizer
 		D3D12_RECT m_scissorRect;							//Area to draw into
-
+		
+		//Immediate stuff
+		TopologyIndexMethod m_immediateIndexMethod;
+		Buffer* m_immediateIndexBuffer;
+		std::vector<ImVert> m_immediateNewVertices;
 		//Frame heap stuff
 		int m_bufferIndex;
 		int m_width, m_height;

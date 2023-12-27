@@ -1,6 +1,5 @@
 #pragma once
 #include "pipeline.h"
-#include "directx12_pipeline_layout.h"
 #include <vector>
 namespace KNR
 {

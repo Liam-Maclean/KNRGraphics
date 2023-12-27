@@ -1,9 +1,12 @@
+#include "KNR_ShaderInterop.h"
 #include "buffer.h"
 #include "command_buffer.h"
 #include "graphics_context.h"
 #include "render_commands.h"
 #include "shader.h"
 #include "texture.h"
+#include "pipeline.h"
+#include "graphics_application.h"
 #include <window.h>
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -12,6 +15,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 {
     // Register the window class.
     KNR::RendererAPI::API graphicsAPI = KNR::RendererAPI::GetAPI();
+    GraphicsApplication graphicsApp = GraphicsApplication();
 
     const wchar_t CLASS_NAME[] = L"KNT SANDBOX";
   
@@ -52,11 +56,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
     ShowWindow(hwnd, nCmdShow);
 
+    KNR::WindowDesc windowDesc = {};
+    windowDesc.width = 1280;
+    windowDesc.height = 720;
+    windowDesc.hwnd = hwnd;
+    windowDesc.instance = hInstance;
+
+    graphicsApp.Initialise(windowDesc);
+
     MSG msg = { };
     while (GetMessage(&msg, NULL, 0, 0) > 0)
     {
         TranslateMessage(&msg);
         DispatchMessage(&msg);
+
+        //Bit of a hack but it'll do for now 
+        graphicsApp.Update();
+        graphicsApp.Render();
     }
 
     return 0;
@@ -83,56 +99,5 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
     default:
         return DefWindowProc(hwnd, uMsg, wParam, lParam);
     }
-    return 0;
-}
-
-int main()
-{
-    KNR::Buffer* buffer;
-    KNR::Texture* texture;
-    KNR::CommandBuffer* commandBuffer;
-
-    KNR::WindowDesc windowDesc = {};
-    windowDesc.width = 1920;
-    windowDesc.height = 1080;
-
-    //Initialize KNR (make sure this is done before initializing any KNR types)
-    KNR::RenderCommand::Initialize(windowDesc);
-
-    //Create a buffer using a descriptor
-    KNR::BufferDescriptor bufferDesc = {};
-    bufferDesc.bufferType = KNR::BufferUsageType::Vertex;
-    bufferDesc.bufferAccessType = KNR::BufferAccessType::Default;
-    bufferDesc.vertexBuffer.vertexDeclaration = 0;
-    bufferDesc.size = (1024);
-    buffer = KNR::Buffer::Create(bufferDesc);
-
-    //Create a command buffer
-    KNR::CommandBufferType commandBufferType = KNR::CommandBufferType::Graphics;
-    commandBuffer = KNR::CommandBuffer::Create(commandBufferType);
-
-    KNR::TextureDescriptor outputTargetDesc = {};
-    outputTargetDesc.textureType = KNR::TextureType::Framebuffer;
-    outputTargetDesc.textureUsage = KNR::TextureUsage::RenderTarget;
-    outputTargetDesc.textureFormat = KNR::TextureFormat::TEXTURE_FORMAT_R16G16B16A16_FLOAT;
-    outputTargetDesc.width = 1920;
-    outputTargetDesc.height = 1080;
-    outputTargetDesc.mipCount = 1;
-    outputTargetDesc.samples = 1;
-   
-
-    KNR::Texture2D* outputTarget = KNR::Texture2D::Create(outputTargetDesc);
-
-    while (true)
-    {
-        KNR::RenderCommand::BeginRender();
-        KNR::RenderCommand::SetViewport(commandBuffer, 0, 0, 1920, 1080);
-
-        KNR::RenderCommand::
-
-        KNR::RenderCommand::EndRender(); //End rendering
-        KNR::RenderCommand::Present(); //Present to swapchain
-    }
-
     return 0;
 }

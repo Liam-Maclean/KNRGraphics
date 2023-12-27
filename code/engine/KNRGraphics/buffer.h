@@ -13,6 +13,7 @@ namespace KNR
 		Index,
 		Storage,
 		Uniform,
+		Bindless,
 		Copy,
 		Upload
 	};
@@ -72,6 +73,8 @@ namespace KNR
 
 		virtual size_t GetCapacitySize() const = 0;
 		virtual size_t GetUsedSize() const = 0;
+
+		virtual uint32_t GetBindlessIndex() const = 0;
 
 		static Buffer* Create(const BufferDescriptor& desc);
 	};

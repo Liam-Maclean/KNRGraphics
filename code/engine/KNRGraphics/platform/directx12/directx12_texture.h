@@ -17,7 +17,9 @@ namespace KNR
 		virtual uint32_t GetWidth() const override { return m_Width; }
 		virtual uint32_t GetHeight() const override { return m_Height; }
 		virtual uint32_t GetBindlessIndex() const override { return m_srvDescriptorHandleBlock.bindlessIndexID; }
-		virtual uint64_t GetHandle() const override;
+		virtual uint64_t GetHandle() const override { return m_srvDescriptorHandleBlock.cpuHandle.ptr; };
+		virtual DirectX12DescriptorHandleBlock GetRTBlock() const { return m_rtvDescriptorHandleBlock; }
+		virtual DirectX12DescriptorHandleBlock GetSRVBlock() const { return m_srvDescriptorHandleBlock; }
 		
 		inline void Destroy(ID3D12Resource* uploadBuffer, void* data) 
 		{

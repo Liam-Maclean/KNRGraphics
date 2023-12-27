@@ -30,11 +30,13 @@ namespace KNR
 		m_width = windowDesc.width;
 		m_height = windowDesc.height;
 
+		DirectX12Context.Init(windowDesc);
+
 		for (int i = 0; i < 3; ++i)
 		{
 			m_fences[i] = new DirectX12Fence(false);
 		}
-		CreateRenderTargets();
+		CreateSwapchainBackbuffer();
 	}
 
 	void DirectX12RendererAPI::ClearRenderTarget(CommandBuffer* commandList, bool clearColor, Color color, bool clearDepth, float depthValue) const
@@ -99,21 +101,28 @@ namespace KNR
 
 	void DirectX12RendererAPI::ImmediateDrawBegin(TopologyIndexMethod indexMethod)
 	{
-
+		m_immediateIndexMethod = indexMethod;
 	}
 
 	void DirectX12RendererAPI::ImmediateVertex(float posX, float posY, float posZ, float u, float v)
 	{
-
+		ImVert newImVert = {};
+		newImVert.position = XMFLOAT4(posX, posY, posZ, 1.0f);
+		newImVert.uv = XMFLOAT2(u, v);
+		m_immediateNewVertices.push_back(newImVert);
 	}
 
 	void DirectX12RendererAPI::ImmediateDrawEnd(CommandBuffer* commandList)
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		Draw(commandList);
 	}
 
 	void DirectX12RendererAPI::SetViewport(CommandBuffer* commandList, const float x, const float y, const float width, const float height)
 	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
 		//This should never be hit but lets make sure this doesn't happen anyway
 		assert(width > 0);
 		assert(height > 0);
@@ -127,38 +136,25 @@ namespace KNR
 		m_viewport.MinDepth = 0.0f;
 		m_viewport.MaxDepth = 1.0f;
 
-		m_scissorRect.left = 0;
-		m_scissorRect.top = 0;
-		m_scissorRect.right = width;
-		m_scissorRect.bottom = height;
 
-		//Wait for GPU
-		WaitForGPU();
-
-		//Kill all resources holding references to the swapchain
-		for (int i = 0; i < 3; ++i)
-		{
-			m_backBufferRenderTarget[i].Reset();
-			m_fences[i]->SetToCurrentFenceValue();
-		}
-
-		DXGI_SWAP_CHAIN_DESC desc = {};
-		IDXGISwapChain3* swapchain = DirectX12Context.GetSwapchain();
-		ID3D12Device* device = DirectX12Context.GetDevice();
-		swapchain->GetDesc(&desc);
-		HRESULT hr = swapchain->ResizeBuffers(3, width, height, desc.BufferDesc.Format, desc.Flags);
-		if (FAILED(hr))
-		{
-			assert(0);
-		}
-
-		m_bufferIndex = swapchain->GetCurrentBackBufferIndex();
-
-		CreateRenderTargets();
+		directXCommandList->Get()->RSSetViewports(1, &m_viewport);
+		
 	}
 
 	void DirectX12RendererAPI::SetScissor(CommandBuffer* commandList, const float left, const float top, const float right, const float bottom)
 	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+
+		//This should never be hit
+		assert(right > 0);
+		assert(bottom > 0);
+
+		m_scissorRect.left = left;
+		m_scissorRect.top = top;
+		m_scissorRect.right = right;
+		m_scissorRect.bottom = bottom;
+
+		directXCommandList->Get()->RSSetScissorRects(1, &m_scissorRect);
 	}
 
 	void DirectX12RendererAPI::RecordCommandBuffers()
@@ -214,6 +210,33 @@ namespace KNR
 		m_commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
 	}
 
+	void DirectX12RendererAPI::ResizeWindow(const float width, const float height)
+	{
+		//Wait for GPU
+		WaitForGPU();
+
+		//Kill all resources holding references to the swapchain
+		for (int i = 0; i < 3; ++i)
+		{
+			m_backBufferRenderTarget[i].Reset();
+			m_fences[i]->SetToCurrentFenceValue();
+		}
+
+		DXGI_SWAP_CHAIN_DESC desc = {};
+		IDXGISwapChain3* swapchain = DirectX12Context.GetSwapchain();
+		ID3D12Device* device = DirectX12Context.GetDevice();
+		swapchain->GetDesc(&desc);
+		HRESULT hr = swapchain->ResizeBuffers(3, width, height, desc.BufferDesc.Format, desc.Flags);
+		if (FAILED(hr))
+		{
+			assert(0);
+		}
+
+		m_bufferIndex = swapchain->GetCurrentBackBufferIndex();
+
+		CreateSwapchainBackbuffer();
+	}
+
 	void DirectX12RendererAPI::Present()
 	{
 		IDXGISwapChain3* m_swapChain = DirectX12Context.GetSwapchain();
@@ -253,6 +276,12 @@ namespace KNR
 		directXCommandList->Wait();
 	}
 
+	void DirectX12RendererAPI::BeginRecordingCommands(CommandBuffer* commandList)
+	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+		directXCommandList->Reset();
+	}
+
 	void DirectX12RendererAPI::BindPipeline(CommandBuffer* commandList, Pipeline* pipeline)
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
@@ -261,13 +290,37 @@ namespace KNR
 		//Binds the pipeline, binds the data
 		directXCommandList->Get()->SetPipelineState(directXPipeline->GetPipeline());
 		directXCommandList->Get()->SetGraphicsRootSignature(directXPipeline->GetRootSignature());
-		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::Texture1DSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture1D)->hGPUHeapStart);
-		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::Texture2DSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture2D)->hGPUHeapStart);
-		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::Texture2DArraySlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture2DArray)->hGPUHeapStart);
-		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::Texture3DSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture3D)->hGPUHeapStart);
-		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::TextureCubemapSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessCubemap)->hGPUHeapStart);
-		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::TextureCubemapArraySlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessCubemapArray)->hGPUHeapStart);
-		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)Util::KNRRootSignatureBindSlot::ConstantSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessConstant)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)KNRRootSignatureBindSlot::Texture1DSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture1D)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)KNRRootSignatureBindSlot::Texture2DSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture2D)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)KNRRootSignatureBindSlot::Texture2DArraySlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture2DArray)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)KNRRootSignatureBindSlot::Texture3DSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessTexture3D)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)KNRRootSignatureBindSlot::TextureCubemapSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessCubemap)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)KNRRootSignatureBindSlot::TextureCubemapArraySlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessCubemapArray)->hGPUHeapStart);
+		directXCommandList->Get()->SetGraphicsRootDescriptorTable((int)KNRRootSignatureBindSlot::ConstantSlot, DirectX12Context.GetReservedHeap(ReservedHeapRegion::BindlessConstant)->hGPUHeapStart);
+	}
+
+	void DirectX12RendererAPI::BindRenderTargets(CommandBuffer* commandList, Texture2D* targets, uint32_t count, Texture2D* depthTarget)
+	{
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+		std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> renderTargetHandles;
+		for (size_t i = 0; i < count; ++i)
+		{
+			DirectX12Texture2D* directXTexture = static_cast<DirectX12Texture2D*>(&targets[i]);
+			renderTargetHandles.push_back(static_cast<D3D12_CPU_DESCRIPTOR_HANDLE>(directXTexture->GetRTBlock().cpuHandle));
+		}
+
+		D3D12_CPU_DESCRIPTOR_HANDLE depthTargetHandle = {};
+		//If we have a depth target, bind that as well
+		if (depthTarget)
+		{
+			DirectX12Texture2D* directXDepthTexture = static_cast<DirectX12Texture2D*>(depthTarget);
+			depthTargetHandle = directXDepthTexture->GetRTBlock().cpuHandle;
+			directXCommandList->Get()->OMSetRenderTargets(renderTargetHandles.size(), renderTargetHandles.data(), false, &depthTargetHandle);
+		}
+		else //Otherwise, don't bind it 
+		{
+			directXCommandList->Get()->OMSetRenderTargets(renderTargetHandles.size(), renderTargetHandles.data(), false, nullptr);
+		}
 	}
 
 	void DirectX12RendererAPI::WaitForPreviousFrame()
@@ -280,7 +333,7 @@ namespace KNR
 		m_fences[m_bufferIndex]->IncrementFenceValue();
 	}
 
-	void DirectX12RendererAPI::CreateRenderTargets()
+	void DirectX12RendererAPI::CreateSwapchainBackbuffer()
 	{
 		IDXGISwapChain3* swapchain = DirectX12Context.GetSwapchain();
 		

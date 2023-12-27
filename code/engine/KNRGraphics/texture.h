@@ -54,6 +54,7 @@ namespace KNR
 		: public Texture
 	{
 	public:
+		inline virtual TextureFormat GetFormat() { return m_TextureFormat; }
 		static Texture2D* Create(const TextureDescriptor& desc);
 
 	protected:

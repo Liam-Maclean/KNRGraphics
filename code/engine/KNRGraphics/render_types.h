@@ -28,6 +28,19 @@ namespace KNR
 		size_t size;
 	};
 
+	enum class KNRRootSignatureBindSlot : int
+	{
+		Texture1DSlot = 0,
+		Texture2DSlot = 1,
+		Texture2DArraySlot = 2,
+		Texture3DSlot = 3,
+		TextureCubemapSlot = 4,
+		TextureCubemapArraySlot = 5,
+		ConstantSlot = 6,
+		MaterialIndexSlot = 7,
+		ConstantIndexSlot = 8,
+	};
+
 	enum class ReservedHeapRegion : int
 	{
 		//Bindless heaps (SRV/CBV/UAV)
@@ -225,6 +238,7 @@ namespace KNR
 			m_DepthBiasClamp = 0.0f;
 			m_SampleCount = 1;
 			m_ConservativeRasterizer = false;
+			m_MultisampleEnable = false;
 		}
 
 		CullingMode m_CullingMode;
@@ -286,6 +300,15 @@ namespace KNR
 
 	struct BlendState
 	{
+		BlendState()
+		{
+			for (size_t i = 0; i < 8; ++i)
+			{
+				renderTargetBlendStates[i] = RenderTargetBlendState();
+			}
+			alphaToCoverageEnable = false;
+			independentBlendEnable = false;
+		}
 		RenderTargetBlendState renderTargetBlendStates[8];
 		bool alphaToCoverageEnable;
 		bool independentBlendEnable;

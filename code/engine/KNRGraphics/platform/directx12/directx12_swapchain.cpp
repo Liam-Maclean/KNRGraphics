@@ -1,19 +1,9 @@
-#define GLFW_EXPOSE_NATIVE_WIN32 = 1;
 #include "directx12_graphics_context.h"
 #include "directx12_swapchain.h"
+#include "logger/logger.h"
 
 namespace KNR
 {
-	Swapchain* Swapchain::Create(void* windowPtr, void* instance, const int screenWidth, const int screenHeight)
-	{
-		return new DirectX12Swapchain(windowPtr, instance, screenWidth, screenHeight);
-	}
-
-	Swapchain* Swapchain::Create(GLFWwindow* hwnd, const int screenWidth, const int screenHeight)
-	{
-		return new DirectX12Swapchain(hwnd, screenWidth, screenHeight);
-	}
-
 	DirectX12Swapchain::DirectX12Swapchain(void* windowPtr, void* instance, const int screenWidth, const int screenHeight)
 	{
 		DXGI_SWAP_CHAIN_DESC swapChainDesc;
@@ -147,12 +137,15 @@ namespace KNR
 		result = factory->CreateSwapChain(DirectX12Context.GetCommandQueue(), &swapChainDesc, &swapChain);
 		if (FAILED(result))
 		{
+			KNT_ERROR("Failed to make swapchain");
 			assert(0);
 		}
 
 		result = swapChain->QueryInterface(__uuidof(IDXGISwapChain3), (void**)&m_swapChain);
 		if (FAILED(result))
 		{
+			KNT_ERROR("Failed to query swapchain interface");
+
 			assert(0);
 		}
 

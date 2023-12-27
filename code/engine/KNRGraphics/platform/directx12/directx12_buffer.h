@@ -22,6 +22,8 @@ namespace KNR
 
 		inline size_t GetUsedSize() const override { return m_usedSize; }
 
+		inline uint32_t GetBindlessIndex() const override { return m_descriptorHandleBlock.bindlessIndexID; }
+
 		inline ID3D12Resource* GetD3D() const { return m_resource; }
 
 		inline DirectX12DescriptorHandleBlock GetDescriptorBlock() const { return m_descriptorHandleBlock; }

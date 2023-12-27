@@ -1,9 +1,10 @@
 #include "directx12_util.h"
+#include "render_types.h"
 #include "logger/logger.h"
 
 namespace KNR
 {
-	inline D3D12_FILL_MODE Util::ConvertFillMode(FillMode fillMode)
+	D3D12_FILL_MODE Util::ConvertFillMode(FillMode fillMode)
 	{
 		if (fillMode == FillMode::Wireframe)
 		{
@@ -16,7 +17,7 @@ namespace KNR
 		return D3D12_FILL_MODE_SOLID;
 	}
 
-	inline D3D12_CULL_MODE Util::ConvertCullMode(CullingMode cullMode)
+	D3D12_CULL_MODE Util::ConvertCullMode(CullingMode cullMode)
 	{
 		if (cullMode == CullingMode::Backface)
 		{
@@ -33,7 +34,7 @@ namespace KNR
 		return D3D12_CULL_MODE::D3D12_CULL_MODE_NONE;
 	}
 
-	inline D3D12_BLEND Util::ConvertBlendMode(BlendValue blendValue)
+	D3D12_BLEND Util::ConvertBlendMode(BlendValue blendValue)
 	{
 		switch (blendValue)
 		{
@@ -72,7 +73,7 @@ namespace KNR
 		return D3D12_BLEND();
 	}
 
-	inline D3D12_BLEND_OP Util::ConvertBlendOp(BlendOp blendOp)
+	D3D12_BLEND_OP Util::ConvertBlendOp(BlendOp blendOp)
 	{
 		switch (blendOp)
 		{
@@ -93,7 +94,7 @@ namespace KNR
 		return D3D12_BLEND_OP();
 	}
 
-	inline D3D12_COMPARISON_FUNC Util::ConvertCompareOp(ComparisonOp comparison)
+	D3D12_COMPARISON_FUNC Util::ConvertCompareOp(ComparisonOp comparison)
 	{
 		switch (comparison)
 		{
@@ -126,7 +127,7 @@ namespace KNR
 		return D3D12_COMPARISON_FUNC();
 	}
 
-	inline D3D12_SHADER_BYTECODE Util::ConvertBytecode(ShaderBytecode bytecode)
+	D3D12_SHADER_BYTECODE Util::ConvertBytecode(ShaderBytecode bytecode)
 	{
 		D3D12_SHADER_BYTECODE shaderBytecode;
 		shaderBytecode.BytecodeLength = bytecode.size;
@@ -134,7 +135,40 @@ namespace KNR
 		return shaderBytecode;
 	}
 
-	inline bool Util::IsDepthFormat(TextureFormat format)
+	LPCSTR Util::ConvertVertexUsage(VertexAttributeUsage usage)
+	{
+		switch (usage)
+		{
+		case VertexAttributeUsage::Position:
+			return "POSITION";
+			break;
+		case VertexAttributeUsage::Texcoord:
+			return "TEXCOORD";
+			break;
+		case VertexAttributeUsage::BlendIndices:
+			return "BLENDINDICES";
+			break;
+		case VertexAttributeUsage::BlendWeights:
+			return "BLENDWEIGHTS";
+			break;
+		case VertexAttributeUsage::Normal:
+			return "NORMAL";
+			break;
+		case VertexAttributeUsage::Tangent:
+			return "TANGENT";
+			break;
+		case VertexAttributeUsage::Binormal:
+			return "BINORMAL";
+			break;
+		default:
+			break;
+		}
+		KNT_ERROR("Invalid Vertex Usage");
+		assert(0);
+		return LPCSTR();
+	}
+
+	bool Util::IsDepthFormat(TextureFormat format)
 	{
 		switch (format)
 		{
@@ -244,9 +278,72 @@ namespace KNR
 			break;
 		}
 
-		KNT_ERROR("Unknown Texture Format, Please select a valid format");
-		//Unknown texture format
+		KNT_ERROR("Unhandled Texture Format, Please select a valid format");
 		assert(0);
+	}
+
+	DXGI_FORMAT Util::GetDXGITypelessFormat(TextureFormat format)
+	{
+		switch (format)
+		{
+		case KNR::TextureFormat::TEXTURE_FORMAT_D32_FLOAT:
+			return DXGI_FORMAT_R32_TYPELESS;
+		case KNR::TextureFormat::TEXTURE_FORMAT_D24_UNORM_S8_UINT:
+			return DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		}
+		KNT_ERROR("Unhandled Texture Format, Please select a valid format");
+		assert(0);
+	}
+
+	DXGI_FORMAT Util::GetDXGIFormatFromVertexDeclaration(VertexAttributeFormat format, uint32_t count)
+	{
+		if (format == VertexAttributeFormat::Float)
+		{
+			switch (count)
+			{
+			case 1:
+				return DXGI_FORMAT_R32_FLOAT;
+				break;
+			case 2:
+				return DXGI_FORMAT_R32G32_FLOAT;
+				break;
+			case 3:
+				return DXGI_FORMAT_R32G32B32_FLOAT;
+				break;
+			case 4:
+				return DXGI_FORMAT_R32G32B32A32_FLOAT;
+				break;
+			default:
+				break;
+			}
+		}
+		else if (format == VertexAttributeFormat::UInt)
+		{
+			switch (count)
+			{
+			case 1:
+				return DXGI_FORMAT_R32_UINT;
+				break;
+			case 2:
+				return DXGI_FORMAT_R32G32_UINT;
+				break;
+			case 3:
+				return DXGI_FORMAT_R32G32B32_UINT;
+				break;
+			case 4:
+				return DXGI_FORMAT_R32G32B32A32_UINT;
+				break;
+			default:
+				break;
+			}
+		}
+		else
+		{
+
+		}
+		KNT_ERROR("Invalid Vertex Attribute Format");
+		assert(0);
+		return DXGI_FORMAT();
 	}
 }
 

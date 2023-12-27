@@ -38,11 +38,11 @@ namespace KNR
 
         CDirectX12Context();
 
-        CDirectX12Context(WindowDesc* windowHandle);
+        CDirectX12Context(const WindowDesc& windowHandle);
 
         ~CDirectX12Context();
 
-        void Init(WindowDesc* windowHandle);
+        void Init(const WindowDesc& windowHandle);
 
         void Init() override;
 
@@ -81,6 +81,8 @@ namespace KNR
         
         inline DirectX12Heap* GetReservedHeap(ReservedHeapRegion region) { return &m_bindlessReservationHeaps[(int)region]; }
 
+        inline ID3D12RootSignature* GetKNRRootSignature() const { return m_coreRootSignature; }
+
     private:
         
         void CreateDevice();
@@ -97,12 +99,14 @@ namespace KNR
         ID3D12CommandAllocator* m_commandAllocator[3];
         ID3D12GraphicsCommandList* m_commandList;
 
+        ID3D12RootSignature* m_coreRootSignature;
+
         DirectX12CommandBuffer* m_copyCommandBuffer;
         DirectX12Swapchain* m_swapChain;
         DirectX12FrameHeap* m_frameHeap;
         DirectX12Buffer* m_immediateVertexBuffer;
        
-        WindowDesc* m_window;
+        WindowDesc m_window;
         unsigned int m_videoCardMemory;
         unsigned int m_systemMemory;
         char m_videoCardDescription[128];

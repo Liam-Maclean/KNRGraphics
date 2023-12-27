@@ -3,6 +3,7 @@
 #include "directx12_util.h"
 #include <d3d12.h>
 #include "d3dx12.h"
+#include "logger/logger.h"
 
 namespace KNR
 {
@@ -20,6 +21,7 @@ namespace KNR
 		m_TextureType = desc.textureType;
 		m_TextureFormat = desc.textureFormat;
 		m_TextureUsage = desc.textureUsage;
+		m_Samples = desc.samples;
 
 		//Fast assert
 		assert(m_Width > 0);
@@ -58,16 +60,19 @@ namespace KNR
 				depthOptimizedClearValue.DepthStencil.Stencil = 0xff;
 
 				auto heapProperties = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-				auto textureDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R32_TYPELESS, m_Width, m_Height, 1, 0, m_Samples, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+				auto textureDesc = CD3DX12_RESOURCE_DESC::Tex2D(Util::GetDXGIFormatType(m_TextureFormat), m_Width, m_Height, 1, 0, m_Samples, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 				HRESULT hr = device->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE, &textureDesc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &depthOptimizedClearValue, IID_PPV_ARGS(&m_textureResource));
 				if (FAILED(hr))
 				{
 					assert(0);
 				}
-				m_textureResource->SetName(desc.debugName);
-				
+
+				if (desc.debugName != NULL)
+				{
+					m_textureResource->SetName(desc.debugName);
+				}
 				m_textureSRVDesc = {};
-				m_textureSRVDesc.Format = Util::GetDXGIFormatType(m_TextureFormat);
+				m_textureSRVDesc.Format = Util::GetDXGITypelessFormat(m_TextureFormat);
 				m_textureSRVDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
 				m_textureSRVDesc.Texture2D.MipLevels = 1;
 				m_textureSRVDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -103,10 +108,14 @@ namespace KNR
 				HRESULT hr = device->CreateCommittedResource(&heapProperties, D3D12_HEAP_FLAG_NONE, &resourceDesc, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, &clearValue, IID_PPV_ARGS(&m_textureResource));
 				if (FAILED(hr))
 				{
+					KNT_ERROR("Failed to create texture resource allocation")
 					assert(0);
 				}
 
-				m_textureResource->SetName(desc.debugName);
+				if (desc.debugName != NULL)
+				{
+					m_textureResource->SetName(desc.debugName);
+				}
 
 				////Populate the SRV descriptor
 				m_textureSRVDesc = {};

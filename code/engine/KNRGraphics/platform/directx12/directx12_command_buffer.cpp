@@ -14,7 +14,7 @@ namespace KNR
 	DirectX12CommandBuffer::DirectX12CommandBuffer(CommandBufferType type)
 	{
 		ID3D12Device* device = DirectX12Context.GetDevice();
-		D3D12_COMMAND_LIST_TYPE commandListType;
+		D3D12_COMMAND_LIST_TYPE commandListType = D3D12_COMMAND_LIST_TYPE_DIRECT;
 		m_type = type;
 		HRESULT hr;
 		switch (m_type)

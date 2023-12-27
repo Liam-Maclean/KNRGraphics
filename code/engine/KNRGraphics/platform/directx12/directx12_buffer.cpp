@@ -19,7 +19,7 @@ namespace KNR
 		CD3DX12_HEAP_PROPERTIES heapProperties;
 		D3D12_RESOURCE_DESC resourceDesc = {};
 		resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-		resourceDesc.Width = desc.bufferType == BufferUsageType::Uniform ? m_allocatedSize = (desc.size + 255) & ~255 : m_allocatedSize; //Uniform buffers be 256 aligned
+		resourceDesc.Width = (desc.bufferType == BufferUsageType::Uniform || desc.bufferType == BufferUsageType::Bindless) ? m_allocatedSize = (desc.size + 255) & ~255 : m_allocatedSize; //Uniform buffers be 256 aligned
 		resourceDesc.Height = 1;
 		resourceDesc.DepthOrArraySize = 1;
 		resourceDesc.MipLevels = 1;
@@ -80,12 +80,22 @@ namespace KNR
 		}
 		else if (desc.bufferType == BufferUsageType::Uniform)
 		{
+			//We should be binding the resource buffer directly when binding a uniform structure
+
+			m_constantBufferView = {};
+			m_constantBufferView.BufferLocation = m_resource->GetGPUVirtualAddress();
+			m_constantBufferView.SizeInBytes = m_allocatedSize;
+		}
+		else if (desc.bufferType == BufferUsageType::Bindless)
+		{
+			//For bindless we need to reserve a location onto the CBV heap
 			m_constantBufferView = {};
 			m_constantBufferView.BufferLocation = m_resource->GetGPUVirtualAddress();
 			m_constantBufferView.SizeInBytes = m_allocatedSize;
 
-			m_descriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::Constant);
-			DirectX12Context.CreateCBV()
+			m_descriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::BindlessConstant);
+			DirectX12Context.CreateCBV(m_descriptorHandleBlock, m_constantBufferView);
+
 		}
 		else if (desc.bufferType == BufferUsageType::Storage)
 		{
@@ -98,7 +108,9 @@ namespace KNR
 			m_structuredBufferView.Buffer.StructureByteStride = desc.structuredBuffer.structuredByteStride;
 			m_structuredBufferView.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
 
-			m_descriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(m_resource, ReservedHeapRegion::Constant, m_structuredBufferView);
+			m_descriptorHandleBlock = DirectX12Context.ReserveDescriptorHandle(ReservedHeapRegion::BindlessConstant);
+
+			//TODO - WE NEED BINDLESS STORAGE BUFFERS
 		}
 
 		//If we have initial data, we need to stage

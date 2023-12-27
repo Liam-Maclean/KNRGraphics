@@ -16,9 +16,6 @@ namespace KNR
 	public:
 		~Swapchain() = default;
 
-		static Swapchain* Create(void* windowPtr, void* instance, const int screenWidth, const int screenHeight);
-		static Swapchain* Create(GLFWwindow* hwnd, const int screenWidth, const int screenHeight);
-
 	protected:
 
 		int width, height;

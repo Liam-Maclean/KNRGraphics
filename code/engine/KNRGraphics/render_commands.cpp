@@ -14,7 +14,7 @@
 namespace KNR
 {
 #ifdef PLATFORM_OPENGL
-	RendererAPI* RenderCommand::sRendererAPI = new VulkanRendererAPI;
+	RendererAPI* RenderCommand::sRendererAPI = new OpenglRendererAPI;
 #elif PLATFORM_VULKAN
 	RendererAPI* RenderCommand::sRendererAPI = new VulkanRendererAPI;
 #elif PLATFORM_DX11

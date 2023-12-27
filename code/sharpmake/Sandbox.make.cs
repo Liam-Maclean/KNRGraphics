@@ -8,7 +8,6 @@ using Sharpmake; // Contains the entire Sharpmake object library.
 [module: Sharpmake.Include("KNRGraphics.make.cs")]
 [module: Sharpmake.Include("KNRBaseProject.make.cs")]
 [module: Sharpmake.Include("KNRShaders.make.cs")]
-[module: Sharpmake.Include("KNRShaderCompiler.make.cs")]
 
 [Generate]
 public class KNRSln : Solution
@@ -31,7 +30,6 @@ public class KNRSln : Solution
         conf.AddProject<SandboxProject>(target);
         conf.AddProject<KNRGraphics>(target);
         conf.AddProject<KNRShaders>(target);
-        conf.AddProject<KNRShaderCompiler>(target);
     }
 }
 
