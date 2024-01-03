@@ -118,6 +118,16 @@ namespace KNR
 		//glfwPollEvents();
 	}
 
+	void CDirectX12Context::CopyHeapsCPUToGPU()
+	{
+		//Bindless heaps
+		for (int i = (int)ReservedHeapRegion::BindlessStart; i < (int)ReservedHeapRegion::BindlessEnd; ++i)
+		{
+			//Copy CPU heaps into the GPU frame heap
+			m_frameHeap->CopyAllocate(m_bindlessReservationHeapSizes[i], m_bindlessReservationHeaps[i]);
+		}
+	}
+
 	void CDirectX12Context::CreateDevice()
 	{
 		//set the feature level to DirectX 12.1 to enable all DX12 features.

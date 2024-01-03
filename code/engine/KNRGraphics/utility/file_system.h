@@ -24,7 +24,10 @@ std::vector<T> KNR::LightweightFileSystem::LoadFile(const char* path)
 		std::ifstream file;
 		file.open(path, std::ios::in | std::ios::binary);
 		if (!file.is_open())
+		{
 			KNT_ERROR("failed to open file!");
+			assert(0);
+		}
 
 		//Read everything out using a string stream and grab the string for it 
 		std::string buffer;
@@ -53,7 +56,10 @@ void KNR::LightweightFileSystem::WriteFile(const char* relativePath, std::vector
 	std::ofstream file;
 	file.open(path.string(), std::ios::out | std::ios::trunc | std::ios::binary);
 	if (!file.is_open())
+	{
 		KNT_ERROR("failed to open file!");
+		assert(0);
+	}
 	file.write(reinterpret_cast<char*>(dataToFile.data()), dataToFile.size() * sizeof(T));
 	file.close();
 }

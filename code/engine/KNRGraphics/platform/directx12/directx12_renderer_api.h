@@ -75,6 +75,7 @@ namespace KNR
 		void WaitForPreviousFrame();
 		void CreateSwapchainBackbuffer();
 		void RecordCommandBuffers();
+		void PrepareGraphicsHeaps();
 
 		//For creating the backbuffer for the swapchain
 		Microsoft::WRL::ComPtr<ID3D12Resource> m_backBufferRenderTarget[3];

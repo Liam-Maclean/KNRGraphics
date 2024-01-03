@@ -48,6 +48,8 @@ namespace KNR
 
         void SwapBuffers() override;
 
+        void CopyHeapsCPUToGPU();
+
         DirectX12DescriptorHandleBlock ReserveDescriptorHandle(ReservedHeapRegion region);
     
         void CreateSRV(ID3D12Resource* resource, const DirectX12DescriptorHandleBlock& descriptorHandle, const D3D12_SHADER_RESOURCE_VIEW_DESC srv);

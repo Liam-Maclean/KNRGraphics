@@ -1,0 +1,1 @@
+start S:\github\KNR\KNRGraphics\code\external\winflexbison\win_flex.exe -o S:\github\KNR\KNRGraphics\code\engine\KNRShaderCompiler\ShaderCompilerLex.cpp -i S:\github\KNR\KNRGraphics\code\engine\KNRShaderCompiler\ShaderCompilerLex.l

@@ -62,6 +62,9 @@ namespace KNR
 	void DirectX12RendererAPI::BindUniformBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+		DirectX12Buffer* directXBuffer = static_cast<DirectX12Buffer*>(buffer);
+
+		directXCommandList->Get()->SetGraphicsRootConstantBufferView(bindslot, directXBuffer->GetD3D()->GetGPUVirtualAddress());
 	}
 
 	void DirectX12RendererAPI::BindStructuredBuffer(CommandBuffer* commandList, Buffer* buffer, uint32_t bindslot)
@@ -178,11 +181,19 @@ namespace KNR
 		}
 	}
 
+	void DirectX12RendererAPI::PrepareGraphicsHeaps()
+	{
+
+	}
+
 	//Geometry render begin
 	void DirectX12RendererAPI::BeginFrame()
 	{
 		ID3D12CommandQueue* copyQueue = static_cast<ID3D12CommandQueue*>(DirectX12Context.GetCommandQueue());
 		DirectX12CommandBuffer* copyCommandBuffer = DirectX12Context.GetCopyCommandBuffer();
+
+		PrepareGraphicsHeaps();
+
 		//Is there any copy work to be submitted at the start of the frame
 		if (copyCommandBuffer->GetWorkToBeSubmitted())
 		{
@@ -278,14 +289,21 @@ namespace KNR
 
 	void DirectX12RendererAPI::BeginRecordingCommands(CommandBuffer* commandList)
 	{
-		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
+		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);		
+		DirectX12FrameHeap* directXFrameHeap = DirectX12Context.GetFrameHeap();
+
 		directXCommandList->Reset();
+
+		//Set up the descriptor heaps for the whole frame
+		ID3D12DescriptorHeap* heaps = { directXFrameHeap->GetDescriptorHeap() };
+		directXCommandList->Get()->SetDescriptorHeaps(1, &heaps);
 	}
 
 	void DirectX12RendererAPI::BindPipeline(CommandBuffer* commandList, Pipeline* pipeline)
 	{
 		DirectX12CommandBuffer* directXCommandList = static_cast<DirectX12CommandBuffer*>(commandList);
 		DirectX12Pipeline* directXPipeline = static_cast<DirectX12Pipeline*>(pipeline);
+
 
 		//Binds the pipeline, binds the data
 		directXCommandList->Get()->SetPipelineState(directXPipeline->GetPipeline());

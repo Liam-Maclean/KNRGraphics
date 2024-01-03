@@ -30,6 +30,23 @@ public class KNRShaderCompiler : KNRExeBase
         conf.TargetPath = Path.Combine(Globals.BuildDir, "[project.Name]", "output", "[target.Platform]");
         conf.TargetFileName = @"KNRShaderCompiler";
         //conf.Output = Configuration.OutputType.Exe;
+
+        PostBuildStepFlexBison(conf);
+    }
+
+    public void PostBuildStepFlexBison(ProjConfig conf)
+    {
+        //Flex and bison
+        string executablePath = Path.Combine(Globals.ExternalDir, "winflexbison/");
+        string processedFilePath = Globals.ShaderCompilerDir + "/";
+        string flexExecutable = "win_flex.exe";
+        string bisonExecutable = "win_bison.exe";
+        string flexArgs = $" -o " + processedFilePath + "ShaderCompilerLex.cpp " + processedFilePath + "ShaderCompilerLex.l";
+        string bisonArgs = $" -o " + processedFilePath + "ShaderCompilerParser.cpp " + processedFilePath + "ShaderCompilerParser.y";
+        string postBuildLexer = executablePath + flexExecutable + flexArgs + "";
+        string postBuildBison = executablePath + bisonExecutable + bisonArgs + "";
+        conf.EventPostBuild.Add(postBuildLexer);
+        conf.EventPostBuild.Add(postBuildBison); 
     }
 }
 
