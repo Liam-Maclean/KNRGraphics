@@ -3,17 +3,13 @@
 #define yyFlexLexer ShaderCompilerLexer
 #include <FlexLexer.h>
 
-struct ShaderCompileArgs
-{
-	bool stripPDBs = false;
-	bool stripReflection = false;
-	bool generatePDBs = false;
-	int optimisationLevel = 0;
-	char* shaderFile = "";
-	char* entryPoint = "";
-	char* outputExtension = "";
-	char* shaderModel = "";
-};
+extern bool bisonArgStripPDBs;
+extern bool bisonArgStripReflection;
+extern bool bisonArgGeneratePDBs;
+extern int bisonArgOptimisationLevel;
+extern char* bisonArgShaderFile;
+extern char* bisonArgOutputExtension;
+extern char* bisonArgShaderModel;
 
 int main(int argc, char* argv[])
 {

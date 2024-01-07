@@ -2,328 +2,355 @@
 #include <iostream>
 #include <vector>
 
-class ASTNodeGroup
+enum BinaryOperation
 {
-public:
-	ASTNodeGroup()
-	{
-
-	}
-	~ASTNodeGroup()
-	{
-
-	}
-
-	void AddASTNode(const ASTBase& astNode)
-	{
-		m_ASTNodes.push_back(astNode);
-	}
-
-	void RunASTNodeTree(std::ifstream* stream)
-	{
-		for (size_t i = 0; i < m_ASTNodes.size(); ++i)
-		{
-			m_ASTNodes[i].WriteToFile(stream);
-		}
-	}
-
-	std::vector<ASTBase> m_ASTNodes;
+	OP_ADD,
+	OP_SUB,
+	OP_MUL,
+	OP_DIV,
+	OP_MOD,
+	OP_GREATER,
+	OP_GREATEREQUAL,
+	OP_LESS,
+	OP_LESSEQUAL,
+	OP_EQUAL,
+	OP_NOTEQUAL,
+	OP_OR,
+	OP_AND,
+	OP_LEFTSHIFT,
+	OP_RIGHTSHIFT,
 };
 
-class ASTBase
+enum FunctionArgumentType
 {
-public:
-	ASTBase() {};
-	~ASTBase() {};
-
-	virtual void WriteToFile(std::ifstream* stream)
-	{
-
-	}
+	FUNCTION_ARG_IN,
+	FUNCTION_ARG_OUT,
+	FUNCTION_ARG_INOUT,
 };
 
-class ASTFloat : public ASTBase
+//Handler for variable types in hlsl
+class ASTVariableType
 {
 public:
-	ASTFloat()
-		:ASTBase()
-	{
-
-	}
-	~ASTFloat()
+	ASTVariableType(std::string strType)
+		: m_StrType(strType)
 	{
 
 	}
 
-	virtual void WriteToFile(std::ifstream* stream) override
+	bool operator ==(const ASTVariableType other)
 	{
-
+		m_StrType == other.m_StrType;
 	}
 
 private:
-	float m_value;
+	const std::string m_StrType;
 };
 
-class ASTInt : public ASTBase
+//Abstract syntax tree generated via bison
+class ASTTreeGroup
 {
 public:
-	ASTInt()
-		:ASTBase()
+
+	template<typename T, typename... Args>
+	T* AddASTNode(Args... args)
 	{
-
+		T node = new T(args...);
+		m_ASTNodes.push_back(node);
+		return node;
 	}
-	~ASTInt()
-	{
-
-	}
-
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
-
 private:
-	float m_value;
+	ASTNode* m_RootNode = nullptr;
+	std::vector<ASTNode> m_ASTNodes;
 };
 
-class ASTInt2 : public ASTBase
+//Base node AST class
+class ASTNode
 {
 public:
-	ASTInt2()
-		:ASTBase()
+	ASTNode() {};
+	~ASTNode() = default;
+
+	template<typename T> T& As() { return *(T*)this; }
+
+	std::string GenerateHLSLCode(ASTTreeGroup* ast)
 	{
+		std::string retval = CreateCodeString(ast);
 
+		if (expressionSign < 0) { retval = '-' + retval; }
+		if (inParenthesis < 0) { retval = '(' + retval + ')'; }
+		if (inBlock < 0) { retval = '{' + retval + '}'; }
+		if (hasSemicolon < 0) { retval = retval + ';'; }
+
+		return retval;
 	}
-	~ASTInt2()
-	{
 
-	}
-
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) { return std::string(); }
 
 private:
-	float m_value;
+	int expressionSign = 1;
+	bool inParenthesis = false;
+	bool inBlock = false;
+	bool hasSemicolon = false;
 };
 
-class ASTInt3 : public ASTBase
+//A node the variable name (e.g. int x with x being the identifier)
+class ASTIdentifier : public ASTNode
 {
 public:
-	ASTInt3()
-		:ASTBase()
+	ASTIdentifier() = default;
+
+	ASTIdentifier(const std::string& identifier)
+		:m_value(identifier)
 	{
 
 	}
-	~ASTInt3()
+	~ASTIdentifier()
 	{
 
 	}
 
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
 
 private:
-	float m_value;
+	const std::string m_value;
 };
 
-class ASTInt4 : public ASTBase
+//Accessing a struct or class (e.g. IN.pos, IN.uv)
+class ASTVariableMemberAccess : public ASTNode
 {
 public:
-	ASTInt4()
-		:ASTBase()
+	ASTVariableMemberAccess() = default;
+	ASTVariableMemberAccess(ASTNode* expression, const std::string& accessedMember)
+		: m_Expression(expression), m_AccessedMember(accessedMember)
 	{
 
 	}
-	~ASTInt4()
-	{
 
-	}
-
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
 
 private:
-	float m_value;
+	const ASTNode* m_Expression;
+	const std::string m_AccessedMember;
 };
 
-class ASTChar : public ASTBase
+//Binary conditions such as ternaries, bit shifting (left ? right or width << 1)
+class ASTExpressionBinary : public ASTNode
 {
 public:
-	ASTChar()
-		:ASTBase()
+	ASTExpressionBinary() = default;
+	ASTExpressionBinary(BinaryOperation op, ASTNode* left, ASTNode* right)
+		:m_Operation(op), m_Left(left), m_Right(right)
 	{
 
 	}
-	~ASTChar()
-	{
 
-	}
-
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
 
 private:
-	char m_value;
+	const BinaryOperation m_Operation;
+	const ASTNode* m_Left;
+	const ASTNode* m_Right;
 };
 
-class ASTString : public ASTBase
+class ASTIndexing : public ASTNode
 {
 public:
-	ASTString()
-		:ASTBase()
+	ASTIndexing() = default;
+	ASTIndexing(ASTNode* member, ASTNode* index)
+		: m_Member(member), m_Index(index)
 	{
 
 	}
-	~ASTString()
-	{
 
-	}
-
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
 
 private:
-	std::string m_value;
+	const ASTNode* m_Member;
+	const ASTNode* m_Index;
 };
 
-class ASTOperation : public ASTBase
+class ASTAssignment : public ASTNode
 {
-	enum ASTOperationType
+public:
+	ASTAssignment() = default;
+	ASTAssignment(ASTNode* lvalue, ASTNode* expression)
+		: m_LValue(lvalue), m_Expression(expression)
 	{
-		Addition,
-		Subtraction,
-		Multiplication,
-		Division,
-		Modulo,
-		BitshiftRight,
-		BitshiftLeft,
+
+	}
+
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
+
+private:
+	ASTNode* m_LValue;
+	ASTNode* m_Expression;
+};
+
+class ASTValueLiteral : public ASTNode
+{
+public:
+	ASTValueLiteral() = default;
+	ASTValueLiteral(float value)
+		:m_ValueFloat(value), m_Type("float")
+	{
+
+	}
+
+	ASTValueLiteral(int value)
+		:m_ValueInt(value), m_Type("int")
+	{
+
+	}
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
+
+private:
+	union
+	{
+		const float m_ValueFloat;
+		const int m_ValueInt;
 	};
-public:
-	ASTOperation()
-		:ASTBase()
-	{
 
-	}
-	~ASTOperation()
-	{
-
-	}
-
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
-
-private:
-	ASTOperationType m_value;
+	ASTVariableType m_Type;
 };
 
-class ASTMisc : public ASTBase
+class ASTVariableDeclaration : public ASTNode
 {
-public:
-	ASTMisc()
-	{
+	ASTVariableDeclaration() = default;
 
+	ASTVariableDeclaration(ASTVariableType type, std::string typeIdentifier, ASTNode* firstExpression)
+		: m_Type(type)
+	{
+		m_Identifier.push_back(typeIdentifier);
+		m_Expression.push_back(firstExpression);
 	}
 
-	~ASTMisc()
-	{
-
-	}
-
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
-
-};
-
-class ASTSampler : public ASTBase
-{
-	enum ASTSamplerType
-	{
-		Sampler,
-		Sampler2D,
-	};
-public:
-	ASTSampler()
-		:ASTBase()
-	{
-
-	}
-	~ASTSampler()
-	{
-
-	}
-
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
 
 private:
-	ASTSamplerType m_value;
+	std::vector<std::string> m_Identifier;
+	std::vector<ASTNode*> m_Expression;
+	ASTVariableType m_Type;
 };
 
-class ASTConstant : public ASTBase
+//C style conditional coding
+class ASTConditionalIf : public ASTNode
 {
-public:
-	ASTConstant()
-		:ASTBase()
-	{
-
-	}
-	~ASTConstant()
+	ASTConditionalIf() = default;
+	ASTConditionalIf(ASTNode* expression, ASTNode* trueStatement, ASTNode* falseStatement)
+		:m_Expression(expression), m_TrueStatement(trueStatement), m_FalseStatement(falseStatement)
 	{
 
 	}
 
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
 
 private:
-	std::string m_value;
+	ASTNode* m_Expression;
+	ASTNode* m_TrueStatement;
+	ASTNode* m_FalseStatement;
 };
 
-class ASTTexture : public ASTBase
+//C style conditional coding
+class ASTConditionalWhile : public ASTNode
 {
-	enum ASTTextureType
-	{
-		Texture1D,
-		Texture2D,
-		Texture2DArray,
-		Texture3D,
-		TextureCube,
-		TextureCubeArray,
-	};
-public:
-	ASTTexture()
-		:ASTBase()
-	{
-
-	}
-	~ASTTexture()
+	ASTConditionalWhile() = default;
+	ASTConditionalWhile(ASTNode* expression, ASTNode* bodyStatements)
+		:m_Expression(expression), m_BodyStatements(bodyStatements)
 	{
 
 	}
 
-	virtual void WriteToFile(std::ifstream* stream) override
-	{
-
-	}
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
 
 private:
-	ASTTextureType m_value;
+	ASTNode* m_Expression;
+	ASTNode* m_BodyStatements;
+};
+
+//C style conditional coding
+class ASTConditionalFor : public ASTNode
+{
+	ASTConditionalFor() = default;
+	ASTConditionalFor(ASTNode* variableDeclaration, ASTNode* booleanExpression, ASTNode* postExpression, ASTNode* statement)
+		:m_VariableDeclaration(variableDeclaration), m_BoolExpression(booleanExpression), m_PostExpression(postExpression), m_Statement(statement)
+	{
+
+	}
+
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
+
+private:
+	const ASTNode* m_VariableDeclaration = nullptr;
+	const ASTNode* m_BoolExpression = nullptr;
+	const ASTNode* m_PostExpression = nullptr;
+	const ASTNode* m_Statement = nullptr;
+};
+
+class ASTConditionalReturn : public ASTNode
+{
+	ASTConditionalReturn() = default;
+	ASTConditionalReturn(ASTNode* expression)
+		:m_Expression(expression)
+	{
+
+	}
+
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
+
+private:
+	ASTNode* m_Expression;
+};
+
+class ASTStatementList : public ASTNode
+{
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
+
+private:
+	std::vector<ASTNode*> m_Nodes;
+};
+
+class ASTFunctionCall : public ASTNode
+{
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
+private:
+	std::string m_FunctionName;
+	std::vector<ASTNode*> m_Args;
+};
+
+class ASTFunctionDeclarationArguments : public ASTNode
+{
+	ASTFunctionDeclarationArguments() = default;
+
+	ASTFunctionDeclarationArguments(ASTVariableType type, const std::string& identifier, ASTNode* expression, FunctionArgumentType functionArgType)
+	: m_Type(type), m_Identifier(identifier), m_Expression(expression), m_FunctionArgumentType(functionArgType)
+	{
+
+	}
+
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
+
+	ASTVariableType m_Type;
+	const std::string m_Identifier;
+	ASTNode* m_Expression;
+	FunctionArgumentType m_FunctionArgumentType;
+}
+
+class ASTFunctionDeclaration : public ASTNode
+{
+	std::string GenerateFunctionBody(ASTTreeGroup* ast);
+	virtual std::string CreateCodeString(ASTTreeGroup* ast) override;
+private:
+	std::string m_FunctionName;
+	std::vector<ASTNode*> m_Args;
+	ASTNode* m_FunctionBody;
+	ASTVariableType m_ReturnType;
+};
+
+class ASTProgram : public Node
+{
+public:
+	std::string CreateCodeString(ASTTreeGroup* ast) override;
+
+	std::vector<ASTNode*> nodes;
 };
